@@ -26,3 +26,5 @@ li a{display:block;padding:15px;}
 #content{margin-left:175px;position:relative;}
 
 #left{padding:20px;width:125px;float:left;color:#fff;}
+
+#disqus_thread li span{display:inline;padding:none;float:none;}
