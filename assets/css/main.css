@@ -24,5 +24,6 @@ li{list-style:none;}
 #title span{display:none;}
 #rss{float:right;position:relative;top:10px;}
 #content{margin-left:175px;position:relative;}
+#post h1{margin-bottom:20px;}
 
 #left{padding:20px;width:125px;float:left;color:#fff;}
