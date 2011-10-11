@@ -11,8 +11,8 @@ a:hover{color:#c35617;}
 #left a {text-decoration:none;border:1px solid #f0f0f0;background:#f6f6f6;padding:5px;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;line-height:30px;}
 #left a:hover{background:#e6e6e6;border:1px solid #ccc;}
 li{list-style:none;}
-li span{display:inline-block;width:125px;float:left;padding:15px 0;}
-li a{display:block;padding:15px;}
+.posts li span{display:inline-block;width:125px;float:left;padding:15px 0;}
+.posts li a{display:block;padding:15px;}
 
 #about li{padding:20px;}
 #about li a{display:inline;}
@@ -26,5 +26,3 @@ li a{display:block;padding:15px;}
 #content{margin-left:175px;position:relative;}
 
 #left{padding:20px;width:125px;float:left;color:#fff;}
-
-#disqus_thread li span{display:inline;padding:none;float:none;}
