@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+    <link href="/assets/css/main.css" rel="stylesheet" type="text/css">
+    <link href="//feeds.feedburner.com/KarlSeguinsBlog" rel="alternate" type="application/atom+xml" />
+    <link href="/assets/css/shcore.css" rel="stylesheet" type="text/css" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js" type="text/javascript"></script>
+    <script src="/assets/js/shCore.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div id="header">
+      <div id="title">Hello.</div>
+      <a href="//feeds.feedburner.com/KarlSeguinsBlog"><img id="rss" src="/assets/i/rss.png" width="32" height="32" alt="rss" /></a>
+    </div>
+     <div id="site">
+        <div id="left">
+          <p><a href="/about.html">about</a></p>
+          <p><a href="//github.com/karlseguin">on github</a></p>
+          <p><a href="//twitter.com/karlseguin">at twitter</a></p>
+          <p><a href="mailto:karl@openmymind.net">via email</a></p>
+          {% if page.url != '/index.html' %}<p><a href="/">home</a></p>{% endif %}
+        </div>
+        <div id="content"> {{ content }}</div>
+     </div>
+  </body>
+</html>
+

@@ -1,0 +1,40 @@
+---
+layout: default
+---
+
+<div id="post">
+{{ content }}
+</div>
+
+<div class="section">
+  <div id="disqus_thread"></div> 
+  <a href="http://disqus.com" class="dsq-brlink attribution">blog comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+  SyntaxHighlighter.defaults['wrap-lines'] = false;
+  SyntaxHighlighter.defaults['toolbar'] = false;
+  SyntaxHighlighter.autoloader(
+    'c# csharp  /assets/js/shBrushCSharp.js',
+    'css  /assets/js/shBrushCss.js',
+    'js  /assets/js/shBrushJScript.js',
+    'plain text  /assets/js/shBrushPlain.js',
+    'ruby rails  /assets/js/shBrushRuby.js',
+    'xml html xhtml  /assets/js/shBrushXml.js'
+  );
+  SyntaxHighlighter.all();
+});
+{% if page.disqus_id %}
+var disqus_identifier = {{ page.disqus_id }};
+{% else %}
+var disqus_identifier = '{{ page.url }}';
+{% endif %}
+
+(function() {
+ var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+ dsq.src = 'http://karlseguin.disqus.com/embed.js';
+ (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=<%= Configuration.disqus_username %>">comments powered by Disqus.</a></noscript>

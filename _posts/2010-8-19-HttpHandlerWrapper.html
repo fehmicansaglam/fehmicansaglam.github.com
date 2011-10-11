@@ -1,0 +1,15 @@
+---
+layout: post
+title: "HttpHandlerWrapper"
+disqus_id: 29
+---
+<pre class="brush: c#">public abstract class HttpHandlerWrapper : IHttpHandler
+{
+   public void ProcessRequest(HttpContext context)
+   {
+       ProcessRequest(new HttpContextWrapper(context));
+   }
+
+   public abstract bool IsReusable { get; }      
+   public abstract void ProcessRequest(HttpContextBase context);
+}</pre>

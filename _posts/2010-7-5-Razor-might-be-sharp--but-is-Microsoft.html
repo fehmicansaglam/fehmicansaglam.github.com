@@ -1,0 +1,16 @@
+---
+layout: post
+title: "Razor might be sharp, but is Microsoft?"
+disqus_id: 18
+---
+<p>I've been critical of the fact that ASP.NET MVC has largely been all about the C - given the lack of cohesive and useful data access strategy (like ActiveRecord) and the horrible WebForms view engine. So I'm happy that Microsoft is acknowledging the shortcoming in their existing product and trying to address it.</p>
+
+<p>Razor is what Microsoft is calling a &quot;code-focused templating approach&quot;. This would put it in the same category as webforms, erb, smarty, velocity and many, many others. Other templates, such as Spark or HAML are more declarative. Let's be very clear: not only is Razor always a better alternative to WebForms, compared to other code-focused templates its a very good solution.</p>
+
+<p>But here's the problem: a templating engine by itself is a very small and almost insignificant part of the equation. Template engines essentially give you a way to execute code, a shortcut to output a string, nesting capabilities and support for partials. Razor might be better than erb in and of itself (by whatever minute factors one code-focused templating approach can be to another), but add Ruby and Rails to the equation, and <strong>none</strong> of ASP.NET MVC's shortcomings versus Rails or other OSS stacks are resolved.</p>
+
+<p>Razor is the equivalent of Bing trying to compete with Google by having a bigger search button - not only is it a matter of preference, in the scale of things its utterly insignificant. Sure it might take more characters to output a variable in erb, but having a RESTful routes for resources, named urls, rendering partials from a collection, statement modifiers and countless other things are what really matter.</p>
+
+<p>Fundamentally the problem with ASP.NET MVC is twofold: its immature compared to the competition and, more importantly, its tied to C# and VB.NET. You'll only think I'm needlessly bashing C#/VB.NET if you've never written a rails view. These are problems Razor has no way to overcome.</p>
+
+<p>So, the recap? Razor is a nice &quot;code-focused templating&quot; solution, but its hardly innovative nor significant because it was never 5 extra characters that made WebForms suck. In fact, the only thing the ASP.NET team could have done is adopt a declarative solution (say, by making Spark an official product) - because, as we've seen with Spark, declarative templates can hide away much of the C#/VB.NET ugliness. Given that Microsoft already has a code-focused solution, this is certainly what they should have done. The fact that they didn't, tells me that they really, really, don't get it.</p>

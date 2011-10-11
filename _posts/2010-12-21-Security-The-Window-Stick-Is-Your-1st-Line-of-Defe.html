@@ -1,0 +1,29 @@
+---
+layout: post
+title: "Security: The Window Sticker is Your First Line of Defense"
+disqus_id: 59
+---
+<p>I don't profess to know that much about application or system security. Its a serious topic and people who do know a lot about it get rightfully upset when the rest of us start making statements or suggestions that end up doing more harm than good. So, take all this with a grain of salt...</p>
+
+<p>I remember watching a show on TV where they interviewed burglars and they all insisted that a house with a visible security sticker was to be avoided at all cost. Their reasoning was sound: even if there's a huge number of fake security stickers, and the quality of security systems themselves vary greatly, why take the chance? Sure, the sticker might be fake, but you know what house much more likely doesn't have a security system? The one next door (or maybe one more over) that has no sticker - fake or real.</p>
+
+<p>The lesson that I took from that isn't that security should be faked, but rather that its a game. To win, you'll need luck and skill, but most importantly you'll need an understanding of the stakes. The truth is that I work under the assumption that a hacker could hack the systems that I write. The first implication is that the most critical pieces of information, like a user's password, is always stored using a <strong>slow</strong> 1-way hash with a unique salt - something like bcrypt or scrypt works quite well. I understand the difference between <a href="http://en.wikipedia.org/wiki/Authentication#Authentication_vs._authorization">authentication and authorization</a>, and I don't write stupid SQL code which allows for injection attacks.</p>
+
+<p>Next you need to look at your system, your data and try to figure out what value it has to a hacker. I can't build an impregnable system, but I don't have to. My goal is to make breaking into my systems more effort than its worth. In fact, my system's security is enhanced by every other insecure system out there - I'm relying on the house without the sticker.</p>
+
+<p>The same day that we rolled out <a href="http://mogade.com">mogade.com</a> and <strong>no one</strong> knew about it, we noticed a bunch of fake account creations. Hours from the site going live, some bot was hitting the login script. I don't know what it was trying to do (and I would like to find out, because it might help me build a better system), but we decided to add a simple captcha. Since mogade.com is targeted at game developers, we ask the question <code>Mario and _ _ _ _ _</code>. This is essentially what Jeff Atwood <a href="http://www.codinghorror.com/blog/2008/03/captcha-is-dead-long-live-captcha.html">did on his blog</a> for the longest time. No more fake logins. I look forward to the day where we need to invest more time on better authentication security, because it'll mean we are worth more hassle (and please, don't make that today just to prove a point).</p>
+
+<p>(Out of interest, we accept more than <code>Luigi</code>, though that's the only answer anyone has supplied yet. We accept Luigi, Yoshi, Bowser, Toad and Peach).</p>
+
+<p>We also noticed a bunch of hits to random paths. I don't remember exactly what, but they were clearly configuration files for popular apps, like phpmyadmin. I spent some time going through <a href="https://calomel.org/nginx.html">this great post on nginx security</a> and also added explicit rules to fail quickly:</p>
+
+<pre class="brush:text">
+location ~*\.inc {
+  add_header "Not Found" 404;
+}
+location ~*\.php {
+  add_header "Not Found" 404;
+}
+</pre>
+
+<p>Its really basic stuff. Barely worth calling security. However, since the &quot;attacks&quot; were so frequent, I can only assume that they sometimes work. By being ahead of the pack in comparison to similar systems you make your system not worth the bother. Its a game, in some cases with very serious stakes. Unless you understand the worth compromising your system has, you'll either spend too much or too little time focusing on security.</p>

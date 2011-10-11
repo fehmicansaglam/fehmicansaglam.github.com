@@ -1,0 +1,48 @@
+---
+layout: post
+title: "Microsoft's WebMatrix - Why You Aren't Going To Use It"
+disqus_id: 24
+---
+<p>Its hard to tell exactly who WebMatrix, Microsoft's new lightweight web programming framework, is for. Official documentation paints broad strokes, insisting its for <em>developers, students, or just about anyone who just wants a small and simple way to build Web sites.</em> While Microsoft employees are more conservative and seem to indicate that its targeted at amateurs - going so far as to suggest people like my <em>wife, nephew, dad</em> might be interested.</p>
+
+<p>The truth is that, WebMatrix isn't suitable, by a long shot, for either audience. And, its worth pointing out before people get defensive, that this isn't a limitation of the beta, but with the fundamental goals and scope of the product.</p>
+
+<p>You see, WebMatrix is such a simple tool that you can hardly achieve anything [without delving into the bowels of .NET and C#]. What WebMatrix does have going for it is database support which admittedly buys you a lot. But even the simplest database driven website is going to need one or two additional features - sha1 hashes, image manipulation (thumbnails maybe?), downloading a remote page, xml manipulation, regular expressions, or hundreds of other possibilities.</p>
+
+<p>WebMatrix's simplicity means it isn't suited for the vast majority of sites, and for the few that it is, I guarantee that there's a better, cheaper, faster and more mature alternative (WordPress, SquareSpace, Joomla, etc). <strong>You'd be a real jerk to recommend WebMatrix to your dad over WordPress.</strong></p>
+
+<p>Nonetheless, I decided to find out for myself whether or not WebMatrix fulfills the need that a very small website might have. It just so happens that I recently built a single page website for my neighbour's <a href="http://builtbyben.ca">handy man business</a>. This is a static HTML website which relies on a jQuery plugin to interact with Google's PicasaWeb API. If this isn't the type of stuff WebMatrix is meant for, than I just don't get it.</p>
+
+<p>I decided to focus on the only really interesting part - pulling and displaying the thumbnail images from PicasaWeb's RSS feed (because everything else is just HTML). Here's what the PHP version ended up looking like:</p>
+
+<pre class="brush: text">
+$xml = simplexml_load_file('http://picasaweb.google.com/data/feed/base/user/114741487348646937381/albumid/5494564502704076449?kind=photo');
+foreach ($xml->entry as $entry) 
+{ 
+  $media = $entry->children('http://search.yahoo.com/mrss/');
+  $thumbnail = $media->group->thumbnail[1];
+  echo '<img src="' . $thumbnail->attributes()->{'url'} . '" />';
+}
+</pre>
+   
+<p>And the WebMatrix vesion:</p>
+
+<pre class="brush: c#">
+@using System.Xml
+@{        
+ var xml = new XmlDocument();
+ xml.Load("http://picasaweb.google.com/data/feed/base/user/114741487348646937381/albumid/5494564502704076449?kind=photo"); 
+ var nsmgr = new XmlNamespaceManager(xml.NameTable); 
+ nsmgr.AddNamespace("media", "http://search.yahoo.com/mrss/");    
+ foreach(XmlNode node in xml.SelectNodes("//media:thumbnail", nsmgr))
+ {        
+   Response.Write(string.Format("<img src=\"{0}\" />", node.Attributes["url"].Value));
+ }    
+}
+</pre>
+
+<p>The WebMatrix version is more complicated; and before anyone criticizes the variable name <em>nsmgr</em>, thats from msdn. Its actually downright impossible for the people WebMatrix is supposedly for. (in fairness, the php version is only marginally better, but PHP doesn't claim to be what WebMatrix does and it was easier to figure out how to do this in PHP than WebMatrix)</p>
+
+<p>The worst part about this WebMatrix story is how easy it is to correct. Just add a ton of methods, the way PHP has. Sure, the Twitter helper is neat, but there's too many data and social feeds for WebMatrix to build 1 specific helper rather than more generic helpers. But Microsoft says that isn't going to happen.</p>
+
+<p>I'll tell you what will happen, no one in their right mind is going to use it. Sooner or later Microsoft will realize that they've positioned WebMatrix in a way that it can only fail. They'll notice that their forum is full of questions for which the answer is a complex block of C# code. They'll accept that they built a tool for an audience that doesn't exist. Until then, you're either going to need something more powerful (even so slightly), or you're using a considerably better, thought out, simple and more mature solution.</p>
