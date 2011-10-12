@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ page.title }}</title>
+    <link href="http://fonts.googleapis.com/css?family=Chivo" rel="stylesheet" type="text/css">
+    <link href="/assets/css/quote.css" rel="stylesheet" type="text/css">
+  </head>
+  <body{% if page.theme %} class="{{ page.theme }}"{% endif %}>
+    <a href="/" id="home">home</a>
+    <div id="quote"> {{ content }}</div>
+  </body>
+</html>
+
