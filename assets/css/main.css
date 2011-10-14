@@ -21,7 +21,8 @@ li{list-style:none;}
 #site, #header{width:95%;margin:0 auto;}
 #header{height:100px;margin-bottom:2px;position:relative;}
 #title{font-size:2.5em;position:absolute;top:10px;left:100px;}
-#title span{display:none;}
+#title a{color:#000;text-decoration:none;}
+#title a:hover{color:#777;}
 #rss{float:right;position:relative;top:10px;}
 #content{margin-left:175px;position:relative;}
 #post h1{margin-bottom:20px;}
