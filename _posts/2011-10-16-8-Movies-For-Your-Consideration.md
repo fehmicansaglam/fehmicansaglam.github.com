@@ -3,7 +3,7 @@ layout: post
 title: "8 Movies For Your Consideration"
 ---
  
-Here's just a list of movies, I think, are worth watching. These aren't necessarily my favorite movies, but I tried to stay away from anything too mainstream.
+Here's a list of movies, I think, are worth watching. These aren't necessarily my favorite movies, but I tried to stay away from anything too mainstream.
 
 ### Ink
 I've talked-up Ink a lot in the past. It's a low budget ($250K) science fiction/fantasy movie. Of all the movies on the list, this probably has the most amateur acting, but they still do a great job. The appeal with the movie is both the simple yet effective special effects, and the solid story. <http://en.wikipedia.org/wiki/Ink_(film)>
@@ -31,5 +31,5 @@ I think I liked this movie more than most. I'm a pretty big Harrelson fan, and t
 
 
 ### Two Movies That Didn't Make The List
-[Primer](http://en.wikipedia.org/wiki/Primer_(film)) and [Moon](http://en.wikipedia.org/wiki/Moon_(film)) are probably two movies people would expect to see in a list like this. There's no doubt that they are good, non mainstream movies made on a budget, but neither movie really did it for me.
+Primer and Moon are probably two movies people would expect to see in a list like this. There's no doubt that they are good, non mainstream movies made on a budget, but neither movie really did it for me.
 
