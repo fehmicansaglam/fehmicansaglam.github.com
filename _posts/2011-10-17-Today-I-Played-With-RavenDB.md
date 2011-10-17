@@ -3,7 +3,7 @@ layout: post
 title: "Today I Played With RavenDB"
 ---
 
-Today I decided to spend some time and get familiar with [RavenDB](http://ravendb.net/). RavenDB is a document database for .NET. Now, I'm a MonoDB user and I've made contributions to the project, so it wouldn't be unreasonable to call me biased. However, it also means that I know a thing or two about document databases and what's available out there for developers.
+Today I decided to spend some time and get familiar with [RavenDB](http://ravendb.net/). RavenDB is a document database for .NET. Now, I'm a MongoDB user and I've made contributions to the project, so it wouldn't be unreasonable to call me biased. However, it also means that I know a thing or two about document databases and what's available out there for developers.
 
 There are three non-technical aspects of RavenDB which are, each individually, a show stopper for me. First, it's .NET only, second, it's windows-only and third it requires a license for commercial use. Even when I was doing .NET development, I was pretty vocal against SQL Server for its similar limitations (and it isn't even .NET only). I just can't understand paying and locking yourself in when free and, at the very least, as-good solutions are available. But, I will say that, having no idea what the cost of RavenDB was, I was slightly put at ease with it's $600 price tag.
 
