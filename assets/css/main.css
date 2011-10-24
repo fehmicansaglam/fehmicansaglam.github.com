@@ -25,6 +25,7 @@ li{list-style:none;}
 #title a:hover{color:#777;}
 #rss{float:right;position:relative;top:10px;}
 #content{margin-left:175px;position:relative;}
+#content p{font-size:18px;line-height:26px;}
 #post #date{margin-bottom:20px;font-style:italic;font-size:80%;color:#444;}
 
 #left{padding:20px;width:125px;float:left;color:#fff;}
