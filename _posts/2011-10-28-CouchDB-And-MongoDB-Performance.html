@@ -22,14 +22,14 @@ Benchmark.bm do |x|
       if i % 2 == 0
         scores.insert({:appid => app_ids.sample, :points => rand(100000), :dated => Time.now - rand(100000), :user => i.to_s}, {:safe => true, :fsync => true})
       else
-        scores.find({:appid => app_ids.sample}).sort([:points, :descending]).limit(20).skip(rand(20)).explain()
+        scores.find({:appid => app_ids.sample}).sort([:points, :descending]).limit(20).skip(rand(20)).to_a
       end
     end
   end
 end
 
     user     system      total        real
-3.150000   0.390000   3.540000 (  7.955844)</pre>
+6.600000   1.040000   7.640000 ( 12.290563)</pre>
 
 
 <p>The CouchDB code:</p>
