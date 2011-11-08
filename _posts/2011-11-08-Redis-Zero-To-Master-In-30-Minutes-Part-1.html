@@ -92,6 +92,8 @@ ZRANGEBYSCORE friends:leto 500 1000
 <pre class="brush: ruby">keys = redis.keys("ranks:daily:*:201108*")
 redis.del(*keys)</pre>
 
+<p><strong>Note: They <code>keys</code> command linearly goes through all your keys finding matches. It's slow and the documents suggest you only use it for debugging ande development purposes</strong></p>
+
 <h2>Other Things You Should Know</h2>
 <p>Redis is easy to setup and maintain. Data is persisted to disk in a single file, which can be backed up simply by copying. It's driven by a straightforward <a href="https://raw.github.com/antirez/redis/2.2/redis.conf">configuration file</a>.</p>
 
