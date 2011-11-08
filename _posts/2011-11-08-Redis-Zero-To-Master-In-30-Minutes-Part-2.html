@@ -42,19 +42,7 @@ end</pre>
   end
 end</pre>
 
-<p>Now we have another problem. What happens if we've already stored the job? We do want to store any new details, but we don't want to re-add it to our sorted set (if any details of the job changed, like location, it'll add a duplicate). Again, no big deal: </p>
-
-<pre class="brush: ruby">def save(job)
-  key = "job:#{job[:source]}:#{job[:source_id]}"
-  if redis.exists(key)
-    redis.set(key, job.to_json)
-  else
-    redis.multi do
-      redis.set(key, job.to_json)
-      redis.zadd('jobs', job[:created_at], key) 
-    end
-  end
-end</pre>
+<p>What happens if we've already stored the job? It turns out that this isn't a problem. We can simply re-set the our main job String (incase any of the job details have changed) and, since we are using a set, can re-add the key to our set.</p>
 
 <p>We'll come back to this in a bit, but for now, this is a good start.</p>
 
@@ -98,14 +86,12 @@ end
 
 <pre class="brush: ruby">def save(job)
   key = "job:#{job[:source]}:#{job[:source_id]}"
-  if redis.exists(key)
+  if !redis.exists(key) 
+    redis.rpush('jobs:new', key)
+  end
+  redis.multi do
     redis.set(key, job.to_json)
-  else
-    redis.multi do
-      redis.set(key, job.to_json)
-      redis.zadd('jobs', job[:created_at], key) 
-      redis.rpush('jobs:new', key) # &lt;-- we added this
-    end
+    redis.zadd('jobs', job[:created_at], key) 
   end
 end</pre>
 
