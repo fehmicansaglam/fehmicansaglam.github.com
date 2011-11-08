@@ -24,7 +24,7 @@ about us</pre>
 <p>There's a lot more you can do with Strings, both because of the other available commands (like <code>INCR</code> or <code>GETRANGE</code>, to name a few) and because we can store more than just a number of a string. For example, we could use the String structure to store users. The key could be their email, and the value a serialized user object.</p>
 
 <h3>Hashes</h3>
-<p>The hash data structure is exactly what you are thinking it is. One way to look at it is that it give you one extra layer on top of simple Strings, which is, of course, a field name. So, we don't just get and set a hash value. Instead, we get and set the value of a field for a hash:</p>
+<p>The hash data structure is exactly what you are thinking it is (a hash/dictionary). Rather than manipulating a key directly (like with a String) you manipulate the fields of a key. So, we don't just get and set a hash value. Instead, we get and set the value of a field for a hash:</p>
 
 <pre class="brush: plain">HSET goku power 9001
 HGET goku power
@@ -39,7 +39,7 @@ HSET users:goku power 9001</pre>
 <p>The difference comes down to how you're going to manipulate and query it. If you need control over individual fields, and you don't want to pull the whole object into your app, use a hash. Otherwise, a String is probably what you want.</p>
 
 <h3>Lists</h3>
-<p>Lists let you associate an array of values to a single key. You can insert, append, pop, push, trim and so on. Redis doesn't support secondary indexes. You can only access data by its key. Lists are often used to fill this void (though that certainly isn't their only use):</p>
+<p>Lists let you associate an array of values to a single key. In fact, you can (and should) think of them as dynamic arrays. You can insert, append, pop, push, trim and so on. Redis doesn't support secondary indexes. You can only access data by its key. Lists are often used to fill this void (though that certainly isn't their only use):</p>
 
 <pre class="brush: ruby">length = redis.lpush('users:newest', 'user:goku')
 if length > 100
@@ -69,7 +69,7 @@ SINTER friends:leto friends:paul
 </pre>
 
 <h3>Sorted Sets</h3>
-<p>It's wrong to call one structure more powerful than the others, since they all tend to serve fairly distinct needs, but sorted sets are pretty awesome. If a hash is like a string with an extra field layer, than a sorted set is like a set with an extra score value. In other words, when you add a value to a sorted set, you also specify the score as a number. This determines the order of the value within the set. Building on on previous example, we could add a weight to our data:</p>
+<p>It's wrong to call one structure more powerful than the others, since they all tend to serve fairly distinct needs, but sorted sets are pretty awesome. A sorted set is similar to a set, except each value is associated (and sorted by) a score field. In other words, when you add a value to a sorted set, you also specify the score as a number. This determines the order of the value within the set. Building on on previous example, we could add a weight to our data:</p>
 
 <pre class="brush: plain">ZADD friends:leto 1000 ghanima
 ZADD friends:leto 994 duncan
