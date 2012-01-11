@@ -2,11 +2,11 @@
 layout: default
 ---
 
-<div id="post">
+<article>
  <h1>{{ page.title | xml_escape }}</h1>
  <div id="date">{{ page.date | date_to_string }}</div>
 {{ content }}
-</div>
+</article>
 
 <div class="section">
   <div id="disqus_thread"></div> 

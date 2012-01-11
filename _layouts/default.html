@@ -2,25 +2,32 @@
 <html>
   <head>
     <title>{{ page.title }}</title>
-    <link href="/assets/css/main.css" rel="stylesheet" type="text/css">
+    <meta name="description" content="code, write, think" />
+    <link href="/assets/css/main.css" rel="stylesheet" />
     <link href="//feeds.feedburner.com/KarlSeguinsBlog" rel="alternate" type="application/atom+xml" />
-    <link href="/assets/css/shcore.css" rel="stylesheet" type="text/css" />
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js" type="text/javascript"></script>
-    <script src="/assets/js/shCore.js" type="text/javascript"></script>
+    <link href="/assets/css/shcore.css" rel="stylesheet" />
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js"></script>
+    <script src="/assets/js/shCore.js"></script>
+    <!--[if lt IE 9]>
+    <script>
+      var e = ['article','header','nav'];
+      for (var i = 0; i < e.length; i++) { document.createElement(e[i]); }
+    </script>
+    <![endif]-->
   </head>
   <body>
-    <div id="header">
+    <header>
       <div id="title"><a href="/">Hello.</a></div>
       <a href="//feeds.feedburner.com/KarlSeguinsBlog"><img id="rss" src="/assets/i/rss.png" width="32" height="32" alt="rss" /></a>
-    </div>
+    </header>
      <div id="site">
-        <div id="left">
+        <nav>
           <p><a href="/about.html">about</a></p>
           <p><a href="//github.com/karlseguin">on github</a></p>
           <p><a href="//twitter.com/karlseguin">at twitter</a></p>
           <p><a href="mailto:karl@openmymind.net">via email</a></p>
           {% if page.url != '/index.html' %}<p><a href="/">home</a></p>{% endif %}
-        </div>
+        </nav>
         <div id="content"> {{ content }}</div>
      </div>
   </body>

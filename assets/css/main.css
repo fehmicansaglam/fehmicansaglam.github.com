@@ -7,10 +7,15 @@ p{margin:0 0 25px 0;line-height:24px;}
 code{background: #f6f6f6; border: 1px solid #eee; font-size: 0.95em; font-family:menlo,consolas,'courier new';padding: 2px;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;}
 a{color:#004A7F;}
 a:hover{color:#c35617;}
-
-#left a {text-decoration:none;border:1px solid #f0f0f0;background:#f6f6f6;padding:5px;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;line-height:30px;}
-#left a:hover{background:#e6e6e6;border:1px solid #ccc;}
+header{height:100px;margin-bottom:2px;position:relative;width:95%;margin:0 auto;display:block;}
+header #title{font-size:2.5em;position:absolute;top:10px;left:100px;font-weight:normal;}
+header a{color:#000;text-decoration:none;}
+header a:hover{color:#777;}
+nav{padding:20px;width:125px;float:left;color:#fff;display:block;}
+nav a {text-decoration:none;border:1px solid #f0f0f0;background:#f6f6f6;padding:5px;-moz-border-radius:4px;-webkit-border-radius:4px;border-radius:4px;line-height:30px;}
+nav a:hover{background:#e6e6e6;border:1px solid #ccc;}
 li{list-style:none;}
+
 .posts li span{display:inline-block;width:125px;float:left;padding:15px 0;}
 .posts li a{display:block;padding:15px;}
 
@@ -18,14 +23,10 @@ li{list-style:none;}
 #about li a{display:inline;}
 #about li a:hover{background:none;}
 
-#site, #header{width:95%;margin:0 auto;}
-#header{height:100px;margin-bottom:2px;position:relative;}
-#title{font-size:2.5em;position:absolute;top:10px;left:100px;}
-#title a{color:#000;text-decoration:none;}
-#title a:hover{color:#777;}
+#site{width:95%;margin:0 auto;}
 #rss{float:right;position:relative;top:10px;}
 #content{margin-left:175px;position:relative;}
 #content p{font-size:18px;line-height:26px;}
-#post #date{margin-bottom:20px;font-style:italic;font-size:80%;color:#444;}
+article #date{margin-bottom:20px;font-style:italic;font-size:80%;color:#444;display:block;}
 
-#left{padding:20px;width:125px;float:left;color:#fff;}
+
