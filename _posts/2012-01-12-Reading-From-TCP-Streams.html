@@ -3,7 +3,7 @@ layout: post
 title: "Reading from TCP streams"
 ---
 
-<p>Over the last couple days I wrote a Redis <a href="https://github.com/karlseguin/redispy-web">monitoring tools</a> which leveraged a <a href="https://github.com/karlseguin/redispy">redis monitoring stream parser</a> I also wrote. They aren't particularly complicated or even useful projects, but it did involve writing I've written a number of times before: TCP stream parsing.</p>
+<p>Over the last couple days I wrote a Redis <a href="https://github.com/karlseguin/redispy-web">monitoring tools</a> which leveraged a <a href="https://github.com/karlseguin/redispy">redis monitoring stream parser</a> I also wrote. They aren't particularly complicated or even useful projects, but it did involve writing code I've written a number of times before: TCP stream parsing.</p>
 
 <p>You see, the first time most people read data from a TCP stream they probably try to read (or write) it like a file. So they think that if the other end outputs 3 writes, than they'll need to do 3 reads. Unfortunately, when you are doing local development, that's probably going to be true. It's unfortunate because it doesn't mirror what happens in the real world.</p>
 
