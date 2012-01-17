@@ -3,9 +3,9 @@ layout: post
 title: "Refactoring Common API Functionality Into A Node.js Proxy"
 ---
 
-<p>The handful of web services that I maintain all share common functionality. For example, at the start of each request, they load an account based on some key (in the query string or the message body). They also ensure that a request is valid by validating the provided sha1 signature. They handle versioning and do logging. It's almost the exact same thing from project to project, but not all of these projects is written in the same language so traditional re-use (dll, gem, package) isn't the best solution.</p>
+<p>The handful of web services that I maintain all share common functionality. For example, at the start of each request, they load an account based on some key (in the query string or the message body). They also ensure that a request is valid by validating the provided sha1 signature. They handle versioning and do logging. It's almost the exact same thing from project to project, but not all of these projects are written in the same language so traditional re-use (dll, gem, package) isn't the best solution.</p>
 
-<p>This weekend I wrote <a href="https://github.com/karlseguin/aproxi">aproxi</a> which is a simple node.js proxy built on <a href="https://github.com/senchalabs/connect/">connect</a>. Connect is a middleware layer like ruby's rack or .NET's OWIN. The idea behind this project is to have it sit between a webserver, say nginx, and the application and provide all of this common functionality.</p>
+<p>This weekend I wrote <a href="https://github.com/karlseguin/aproxi">aproxi</a> which is a simple node.js proxy built on <a href="https://github.com/senchalabs/connect/">connect</a>. Connect is a middleware layer like ruby's rack or .NET's OWIN. The idea behind this project is to have it sit between a webserver, say nginx, and the application (which could be written in anything) and provide all of this common functionality.</p>
 
 <p>There are a couple hosted services that do this, like apigee and mashery. I think those are wonderful services, but I also think having something more custom for your applications can be beneficial (for example, I don't think either of them support method signing).<p>
 
@@ -20,6 +20,7 @@ appLoader =  ->
 
     key = if request.method == 'GET' || request.method == 'DELETE' then request.query['key'] else request.body['key']
     return invalid(response) unless key?
+
     store.findOne 'apps', {_id: key}, {fields: {secret: true}}, (err, app) =>
       return invalid(response) if err? || !app?
       request._app = app
@@ -70,6 +71,6 @@ module.exports = proxy
 
 <p>The node.js documentation describes the <a href="http://nodejs.org/docs/latest/api/http.html">http object</a>, but the code is fairly simple. We open a request to the application server, write out the body, and any data we receive we stream back out to the requesting client (which in our case would be nginx).</p>
 
-<p>One question you might have is why do we still need nginx? Well nginx provides a ton of reliable and fast modules. In theory we could get rid of it, but then we'd have to handle ssl, caching, blacklisting, throttling and so on. Also, all of this is stuff that we could write as an nxing module (or using varnish VCL) but the ease and power of node.js is unsurpassed. It would be ideal if nginx would embed V8 so that modules could be written in JavaScript, but that <a href="http://translate.google.com/translate?js=n&prev=_t&hl=en&ie=UTF-8&layout=2&eotf=1&sl=ru&tl=en&u=http://sysoev.ru/prog/v8.html">doesn't seem like it'll happen</a> any day soon.</p>
+<p>One question you might have is why do we still need nginx? Well nginx provides a ton of reliable and fast modules. In theory we could get rid of it, but then we'd have to handle ssl, caching, blacklisting, throttling and so on. Conversely we could write all of this as nxing modules (or using varnish VCL) but the ease and power of node.js is unsurpassed. It would be ideal if nginx would embed V8 so that modules could be written in JavaScript, but that <a href="http://translate.google.com/translate?js=n&prev=_t&hl=en&ie=UTF-8&layout=2&eotf=1&sl=ru&tl=en&u=http://sysoev.ru/prog/v8.html">doesn't seem like it'll happen</a> any day soon.</p>
 
-<p>I'm actually quite excited by this project. It is somewhat configurable, but the goal isn't really so that other people can use it as-is. It's so that I can use it as-is. But, if you build APIs and you find yourself writing similar code over and over again, hopefully this project will give you some ideas and possibly act as a launching pad for your own custom proxy.</p>
+<p>I'm actually quite excited by this project. It is somewhat configurable, but the goal isn't really for  other people to use it. It's so that I can use it. But, if you build APIs and you find yourself writing similar code over and over again, hopefully this project will give you some ideas and possibly act as a launching pad for your own custom proxy.</p>
