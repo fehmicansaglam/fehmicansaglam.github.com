@@ -1,4 +1,4 @@
-The is the data for my blog, <http://opemymind.net>. It is hosted on <https://github.com> using [jekyll](https://github.com/mojombo/jekyll).
+The is the data for my blog, <http://openmymind.net>. It is hosted on <https://github.com> using [jekyll](https://github.com/mojombo/jekyll).
 
 ### License
 The content within _posts is Copyright Karl Seguin. You may not reuse anything therein without my permission.
