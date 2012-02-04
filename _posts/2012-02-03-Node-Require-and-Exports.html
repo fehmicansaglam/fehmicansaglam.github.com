@@ -12,7 +12,7 @@ var x = 5;
 var addX = function(value) {
   return value + x;
 };
-</pre> 
+</pre>
 
 <p>Another file cannot access the <code>x</code> variable or <code>addX</code> function. This has nothing to do with the use of the <code>var</code> keyword. Rather, the fundamental Node building block is called a <em>module</em> which maps directly to a file. So we could say that the above file corresponds to a module named <code>file1</code> and everything within that module (or any module) is private.</p>
 
@@ -32,7 +32,7 @@ var addX = function(value) {
 };
 module.exports.x = x;
 module.exports.addX = addX;
-</pre> 
+</pre>
 
 <p>Now we can use our loaded module:</p>
 
@@ -49,12 +49,12 @@ var User = new function(name, email) {
   this.email = email;
 };
 module.exports = User;
-</pre> 
+</pre>
 
 <p>The difference is subtle by important. See it? We are exporting <code>user</code> directly, without any indirection. The difference between: </p>
 
 <pre class="brush: js">
-module.exports.user = User;
+module.exports.User = User;
 //vs
 module.exports = User;
 </pre>
