@@ -1,12 +1,8 @@
 ---
 layout: default
 ---
-<div id="title">
-  <a href="/" id="home">home</a>
-  <h1>{{ page.title  | xml_escape }}</h1>
-</div>
+<div id="title"><a href="/" id="home">home</a><h1>{{ page.title  | xml_escape }}</h1></div>
 <article>{{ content }}</article>
-
 <div id="comments" class="section">
   <div id="disqus_thread"></div> 
   <a href="http://disqus.com" class="dsq-brlink attribution">blog comments powered by <span class="logo-disqus">Disqus</span></a>
