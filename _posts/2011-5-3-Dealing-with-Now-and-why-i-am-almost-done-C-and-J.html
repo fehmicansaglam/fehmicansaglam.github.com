@@ -5,7 +5,7 @@ disqus_id: 87
 ---
 <p>It's a common scenario to have to use the current time within code. A good example is timestamping an audit trail. As part of your code to create an <code>Audit</code> object, you might do something like:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 var audit = new Audit
 {
 	UserName = user.Name,
@@ -16,7 +16,7 @@ var audit = new Audit
 
 <p>The problem with the above code is that it's hard to test. Personally, I think testing that the proper time is used for your audit record is important. Depending on what field you're in, your lawyers might think so too. However, if we wrote a very specific test, we might be in for a surprise. Can you spot the problem?</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 public void ItSetsTheAuditTimeToRightNow()
 {
 	var audit = CreateAuditItem(new User{Name = "Leto"});

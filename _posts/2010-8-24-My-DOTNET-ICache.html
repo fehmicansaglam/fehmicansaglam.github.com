@@ -11,7 +11,7 @@ disqus_id: 31
 
 <p>First, the interface:</p>
 
-<pre class="brush:c#">
+<pre data-language="generic">
 using System;
 using System.Web.Caching;
 
@@ -51,7 +51,7 @@ public interface ICache
 
 <p>Next we beef up the <code>System.Web.Caching.Cache</code> class with extension methods so that it can do what we need it to:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 using System;
 using System.Web.Caching;
 
@@ -238,7 +238,7 @@ public static class CacheExtensions
 
 <p>Now we wrap the actual <code>System.Web.Caching.Cache</code> class in a wrapper which implements our interface:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 using System;
 using System.Web;
 using System.Web.Caching;
@@ -343,7 +343,7 @@ public sealed class InMemoryCache : ICache
 
 <p>Finally, we need a no-cache solution. This is useful in a number of cases, such as development, and easy testing - when testing, you often don't even need a mock, you just want to circumvent the cache mechanism:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 using System;
 using System.Web.Caching;
 
@@ -440,7 +440,7 @@ public class NoCache : ICache
 
 <p>That's it. Here's how you might use it in a test. You can greatly clean up the constraints by encapsulating that in a custom constraint - but I don't want to make it too easy for you.</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 [Fact]
   public void GetsTheUserFromTheCache()
   {

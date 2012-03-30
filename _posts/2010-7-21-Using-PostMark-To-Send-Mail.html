@@ -11,7 +11,7 @@ disqus_id: 22
 
 <p>This is where PostMark comes in. With their simple API we're able to send off email - so far so good. But their bounce API is where things get really interested. We chose to use their callback (or hook) capability. Essentially, whenever PostMark fails to deliver a message, they hit our server (address is specified by us in their web interface and uses basic authentication) and pass the relevant information. Here's what our rails code looks like to handle this callback:</p>
 
-<pre class="brush: ruby;"> 
+<pre data-language="ruby"> 
 def bounce
    user = User.find_by_field(:email, params[:Email])
    user.invalid_email unless user == nil
@@ -27,7 +27,7 @@ end
 
 
 <p>For the curious, since we are using nginx as our webserver, here's what our location confirguration looks like for this specific URL (to enable basic authentication):</p>
-<pre class="brush: text;">
+<pre data-language="generic">
 location /users/bounce {
    auth_basic "auth";
    auth_basic_user_file "htpasswd";

@@ -17,14 +17,14 @@ h2{margin-bottom:0;font-size:20px;}
 
 <p>Assuming we've parsed our job into a hash, saving it into Redis will look something like:</p>
 
-<pre class="brush: ruby">def save(job)
+<pre data-language="ruby">def save(job)
   key = "job:#{job[:source]}:#{job[:source_id]}"
   redis.set(key, job.to_json)
 end</pre>
 
 <p>Now, we simply want to display the jobs in reverse chronological order. We don't even do paging, we just display the last X jobs. We can't do that with the above code. We need keys to be sorted by date. My first attempt was to simply use a list, like we saw in part 1:</p>
 
-<pre class="brush: ruby">def save(job)
+<pre data-language="ruby">def save(job)
   key = "job:#{job[:source]}:#{job[:source_id]}"
   redis.multi do  #begins a transaction
     redis.set(key, job.to_json)
@@ -34,7 +34,7 @@ end</pre>
 
 <p>But that doesn't really work because the time at which we insert a job into Redis doesn't necessarily map to when the job was posted. Using this approach jobs are sorted by date we process them, rather than we the jobs are posted. The solution? Use a sorted set instead of a list:</p>
 
-<pre class="brush: ruby">def save(job)
+<pre data-language="ruby">def save(job)
   key = "job:#{job[:source]}:#{job[:source_id]}"
   redis.multi do
     redis.set(key, job.to_json)
@@ -49,7 +49,7 @@ end</pre>
 <h2>Listing Jobs</h2>
 <p>We not only have the details of each job saved, but also a sorted list of job keys. From this, getting the jobs for display isn't difficult:</p>
 
-<pre class="brush: ruby">def get_latest_jobs
+<pre data-language="ruby">def get_latest_jobs
   keys = redis.zrevrange('jobs', 0, 150)
   jobs = redis.mget(*keys)
   jobs.map do |j| 
@@ -68,7 +68,7 @@ end</pre>
 <h2>Cleaning Jobs</h2>
 <p>Since we only display the latest 150 jobs, there's no reason to keep a bunch of stale jobs around. Memory is money after all. What we want to do is grab stale jobs, delete the keys and remove them from our jobs sorted set. Let's look at the whole thing in one step:</p>
 
-<pre class="brush: ruby">redis.multi do
+<pre data-language="ruby">redis.multi do
   keys = redis.zrange('jobs', 0, -300)
   redis.del(*keys)
   redis.zrem('jobs', *keys)
@@ -84,7 +84,7 @@ end
 
 <p>When we have a new job, we'll add the key to a list. So, saving a job now looks like:</p>
 
-<pre class="brush: ruby">def save(job)
+<pre data-language="ruby">def save(job)
   key = "job:#{job[:source]}:#{job[:source_id]}"
   if !redis.exists(key) 
     redis.rpush('jobs:new', key)
@@ -98,7 +98,7 @@ end</pre>
 
 <p>We can then run a background task to <code>pop</code> jobs off and tweet them:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 def get_new_job
   key = redis.lpop('jobs:new')
   key ? JSON.parse(redis.get(key)) : nil

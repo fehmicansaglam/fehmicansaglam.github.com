@@ -13,7 +13,7 @@ disqus_id: 89
 <h3>Saving a score</h3>
 <p>Data in version 1 of mogade is modeled much like you'd expect to see using a traditional approach. Essentially, a player's score is stored in a <code>scores</code> collection. The collection contains the leaderboard's id, player's name, a unique identifier for the player (think device id + name), the date the score was achieved, and how many points the player got:</p>
 
-<pre class="brush: text">
+<pre data-language="generic">
 |	lid	|	name	|	unique			|	date				|	points	|
 |	1	|	leto	|	device-1-leto	|	2011/04/11 10:32	|	100000	|
 |	1	|	paul	|	device-1-paul	|	2011/04/12 09:22	|	200000	|
@@ -44,7 +44,7 @@ disqus_id: 89
 <h3>New ranking, attempt 1</h3>
 <p>The truly interesting changes though were done to address our ranking problem. The goal is to make the performance less dependent on the number of scores in a leaderboard. The first approach I toyed with was to try to store denormalized ranks in their own collection. Forgetting the multiple scopes and leaderboards for the time being, I was thinking something like:</p>
 
-<pre class="brush: text">
+<pre data-language="generic">
 |	points	|	rank	|		count	|
 |	100000	|	5233	|		2		|
 |	200000	|	2088	|		1		|
@@ -60,7 +60,7 @@ disqus_id: 89
 
 <p>It turns out that sorted sets are a core Redis data structure. How do they work? You give Redis a key, a score and a value, and it provides all types of efficient and simple ranking methods. Our key would be the leaderboard id, the scope, and the scope+leaderboard start time. Something like <code>3234_daily_201105072000</code> (that's May 7th 2011, at 8PM).  Any daily scores we get for leaderboard id <code>3234</code> for the given timeframe can be added to this ordered set:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 Redis.zadd("3234_daily_201105072000", 1000000, "device1-leto")
 Redis.zadd("3234_daily_201105072000", 200000, "device1-paul")
 Redis.zadd("3234_daily_201105072000", 300000, "device-2-jess")
@@ -70,7 +70,7 @@ Redis.zadd("3234_daily_201105072000", 300000, "device-2-jess")
 
 <p>Getting a rank is also done by member, so we don't have to go to our new <code>high_scores</code> collection to first get a player's top scores:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 Redis.zrevrank("3234_daily_201105072000", "device1-paul")  # gives us 1 (it's 0 based)
 </pre>
 

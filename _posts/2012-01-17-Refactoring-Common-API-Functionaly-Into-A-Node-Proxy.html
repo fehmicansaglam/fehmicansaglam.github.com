@@ -11,7 +11,7 @@ title: "Refactoring Common API Functionality Into A Node.js Proxy"
 
 <p>Let's look at the most basic example, ensure that they API key we received truly belongs to a valid account:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 store = require('./../store')
 appLoader =  ->
   appLoader = (request, response, next) ->
@@ -39,7 +39,7 @@ module.exports = appLoader
 
 <p>Once all middlewares have passed we use node's http package to proxy our request to the application server. This is our final middleware:</p>
 
-<pre class="brush: csharp">
+<pre data-language="generic">
 http = require('http')
 
 proxy = (config) ->

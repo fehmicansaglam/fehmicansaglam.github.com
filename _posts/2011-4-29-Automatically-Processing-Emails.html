@@ -9,7 +9,7 @@ disqus_id: 86
 
 <p>There are two pieces to this puzzle. The first is <a href="https://github.com/titanous/mailman">Mailman</a>, which is a dead simple mail processing microframework. For my simple case, all I really need to do was:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 Mailman::Application.run do
 	to '%user%@blah.com' do
 		parts = params[:user].split('-', 2)
@@ -25,7 +25,7 @@ end
 
 <p>But how do we actually get our emails? Mailman supports different types of receivers, but the simplest to use is POP3 with a Google Apps account configured with a catch-all email. I'm not going to go over how to setup a Google Apps account. However, once you do have it set up, we simply add the following code before our previous example:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 Mailman.config.poll_interval = 30 # check the pop3 server every 30 seconds
 Mailman.config.ignore_stdin = true
 

@@ -33,7 +33,7 @@ title: "A MongoDB Guy Learns CouchDB"
 
 <h3>Querying</h3>
 <p>Here's where things start getting interesting. Anyone who's used a RDBMS will find MongoDB's approach to querying familiar. It all revolves around the <code>find</code> command and typical indexes. For example, even if you've never seen MongoDB, you can probably understand this code: </p>
-<pre class="brush:js">&gt; db.posts.createIndex({tags: 1, dated:1})
+<pre data-language="javascript">&gt; db.posts.createIndex({tags: 1, dated:1})
 &gt; var cursor = db.posts.find({tags: 'nosql'}).skip(10).limit(10).sorted({dated:1})
 &gt; cursor.count()
 20
@@ -45,7 +45,7 @@ title: "A MongoDB Guy Learns CouchDB"
   
 <p>CouchDB takes a different approach. You can only query against views (and preferably predefined viewed), which are built using MapReduce. So, to get a page of posts containing the tag 'nosql', we first define a view:</p>
 
-<pre class="brush:js"> //our simple view doesn't have a reduce phase, just a map phase
+<pre data-language="javascript"> //our simple view doesn't have a reduce phase, just a map phase
 function(doc) {
   if (doc.doc_type != 'post') { return; }
   for(var tag in doc.tags) {
@@ -55,7 +55,7 @@ function(doc) {
 
 <p>Next we can query the view (shown using python):</p>
 
-<pre class="brush:js">
+<pre data-language="javascript">
 for doc in db.view('application/post_by_tags', startkey=["nosql"], endkey=["nosql", {}], limit=10, skip=10, include_docs=True):
   print doc</pre>
 
@@ -63,7 +63,7 @@ for doc in db.view('application/post_by_tags', startkey=["nosql"], endkey=["nosq
 
 <p>If you don't know MapReduce, it's something that you should learn. What our map function is doing is creating a view that looks like:</p>
 
-<pre class="brush:js">[
+<pre data-language="javascript">[
   {key: ['nosql', '2011-09-01']}, value: {_id: doc1_id},
   {key: ['couchdb', '2011-09-01']}, value: {_id: doc1_id},
   {key: ['nosql', '2011-09-02']}, value: {_id: doc2_id},

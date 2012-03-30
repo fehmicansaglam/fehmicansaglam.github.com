@@ -8,7 +8,6 @@ a{text-decoration:none;color:#444;}
 #attribution{font-style:italic;color:#888;text-align:right;}
 #attribution:before{content:'-';}
 
-
 body.dark{background:#222;color:#fff;}
 body.dark #home{background:#444;color:#ccc;}
 body.dark #home:hover;{background:#666;}

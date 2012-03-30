@@ -1,35 +1,19 @@
 ---
 layout: default
-css: shcore
-js: shCore
-page.js:
 ---
+<div id="title">
+  <a href="/" id="home">home</a>
+  <h1>{{ page.title  | xml_escape }}</h1>
+</div>
+<article>{{ content }}</article>
 
-<article>
- <h1>{{ page.title | xml_escape }}</h1>
- <div id="date">{{ page.date | date_to_string }}</div>
-{{ content }}
-</article>
-
-<div class="section">
+<div id="comments" class="section">
   <div id="disqus_thread"></div> 
   <a href="http://disqus.com" class="dsq-brlink attribution">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
 
 <script type="text/javascript">
 $(document).ready(function() {
-  SyntaxHighlighter.defaults['wrap-lines'] = false;
-  SyntaxHighlighter.defaults['toolbar'] = false;
-  SyntaxHighlighter.autoloader(
-    'c# csharp  /assets/js/shBrushCSharp.js',
-    'css  /assets/js/shBrushCss.js',
-    'js  /assets/js/shBrushJScript.js',
-    'plain text  /assets/js/shBrushPlain.js',
-    'ruby rails  /assets/js/shBrushRuby.js',
-    'xml html xhtml  /assets/js/shBrushXml.js'
-  );
-  SyntaxHighlighter.all();
-});
 {% if page.disqus_id %}
 var disqus_identifier = {{ page.disqus_id }};
 {% else %}

@@ -7,7 +7,7 @@ disqus_id: 13
 
 <p>I don't really understand how it happens, but everything in ruby is an object. You might think that everything in C# is a object, but that's only because you haven't seen ruby. What do I mean by that? Well, an instance is actually a class (or, more correctly if I properly understand ruby lingo, a metaclass), so you can actually go ahead and add methods to a specific instance, like so:</p>
 
-<pre class="brush: ruby;">
+<pre data-language="ruby">
 goku = Object.new
 class &lt;&lt; goku
    def power_level
@@ -18,7 +18,7 @@ end
 
 <p>And then, when you execute <code>goku.power_level</code>, you'll see <em>it's over 9000</em>. BUT, if you then do:</p>
 
-<pre class="brush: ruby;">
+<pre data-language="ruby">
 vegeta = Object.new
 vegeta.power_level
 </pre>
@@ -31,7 +31,7 @@ vegeta.power_level
 
 <p>So, when you do something like:</p>
 
-<pre class="brush: ruby;">
+<pre data-language="ruby">
 class User
    def change_status(new_status)
       ...
@@ -46,7 +46,7 @@ end
 
 <p>Now, you can actually put this all together and do something like:
 
-<pre class="brush: ruby;">
+<pre data-language="ruby">
 class User
    def change_status(new_status)
       ...

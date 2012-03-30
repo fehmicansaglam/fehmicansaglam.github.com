@@ -11,7 +11,7 @@ disqus_id: 35
 
 <p>With that out of the way, I wanted a simple approach which would avoid redundant count calls. I didn't want to implement any fancy caching logic. Instead I wanted to leverage the natural client-side caching that happens until the user clicks refresh or navigates somewhere else - a particularly ideal solution when you use ajax for your paging. Here's what my jQuery plugin ended up looking like:</p>
 
-<pre class="brush: js">
+<pre data-language="javascript">
 (function($) 
 {
   $.fn.pagedList = function(options) 
@@ -79,7 +79,7 @@ $.fn.pagedList.defaults =
 </pre>
 
 <p>Calling the plugin is pretty simple, give the following html:</p>
-<pre class="brush: html">
+<pre data-language="html">
 &lt;table id=&quot;myList&quot;&gt;
    &lt;thead&gt;...&lt;/thead&gt;
    &lt;tbody&gt;&lt;/tbody&gt;
@@ -89,7 +89,7 @@ $.fn.pagedList.defaults =
 
 <p>You would use the following javascript:</p>
 
-<pre class="brush: js">
+<pre data-language="javascript">
 $('#myList tbody').pagedList(
    {
       listUrl: 'results/list', 

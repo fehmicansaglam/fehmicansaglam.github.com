@@ -17,7 +17,7 @@ disqus_id: 59
 
 <p>We also noticed a bunch of hits to random paths. I don't remember exactly what, but they were clearly configuration files for popular apps, like phpmyadmin. I spent some time going through <a href="https://calomel.org/nginx.html">this great post on nginx security</a> and also added explicit rules to fail quickly:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 location ~*\.inc {
   add_header "Not Found" 404;
 }

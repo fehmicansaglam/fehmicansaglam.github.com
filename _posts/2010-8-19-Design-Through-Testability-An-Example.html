@@ -7,7 +7,7 @@ disqus_id: 30
 
 <p>First, the context. I have a need to query a data source (could be a database, an LDAP provider, a web service, or anything, it doesn't really matter) to get employee information based on an id. Since employee information doesn't change frequently and, despite what people try to tell you, performance is a feature, we also want to cache the data. Here's what our initial attempt might look like:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 public interface IEmployeeLookup
 {
    Employee Find(string id);
@@ -45,7 +45,7 @@ public class EmployeeLookup : IEmployeeLookup
 
 <p>The problem is that, as is, we can't test the caching aspect of our method without worrying about hitting the actual data source. Despite how simple our code looks, its actually violating a basic concept: the single responsibility principle. The <code>Find</code> method is actually responsible for two, very different, things: caching and getting the data. I maintain that this design flaw isn't obvious until you consider how you might test it (or, you know, actually do test it). Lets see if our second attempt can solve this:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 public class EmployeeLookup : IEmployeeLookup
 {
    public virtual Employee Find(string id)
@@ -82,7 +82,7 @@ public sealed class CachedEmployeeLookup : EmployeeLookup
 
 <p>As it turns out, our second attempt, doesn't actually solve anything. Its actually swapped out a violation of single responsibility principle for tight coupling - which isn't any easier to test. Inheritance, while a useful tool, will always result in tight coupling. However, it is a step in the right direction. Instead of relying on inheritance, we'll leveraging its underused cousin <em>composition</em>:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 public class EmployeeLookup : IEmployeeLookup
 {
    public Employee Find(string id)
@@ -120,7 +120,7 @@ public class CachedEmployeeLookup : IEmployeeLookup
 
 <p>If you are new to composition, take a minute and make sure you really understand the code. Instead of having <code>CachedEmployeeLookup</code> inherit from <code>EmployeeLookup</code>, we are going to inject the dependency. Take note of how testable the <strong>caching</strong> behavior has become:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 [Fact]
 public void CachesTheEmployeeFromTheStoreWhenTheEmployeeIsNotAlreadyCached()
 {

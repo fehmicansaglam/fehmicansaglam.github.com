@@ -10,7 +10,7 @@ title: "Understanding CoffeeScript Comprehensions"
 
 <p>In CoffeeScript, if you want to loop through an array, you use <code>for in</code>. To loop through hashes/objects you use <code>for of</code>. For example:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
   heroes = ['leto', 'duncan', 'goku']
 
   for hero in heroes
@@ -36,7 +36,7 @@ title: "Understanding CoffeeScript Comprehensions"
 
 <p>Now, that's pretty basic and understandable. I understood the syntax around comprehensions when I recognized the similarities to statement modifiers. Statement modifiers are a neat and useful way in CoffeeScript and in Ruby to execute an <code>if</code> (or <code>unless</code>) statement.</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
   # instead of
   if x == 0
     x = 1
@@ -49,7 +49,7 @@ title: "Understanding CoffeeScript Comprehensions"
 
 <p>Being familiar with this type of syntactical trick, we can go back to our loops fancy them up:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
   heroes = ['leto', 'duncan', 'goku']
 
   console.log(hero) for hero in heroes
@@ -65,7 +65,7 @@ title: "Understanding CoffeeScript Comprehensions"
 
 <p>Comprehensions allows for conditions via <code>when</code>, so we do:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
   heroes = ['leto', 'duncan', 'goku']
 
   # boring
@@ -82,7 +82,7 @@ title: "Understanding CoffeeScript Comprehensions"
 
 <p>There are other things you can do with compressions. For example, you won't always want to execute some code (like <code>console.log</code>) on each item. Instead you might want to select or map the results into another variable:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
   evenHeroes = (hero for hero, index in heroes when index % 2 == 0)
 </pre>
 

@@ -8,7 +8,7 @@ title: "I Just Don't Like Object Mappers"
 
 <p>Even for simple stuff, I find it heavy. Say you are letting people vote on something, I just rather write code that explicitly does (via some hard-coded SQL):</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
   update answers set votes = votes + 1 where id = @id
 </pre>
 

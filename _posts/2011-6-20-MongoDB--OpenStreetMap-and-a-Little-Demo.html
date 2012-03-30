@@ -15,7 +15,7 @@ disqus_id: 92
 
 <p>I also extracted the data for each city and made it available, so that you can play with it yourself. It's available at <a href="http://data.mongly.com/">data.mongly.com</a> (you can read about OpenStreetMap's licensing <a href="http://wiki.openstreetmap.org/wiki/Legal_FAQ">here</a>). The data is meant to be easily imported into mongodb using its mongoimport command. Download a city, extract it, and do the following:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 mongoimport -d pots -c tags PATH_TO_TAGS.json
 mongoimport -d pots -c nodes PATH_TO_COUNTRY.json
 </pre>

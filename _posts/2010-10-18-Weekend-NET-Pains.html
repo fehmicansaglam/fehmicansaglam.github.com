@@ -11,7 +11,7 @@ disqus_id: 47
 
 <p>For the purpose of this post, forget about reloading on changes - all I really want is a configuration class, driven by a file using a non-shitty format, and for the whole thing to easily allow me to test. Here's my configuration file:</p>
 
-<pre class="brush:text">{
+<pre data-language="generic">{
   &quot;LdapConfiguration&quot;:
    {
       &quot;Url&quot;: &quot;LDAP://someserver&quot;,
@@ -28,7 +28,7 @@ disqus_id: 47
 
 <p>Now, remember, one of the points is that I want to be able to change these configuration settings on the fly for testing. For example, I want to test that my code properly handles a failure connecting to the LDAP server (and not in some half-assed mock way either). So I decide on the following approach for my configuration (and this may very well be where I made a fundamental design mistake):</p>
 
-<pre class="brush:c#">public class Configuration
+<pre data-language="generic">public class Configuration
 {
    private static Data _data = return new JsonConverter().FromFile&lt;Data&gt;(Runtime.ApplicationRoot + &quot;settings.json&quot;);;
 
@@ -53,7 +53,7 @@ disqus_id: 47
 
 <p>Essentially, my singleton Configuration class will be composed of a configuration object for each service. Here's what a specific configuration looks like:</p>
 
-<pre class="brush:c#">public interface ILdapConfiguration
+<pre data-language="generic">public interface ILdapConfiguration
 {
    string Url { get; }      
    string UserName { get; }
@@ -70,7 +70,7 @@ public class LdapConfiguration : ILdapConfiguration
 
 <p>Why do all of that? Because it lets me inject the appropriate configuration settings into code using a DI framework:</p>
 
-<pre class="brush:c#">Bind&lt;LdapConfiguration&gt;().ToConstant(Configuration.LdapConfiguration); //ninject binding</pre>
+<pre data-language="generic">Bind&lt;LdapConfiguration&gt;().ToConstant(Configuration.LdapConfiguration); //ninject binding</pre>
 
 <p>So, if that's all there was to it, I'd probably sigh and be on my way. But it isn't. My JsonConverter is a facade over JSON.NET. Guess what? It wouldn't deserialize my json into the appropriate object. This is the part that got frustrating.</p>
 
@@ -78,7 +78,7 @@ public class LdapConfiguration : ILdapConfiguration
 
 <p>Here's what the code started as:</p>
 
-<pre class="brush:c#">public T FromFile&lt;T&gt;(string path)
+<pre data-language="generic">public T FromFile&lt;T&gt;(string path)
 {
    return FromJson&lt;T&gt;(System.IO.File.ReadAllText(path));
 }
@@ -90,7 +90,7 @@ public T FromJson&lt;T&gt;(string json)
 
 <p>The first problem? JSON.NET doesn't like my private constructor. I can't say I agree with that decision, but the JSON.NET library has to make a decision and one way or another people won't be happy with the choice. Thankfully its pretty easy to override the default behavior:</p>
 
-<pre class="brush:c#">public T FromJson&lt;T&gt;(string json)
+<pre data-language="generic">public T FromJson&lt;T&gt;(string json)
 {
    var settings = new JsonSerializerSettings
    {
@@ -101,7 +101,7 @@ public T FromJson&lt;T&gt;(string json)
 
 <p>Next? It doesn't like the internal settings on my properties. Another setting:</p>
 
-<pre class="brush:c#">var settings = new JsonSerializerSettings
+<pre data-language="generic">var settings = new JsonSerializerSettings
 {
    ConstructorHandling = ConstructorHandling.AllowNonPublicDefaultConstructor,
    ContractResolver = new DefaultContractResolver { DefaultMembersSearchFlags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy },
@@ -112,7 +112,7 @@ public T FromJson&lt;T&gt;(string json)
 
 <p>With those problems solved, its now having a hard time deserializing my interfaces. I don't blame it..how the heck is it supposed to know that LdapConfiguration should be used whenever ILdapConfiguration  is specified? So we have to add some converters. I came up with a simple utility class to do this:</p>
 
-<pre class="brush:c#">public T FromJson&lt;T&gt;(string json)
+<pre data-language="generic">public T FromJson&lt;T&gt;(string json)
 {
    var settings = new JsonSerializerSettings
    {
@@ -145,7 +145,7 @@ internal class InterfaceConverter&lt;To, From&gt; : Newtonsoft.Json.JsonConverte
 
 <p>Do you wanna see my Ruby version?</p>
 
-<pre class="brush:ruby">class Settings
+<pre data-language="ruby">class Settings
   @@settings = YAML::load_file(Rails.root + 'config/config.yml')[Rails.env]
     
   class MissingSettingOptionError &lt; StandardError;
@@ -160,7 +160,7 @@ end</pre>
 
 <p>That's it. Sure I'm leaning a little heavily on method_missing, but there's nothing stopping you from creating a more explicit interface:</p>
 
-<pre class="brush:ruby">class Settings
+<pre data-language="ruby">class Settings
   ...
   def self.LdapUrl
     @@settings['ldap']['url']

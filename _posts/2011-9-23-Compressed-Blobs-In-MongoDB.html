@@ -16,7 +16,7 @@ disqus_id: 103
 
 <h4>Initial Design</h4>
 <p>Without a blob, a MongoWatch document would look something like:</p>
-<pre class="brush: javascript">
+<pre data-language="javascript">
 {account: 1231232, server: 'linode1', latest: 'Sep 23 2011', data: [
   {virtual: 1887, mapped: 849, uptime: 8179298, hit: 100, date: 'Sep 20 2011'},
   {virtual: 1888, mapped: 849, uptime: 8092898, hit: 100, date: 'Sep 21 2011' },
@@ -29,7 +29,7 @@ disqus_id: 103
 
 <h4>Blobbing It</h4>
 <p>I can look at the above document, match it to my needs, and tell you that I'll never need to query or individually access any of the fields within <code>data</code>. So why not look at storing it as a single compressed blob? I'll take more about the approach that I took, but for now, the end result is a document that looks something like :</p>
-<pre class="brush: javascript">
+<pre data-language="javascript">
 {account: 1231232, server: 'linode1', latest: 'Sep 23 2011', data: [
   BinData(0,"iad42ZXJzaW9upTEuOC4wpnVwdGltZc4Ae3z"),
   BinData(0,"ia23d2ZXJzaW9upTEuOC5apnVwdG3ltZc4Ae3z"),
@@ -39,7 +39,7 @@ disqus_id: 103
 </pre>
 
 <p>There's no point spending time talking about numbers since the type and size of data you are dealing with is going to have a huge impact on what algorithm, if any, is best. I can tell you that for the "real" project I intend to use this on, the data will vary greatly. The approach I'm leaning towards is to run some analysis (possibly just length) on the input, and pick an algorithm based on that. Short data might remain uncompressed while medium-to-large data might use <a href="http://code.google.com/p/snappy/">Google's Snappy</a>. With this type of hybrid approach, I'll add a compression type to each document so I know how to decompress it on the way out: </p>
-<pre class="brush: javascript">
+<pre data-language="javascript">
 {account: 1231232, server: 'linode1', latest: 'Sep 23 2011', data: [
   {type: 1, data: BinData(0,"iad42ZXJzaW9upTEuOC4wpnVwdGltZc4Ae3z")},
   {type: 1, data: BinData(0,"iad42ZXJzaW9upTEuOC4wpnVwdGltZc4Ae3z")},
