@@ -9,7 +9,7 @@ disqus_id: 65
 
 <p>Essentially, given the following raw data:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 game_id | date
 1         Jan 20 2010 4:30
 1         Jan 20 2010 5:30
@@ -25,7 +25,7 @@ game_id | date
 
 <p>We'd expect the following output:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 game_id | year | month | day | count
 1         2010   1       20    3
 2         2010   1       20    1
@@ -40,7 +40,7 @@ game_id | year | month | day | count
 
 <p>It's possible for map to emit 0 or more times. We'll always make it emit once (which is a common). Imagine map as looping through each object in <code>hits</code> (we can apply a filter to only map-reduce over some objects, but thats besides the point). For each object we want to emit a key with <code>game_id</code>, <code>year</code>, <code>month</code> and <code>day</code>, and a simple value of 1:</p>
 
-<pre class="brush:js">
+<pre data-language="javascript">
 function() 
 {
 	var key = {game_id: this.game_id, year: this.date.getFullYear(), month: this.date.getMonth(), day: this.date.getDate()};
@@ -50,7 +50,7 @@ function()
 
 <p>Map reduce in mongodb is written in JavaScript, and <code>this</code> refers to the current object being inspected. Hopefully what'll help make this all clear for you is to see what the output of the mapping step is. Using our above data, the complete output would be:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 {game_id: 1, year: 2010, month: 0, day: 20} =&gt; [{count: 1}, {count: 1}, {count:1}]
 {game_id: 2, year: 2010, month: 0, day: 20} =&gt; [{count: 1}]
 {game_id: 2, year: 2010, month: 0, day: 21} =&gt; [{count: 1}, {count: 1}, {count:1}]
@@ -62,7 +62,7 @@ function()
 
 <p>Let's change our map function in some contrived way:</p>
 
-<pre class="brush:js">
+<pre data-language="javascript">
 function() 
 {
 	var key = {game_id: this.game_id, year: this.date.getFullYear(), month: this.date.getMonth(), day: this.date.getDate()};
@@ -80,13 +80,13 @@ function()
 
 <p>Then the first intermediary output would change to:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 {game_id: 1, year: 2010, month: 0, day: 20} =&gt; [{count: 5}, {count: 1}, {count:1}]
 </pre>
 
 <p>Now, the reduce function takes each of these intermediary results and outputs a final result. Here's what ours looks like:</p>
 
-<pre class="brush:js">
+<pre data-language="javascript">
 function(key, values) 
 {
    var sum = 0;
@@ -100,7 +100,7 @@ function(key, values)
 
 <p>The final output from this is:
 
-<pre class="brush:text">
+<pre data-language="generic">
 {game_id: 1, year: 2010, month: 0, day: 20} =&gt; {count: 3}
 {game_id: 2, year: 2010, month: 0, day: 20} =&gt; {count: 1}
 {game_id: 2, year: 2010, month: 0, day: 21} =&gt; {count: 3}
@@ -110,7 +110,7 @@ function(key, values)
 
 <p>Technically, the output in MongoDB is: </p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 _id: {game_id: 1, year: 2010, month: 0, day: 20}, value: {count: 3}
 </pre>
 
@@ -118,12 +118,12 @@ _id: {game_id: 1, year: 2010, month: 0, day: 20}, value: {count: 3}
 
 <p>If you've really been paying attention, you might be asking yourself: <em>Why didn't we simply use <code>sum = values.length</code>?</em>. This would seem like an efficient approach when you are essentially summing an array of 1s. The fact is that reduce isn't always called with a full and perfect set of intermediate date. For example, instead of being called with:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 {game_id: 1, year: 2010, month: 0, day: 20} =&gt; [{count: 1}, {count: 1}, {count:1}]
 </pre>
 
 Reduce could be called with:
-<pre class="brush:text">
+<pre data-language="generic">
 {game_id: 1, year: 2010, month: 0, day: 20} =&gt; [{count: 1}, {count: 1}]
 {game_id: 1, year: 2010, month: 0, day: 20} =&gt; [{count: 2}, {count: 1}]
 </pre>
@@ -138,7 +138,7 @@ Reduce could be called with:
 
 <p>To deal with this MongoDB limitation we can leverage one of its great feature: upserts. The problem we have is that if we run this transform multiple times per day the key may or may not already exist in <code>daily_hits</code>. I've done this in SQL server in the past, and the end result is always executing an <code>UPDATE</code> for existing values and <code>INSERT</code> for new ones (typically requiring a join/subselect on the destination table to see if the key does or does not exist). Here's what the ruby code looks like: </p>
 
-<pre class="brush:ruby">
+<pre data-language="ruby">
 #map and reduce are strings containing our above methods, blah!
 db['hits'].map_reduce(map, reduce).find.each do |row|
   key = {:game_id => row['_id']['game_id'], :year => row['_id']['year'], :month => row['_id']['month'], :day => row['_id']['day']}
@@ -152,7 +152,7 @@ end
 
 <p>For completeness, we need to either delete the processed rows or flag them (and use the flag to filter them) so that when we rerun the transformation we don't double our results. This can actually be a bit tricky since new hits might have come in during our processing which we can't simply delete/mark as processed.  A simple approach is to run the query against X year old records only. So our map reduce now looks like:</p>
 
-<pre class="brush:ruby">
+<pre data-language="ruby">
 limit = 5.minutes.ago
 db['hits'].map_reduce(map, reduce, {:query => {:date => {'$lte' => limit}, 'processed' => {'$exists' => false}}}).find.each do |row| 
   key = {:game_id => row['_id']['game_id'], :year => row['_id']['year'], :month => row['_id']['month'], :day => row['_id']['day']}

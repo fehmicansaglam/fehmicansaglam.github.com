@@ -25,7 +25,7 @@ h2{margin-bottom:0;}
 
 <h3>A First Attempt</h3>
 <p>Our first approach might be to store our data like so:</p>
-<pre class="brush:js">
+<pre data-language="javascript">
 db.users.find()
   {_id: 'Gurney', friends: ['Leto', 'Paul', 'Duncan', 'Jessica', 'Glossu']}
   ...
@@ -44,11 +44,11 @@ db.scores.find()
 <p>With this model, saving scores is simple. We just need to figure out how to display our results. It turns out that, at scale, there isn't a great way to do that. The two most likely solutions, I see, are to either do some type of aggregation (GROUP BY in SQL, Map Reduce in MongoDB) or hit the database multiple times (linear to the number of levels we are showing). Neither of which work particularly well with a lot of levels, a lot of friends, or with a sharded architecture.<p>
 
 <p>Saving a score is fast and easy:</p>
-<pre class="brush:js">// do this as an upsert, 500 is the new score
+<pre data-language="javascript">// do this as an upsert, 500 is the new score
 db.scores.update({user: 'Paul', level: 4, score: {$lt: 500}}, {$set: {score: 500}}, true)</pre>
 
 <p>Getting scores, not so much:</p>
-<pre class="brush:js">var m = function() {
+<pre data-language="javascript">var m = function() {
   emit(this.level, {user: this.user, score: this.score})
 }
 
@@ -65,10 +65,10 @@ db.scores.mapReduce(m, r, {query: {user: {$in: friendsList}}, out: {inline: 1}})
 <h3>A Better Approach</h3>
 <p>Rather than looking at your data and wondering how to query it, consider thinking about an ideal query and figuring out how to model it. Our idea query would be:</p>
 
-<pre class="brush:js">db.scores.find({user: 'Gurney'})</pre>
+<pre data-language="javascript">db.scores.find({user: 'Gurney'})</pre>
 
 <p>This query is simple, it requires a single index on <code>user</code> and it can scale (we'd shard on <code>user</code>). In order to work, a score document would need to look like: </p> 
-<pre class="brush:js">
+<pre data-language="javascript">
 db.scores.find()
  {_id: ObjectId("..."), level: 1, score: 500, user: 'Gurney', best: {user: Leto, score: 900}},
   ...
@@ -76,7 +76,7 @@ db.scores.find()
 
 <p>To reach this state, whenever a user scores a new personal best, we potentially have to update anyone who has that user as a friend:</p>
 
-<pre class="brush:js">// same as before
+<pre data-language="javascript">// same as before
 db.scores.update({user: 'Paul', level: 4, score: {$lt: 500}}, {$set: {score: 500}}, true)
 
 // n returns the number of updated scores

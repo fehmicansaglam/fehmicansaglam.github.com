@@ -11,7 +11,7 @@ disqus_id: 68
 
 <p>Before we can look at testing best practices, we need to lay down a basic foundation. If this is a newish topic for you, you might have noticed a lot of acronyms, competing ideas and approaches. My own experience says that if you start writing tests today you'll steadily progress to writing effective tests. The journey from learning to mastering is a critical learning process, which you couldn't avoid if you wanted to (regardless of a fancy acronym someone gave a phase). For the rest of this chapter we'll talk about <strong>unit tests</strong>. Unit tests assert the most atomic aspects of your system, be it technical details or behavioral expectations. Unit tests leverage testing framework - our C# examples will use <a href="http://www.nunit.org/">NUnit</a>, our Ruby examples will use <a href="http://rspec.info/">RSpec</a> and our JavaScript will use <a href="http://docs.jquery.com/Qunit">QUnit</a>. Let's look at our first example:</p>
 
-<pre class="brush:ruby">#ruby
+<pre data-language="ruby">#ruby
 class User
     def self.passwordIsValid(password, confirmation)
         return false if password.nil? || password != confirmation
@@ -25,7 +25,7 @@ end
 
 <p>When I look at the above method, which validates that a password is 8 or more characters long and matches a confirmation, I see the opportunity for 4 tests:</p>
 
-<pre class="brush:c#">[Test] //C#
+<pre data-language="generic">[Test] //C#
 public void PasswordIsInvalidWhenBlank() 
 {
     Assert.IsFalse(User.passwordIsValid(null, "confirmation"), "Password cannot be false");
@@ -57,7 +57,7 @@ public void PasswordIsValidWhenItMatchesTheConfirmationAndMeetsTheMinimumLength(
 
 <p>Let's take a step back from the stubs and mocks we wrote for Ruby and JavaScript back in Chapter 3 and build our knowledge from the ground up. I've read a handful of explanations on <em>Mocks vs Stubs</em> and to me it still isn't very clear. I see the two as being similar, with mocks being smarter and mostly about asserting expectations as opposed to stubs which are dumb and used to just get code executing properly. As we write more tests the distinction will hopefully become clearer. For now, let's go back to an example we introduced a few chapters back:</p>
 
-<pre class="brush:c#">public class UserRepository : IUserRepository
+<pre data-language="generic">public class UserRepository : IUserRepository
 {
     private IDataStore _store;
     private IEncryption _encryption;
@@ -89,7 +89,7 @@ public void PasswordIsValidWhenItMatchesTheConfirmationAndMeetsTheMinimumLength(
 
 <p>We could, if we were truly stubborn, write our own mock objects:</p>
 
-<pre class="brush:c#">public class FakeDataStore : IDataStore
+<pre data-language="generic">public class FakeDataStore : IDataStore
 {
     public User OnNextCallReturn{get;set;}
     public User FindOneByNamedQuery(string name, object parameters)
@@ -101,7 +101,7 @@ public void PasswordIsValidWhenItMatchesTheConfirmationAndMeetsTheMinimumLength(
 
 <p>Which we could then use in a test, like:</p>
 
-<pre class="brush:c#">[Test]
+<pre data-language="generic">[Test]
 public void ReturnsNullIfTheUserIsntFoundInTheStore() 
 {
     var store = new FakeDataStore{OnNextCallReturn = null};
@@ -116,7 +116,7 @@ public void ReturnsNullIfTheUserIsntFoundInTheStore()
 
 <p>Mocking frameworks are powerful tools in your testing arsenal. Admittedly, they can be a little tricky to  get used to so we'll try to go over them at a reasonable pace. The purpose behind mocking frameworks is to, in a manner of speaking, automate the creation of our <code>FakeDataStore</code> above as well as enhance how our tests interacts with it.  We'll look at an example and work backwards from there. Using a mocking framework, our above test could be rewritten, without the need for our <code>FakeDataStore</code>:</p>
 
-<pre class="brush:c#">[Test] //using Moq in C#
+<pre data-language="generic">[Test] //using Moq in C#
 public void ReturnsNullIfTheUserIsntFoundInTheStore() 
 {
     var store = A.Fake&lt;IDataStore&gt;();

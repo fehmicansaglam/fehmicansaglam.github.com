@@ -9,7 +9,7 @@ disqus_id: 40
 
 <p>Armed with a decent excuse to try and built my own, this is what I came up with:</p>
 
-<pre class="brush: js">
+<pre data-language="javascript">
 $.qext = 
 {
   reset: function()
@@ -85,7 +85,7 @@ $.post = $.qext.ajax.post;
 
 <p>We essentially redirect the <code>$.post</code> method to our stub <code>$.qext.ajax.post</code> method. We could obviously do the same for the <code>$.get</code> or <code>$.ajax</code> methods. Our stub looks through the recorded expected calls, and if found executes the callback with the specified response. You would setup the whole thing like:</p>
 
-<pre class="brush: js">
+<pre data-language="javascript">
 QUnit.testStart = function (name) 
 {
   $.qext.reset();

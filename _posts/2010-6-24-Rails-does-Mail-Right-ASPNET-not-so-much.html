@@ -9,7 +9,7 @@ to doubt the way I've been sending emails in ASP.NET, because, in comparison, I 
 
 <p>I don't know about everyone else, but the way I've been going about emails in ASP.NET is something like:</p>
 
-<pre class="brush: csharp;">
+<pre data-language="generic">
 public interface IMailSender
 {
   void SendConfirmation(string name, string email, string activationCode);
@@ -74,7 +74,7 @@ public sealed class MailSender : IMailSender
 
 <p>This requires a template called activation.html to be placed in Configuration.ResourcePath + &quot;emails\&quot;, that might look like:</p>
 
-<pre class="brush: html;">
+<pre data-language="html">
 Account Activation &lt;-- first line is hacked to the subject--&gt;
 
 &lt;p&gt;Hi #NAME#,&lt;/p&gt;
@@ -91,7 +91,7 @@ Account Activation &lt;-- first line is hacked to the subject--&gt;
 
 MVC infrastructure. Here's an example:</p>
 
-<pre class="brush: ruby;">
+<pre data-language="ruby">
 class Notifier &lt; ActionMailer::Base
   default :from =&gt; Configuration.email_from
   
@@ -105,7 +105,7 @@ end
 
 <p>We can then write a view, like any other controller view (in app/views/notifier/active_account.html.erb), that looks like</p>
 
-<pre class="brush: csharp;">
+<pre data-language="generic">
 &lt;p&gt;Hi &lt;%=user.name%&gt;,&lt;/p&gt;
 
 &lt;p&gt;To activate your account click this: &lt;a href=&quot;&lt;%=activation_link%&gt;&quot;&gt;&lt;%=activation_link%&gt;&lt;/a&gt;&lt;/p&gt;
@@ -116,7 +116,7 @@ end
 
 <p>For completeness, the email could be sent via:</p>
 
-<pre class="brush: ruby;">
+<pre data-language="ruby">
 Notifier.activate_account(user).deliver
 </pre>
 

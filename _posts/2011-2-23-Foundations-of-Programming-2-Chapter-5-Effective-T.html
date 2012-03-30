@@ -31,7 +31,7 @@ disqus_id: 72
  
 <p>I have a quick way to tell whether a test is doing too much: when I name the test, am I tempted to use the word <em>and</em> or <em>or</em>? If we combined two of our tests from chapter 4 into a single one, such as:</p> 
  
-<pre class="brush:ruby">it "should be invalid when the password is blank or it doesn't match the confirmation" do
+<pre data-language="ruby">it "should be invalid when the password is blank or it doesn't match the confirmation" do
   ...
 end
 </pre> 
@@ -52,7 +52,7 @@ end
  
 <p>This test will give us 100% coverage, but doesn't actually do anything (and this isn't just about missing assertions, code can easily be <em>covered</em> and asserting in a meaningless way)</p> 
  
-<pre class="brush:c#">public static int Add(int a, int b)
+<pre data-language="generic">public static int Add(int a, int b)
 {
   return a + b;
 }
@@ -79,7 +79,7 @@ is that they let you focus on behaviors without having to worry about implementa
  
 <p>Unfortunately, people go overboard. They rely too heavily on mocks and focus too much on the integration of their components. It's probably the exact opposite of what you've been told, but mock objects can actually increase the coupling within your tests and with it their brittleness. Let's look at an example method:</p> 
  
-<pre class="brush:c#">public User FindByEmail(string email)
+<pre data-language="generic">public User FindByEmail(string email)
 {
     var user = _store.FindOneByNamedQuery("FindByEmail", new {email = email});
     return user != null &amp;&amp; user.Status == UserStatus.Active ? user : null;
@@ -88,7 +88,7 @@ is that they let you focus on behaviors without having to worry about implementa
  
 <p>Something we'll want to test is that <code>null</code> is returned if the user's <code>Status</code> isn't <code>Active</code>:</p> 
  
-<pre class="brush:c#">[Test]
+<pre data-language="generic">[Test]
 public void ReturnsNullWhenTheUserIsntActive()
 {
     var store = A.Fake&lt;IDataStore&gt;();
@@ -102,7 +102,7 @@ public void ReturnsNullWhenTheUserIsntActive()
  
 <p>There are two alternatives approaches to the above test. First, most mocking frameworks can behave more like stubs (dumb mocks). So we could rewrite our above expectation as:</p> 
  
-<pre class="brush:c#">    A.CallTo(() =&gt; store.FindoneByNamedQuery(null, null)).WithAnyArguments().Returns(new User{Status = UserStatus.Disabled});
+<pre data-language="generic">    A.CallTo(() =&gt; store.FindoneByNamedQuery(null, null)).WithAnyArguments().Returns(new User{Status = UserStatus.Disabled});
  
     //or, even better:
     Any.CallTo(store).WithReturnType&lt;User&gt;().Returns(new User{Status = UserStatus.Disabled});
@@ -112,7 +112,7 @@ public void ReturnsNullWhenTheUserIsntActive()
  
 <p>The second approach is to rely on the real implementation. Given a proper setup, our test can be turned into to:</p> 
  
-<pre class="brush:c#">[Test]
+<pre data-language="generic">[Test]
 public void ReturnsNullWhenTheUserIsntActive()
 {
   var user = new UserRepository(new SqlDataStore()).FindByEmail("invaliduser@email.com");
@@ -128,7 +128,7 @@ public void ReturnsNullWhenTheUserIsntActive()
  
 <p>Let's go back to an old example and test it using what we just learnt. First, the method:</p> 
  
-<pre class="brush:c#">public User FindByCredentials(string username, string password)
+<pre data-language="generic">public User FindByCredentials(string username, string password)
 {
     var user = _store.FindOneByNamedQuery("FindUserByUserName", new {username = username});
     if (user == null) { return null; }
@@ -138,7 +138,7 @@ public void ReturnsNullWhenTheUserIsntActive()
  
 <p>First we'll verify the behavior:</p> 
  
-<pre class="brush:c#">[Test]
+<pre data-language="generic">[Test]
 public void ReturnsNullWhenTheUserDoesntExist()
 {
   var store = A.Fake&lt;IDataStore&gt;();
@@ -181,7 +181,7 @@ public void ReturnTheValidUser()
  
 <p>Next we'll write tests to specifically verity that our class properly interacts with it's dependencies:</p> 
  
-<pre class="brush:c#">[Test]
+<pre data-language="generic">[Test]
 public void LoadsTheUserFromTheDataStore()
 {
   var store = A.Fake&lt;IDataStore&gt;();
@@ -221,7 +221,7 @@ new UserRepository(store, encryption).FindByCredentials("a", "b");
  
 <p>One of the tests we just wrote made such as an assumption, here it is again:</p> 
  
-<pre class="brush:c#">[Test]
+<pre data-language="generic">[Test]
 public void ReturnTheValidUser()
 {
   var store = A.Fake&lt;IDataStore&gt;();

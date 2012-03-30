@@ -13,7 +13,7 @@ disqus_id: 93
 
 <p>Let's look at an example. Let's say that we want to build a service that tracks all the buy requests for a stock market. We then want to make this data available based on a given symbol and a date range. In a relational, or document world (again, these two are really similar), we'd do something like:</p>
 
-<pre class="brush: text">
+<pre data-language="generic">
 |   symbol   |   date  |   amount    |   volume  |  more data |
 </pre>
 
@@ -29,7 +29,7 @@ disqus_id: 93
 
 <p>So I abandoned that thought and was pretty clueless for a couple minutes. Then I thought, what if we leverage Redis' sorted sets and treat this entire thing as a type of ranking system where the score is a timestamp. So now our key is simply the symbol name, say GOOG or MSFT. However, we store a sorted set at this key, which lets us assign a "score" to each value. Our score can be the unix timestamp (number of seconds in Jan 1 1970) of our data. How exactly does this look?:
 
-<pre class="brush: text">
+<pre data-language="generic">
   GOOG
      1309870679 VALUE_BLOB
      1309870679 VALUE_BLOB
@@ -45,7 +45,7 @@ disqus_id: 93
 
 <p>Now, even though the point is to have fun and to try a different perspective, I do want to give some reasons why the above solution might be better. First and foremost, the API is really easy:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 redis = Redis.new #connects to localhost by default
 
 redis.zadd('GOOG', Time.now.utc.to_i, "this would be our value..can be anything, I picked a string")

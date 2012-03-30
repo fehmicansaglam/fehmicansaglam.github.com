@@ -17,7 +17,7 @@ h2{margin-bottom:0;font-size:20px;}
 <h3>Strings</h3>
 <p>Strings are the simplest of the five data structures. They are also the worst named. It, unfortunately, has nothing to do with what anyone thinks when you say "string". A better term would be a "single" or a "simple". When people think Redis, or they think Key Value, they are thinking about the String structure (but remember, that's only one of five structures). Just like the key, a string value can be any byte array. You can store an incrementing integer counter, an actual string, or a binary serialized object (blob). All of these are very common. The most common string methods are <code>GET</code> and <code>SET</code>:</p>
 
-<pre class="brush: plain">SET pages:about "about us"
+<pre data-language="generic">SET pages:about "about us"
 GET pages:about
 about us</pre>
 
@@ -26,13 +26,13 @@ about us</pre>
 <h3>Hashes</h3>
 <p>The hash data structure is exactly what you are thinking it is (a hash/dictionary). Rather than manipulating a key directly (like with a String) you manipulate the fields of a key. So, we don't just get and set a hash value. Instead, we get and set the value of a field for a hash:</p>
 
-<pre class="brush: plain">HSET goku power 9001
+<pre data-language="generic">HSET goku power 9001
 HGET goku power
 9001</pre>
 
 <p>Like everything else in Redis, fields and values are ultimately byte arrays, so they can be anything. Fields though, like keys, tend to be strings. One question you might have is when would you use a Hash rather than a String? For example, what's the difference between the following two? (I'm using json to represent a complex value, which a driver or you would actually serialize into a byte array)</p>
 
-<pre class="brush: plain">SET users:goku {race: 'sayan', power: 9001}
+<pre data-language="generic">SET users:goku {race: 'sayan', power: 9001}
 HSET users:goku race sayan
 HSET users:goku power 9001</pre>
 
@@ -41,7 +41,7 @@ HSET users:goku power 9001</pre>
 <h3>Lists</h3>
 <p>Lists let you associate an array of values to a single key. In fact, you can (and should) think of them as dynamic arrays. You can insert, append, pop, push, trim and so on. Redis doesn't support secondary indexes. You can only access data by its key. Lists are often used to fill this void (though that certainly isn't their only use):</p>
 
-<pre class="brush: ruby">length = redis.lpush('users:newest', 'user:goku')
+<pre data-language="ruby">length = redis.lpush('users:newest', 'user:goku')
 if length > 100
   #trim is to we only keep 100 "newest" users
   redis.rpop('users:newest')
@@ -49,7 +49,7 @@ end</pre>
 
 <p>The above code keeps a reference to the newest registered users in a list. Here we maintain the lists length in real-time, though that could be moved to a background task. How would we use this?:</p>
 
-<pre class="brush: ruby"># get the 10 newest users
+<pre data-language="ruby"># get the 10 newest users
 keys = redis.lrange('users:newest', 0, 10)
 #multi get the actual 10 user objects
 redis.mget(*keys)
@@ -60,7 +60,7 @@ redis.mget(*keys)
 <h3>Sets</h3>
 <p>Sets are a lot like lists, except they provide set-semantics (no duplicate values in a given set). You can diff sets via <code>SDIFF</code>, union two sets via <code>SUNION</code> or <code>SUNIONSTORE</code> (if you want to store the result in another set rather than just return it) and so on. Sets are the kind of data structure you use to keep track of friends and tags:</p>
 
-<pre class="brush: plain">SADD friends:leto ghanima
+<pre data-language="generic">SADD friends:leto ghanima
 SADD friends:leto duncan
 SADD friends:paul duncan
 SADD friends:paul gurney
@@ -71,7 +71,7 @@ SINTER friends:leto friends:paul
 <h3>Sorted Sets</h3>
 <p>It's wrong to call one structure more powerful than the others, since they all tend to serve fairly distinct needs, but sorted sets are pretty awesome. A sorted set is similar to a set, except each value is associated (and sorted by) a score field. In other words, when you add a value to a sorted set, you also specify the score as a number. This determines the order of the value within the set. Building on on previous example, we could add a weight to our data:</p>
 
-<pre class="brush: plain">ZADD friends:leto 1000 ghanima
+<pre data-language="generic">ZADD friends:leto 1000 ghanima
 ZADD friends:leto 994 duncan
 ZADD friends:leto 2 farad'n
 ZRANGEBYSCORE friends:leto 500 1000
@@ -89,7 +89,7 @@ ZRANGEBYSCORE friends:leto 500 1000
 
 <p>In addition to the above five data structures, Redis has commands that work across all keys (known as key-commands). Things like <code>DEL</code>, <code>EXISTS</code> and <code>RENAME</code>. Probably the most commonly used is the <code>KEYS</code> command, which takes a pattern and returns found keys. For example, <a href="http://mogade.com">mogade.com</a> stores all of the daily ranks using a keys that look like <code>ranks:daily:GAME_ID:20110830</code>. If I wanted to delete all the ranks in August, I could do:</p>
 
-<pre class="brush: ruby">keys = redis.keys("ranks:daily:*:201108*")
+<pre data-language="ruby">keys = redis.keys("ranks:daily:*:201108*")
 redis.del(*keys)</pre>
 
 <p><strong>Note: They <code>keys</code> command linearly goes through all your keys finding matches. It's slow and the docs suggest you only use it for debugging and development purposes</strong></p>

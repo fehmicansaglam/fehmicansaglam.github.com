@@ -3,10 +3,10 @@
   <head>
     <title>{{ page.title }}</title>
     <meta name="description" content="code, write, think" />
-    <link href="/assets/css/main.css" rel="stylesheet" />
-    {% if page.css %}<link href="/assets/css/{{ page.css }}.css" rel="stylesheet" />{% endif %}
+    <link href='http://fonts.googleapis.com/css?family=Ubuntu' rel='stylesheet' type='text/css'>
+    <link href="/assets/site.css" rel="stylesheet" />
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    {% if page.js %}<script src="/assets/js/{{ page.js}}.js"></script>{% endif %}
+    <script src="/assets/rainbow.js"></script>
     <link href="//feeds.feedburner.com/KarlSeguinsBlog" rel="alternate" type="application/atom+xml" />
     <!--[if lt IE 9]>
     <script>
@@ -16,20 +16,7 @@
     <![endif]-->
   </head>
   <body>
-    <header>
-      <div id="title"><a href="/">Hello.</a></div>
-      <a href="//feeds.feedburner.com/KarlSeguinsBlog"><img id="rss" src="/assets/i/rss.png" width="24" height="24" alt="rss" /></a>
-    </header>
-     <div id="site">
-        <nav>
-          <p><a href="/about.html" id="about">about</a></p>
-          <p><a href="//github.com/karlseguin">on github</a></p>
-          <p><a href="//twitter.com/karlseguin">at twitter</a></p>
-          <p><a href="mailto:karl@openmymind.net">via email</a></p>
-          {% if page.url != '/index.html' %}<p><a href="/">home</a></p>{% endif %}
-        </nav>
-        <div id="content"> {{ content }}</div>
-     </div>
+    {{ content }}
   </body>
 </html>
 

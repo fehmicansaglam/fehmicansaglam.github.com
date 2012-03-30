@@ -13,7 +13,7 @@ disqus_id: 61
 
 <p>Before we look at IoC, let's understand the problem we are trying to solve. Coupling is what you get when something is dependent on something else. That something can be an assignment, a method, a class or even a whole system. Some examples:</p>
 
-<pre class="brush:text">#The simplest code can couple us to another class or implementation
+<pre data-language="generic">#The simplest code can couple us to another class or implementation
 time = Time.now
 
 //...Something slightly more complex
@@ -35,7 +35,7 @@ var richList = Session.Query&lt;Account&gt;().Where(a =&gt; a.Amount &gt; 100000
 
 <p>Take the following example:</p>
 
-<pre class="brush: c#">public class UserRepository
+<pre data-language="generic"">public class UserRepository
 {
     public User FindByCredentials(string username, string password)
     {
@@ -48,7 +48,7 @@ var richList = Session.Query&lt;Account&gt;().Where(a =&gt; a.Amount &gt; 100000
 
 <p>This code has two dependencies which we'd do well to decouple: the first being <code>SqlDataStore</code> and the other the <code>BCrypt</code> library. The idea behind Dependency Injection is to take those two dependencies and supply them to our class/method, rather than having them hard coded. This can be done by passing them as arguments to our method, setting properties of our class, or, the most common approach, supplying them as constructor arguments. Each approach has its own advantages and drawbacks. They all provide the same benefits though: we externalize our dependencies and, in a statically typed world, can program against an interface. Here's the same code using Dependency Injection at the constructor level:</p>
 
-<pre class="brush:c#">public class UserRepository : IUserRepository
+<pre data-language="generic">public class UserRepository : IUserRepository
 {
     private IDataStore _store;
     private IEncryption _encryption;
@@ -81,7 +81,7 @@ var richList = Session.Query&lt;Account&gt;().Where(a =&gt; a.Amount &gt; 100000
 
 <p>Let's look at an example using <a href="http://ninject.org/">Ninject</a>. The first thing we do is configure our DI framework. The details of this will vary based on the framework you use, Ninject uses a fluent interface.</p>
 
-<pre class="brush: c#">private sealed class BoostrapDependencyModule : NinjectModule
+<pre data-language="generic"">private sealed class BoostrapDependencyModule : NinjectModule
 {
     public override void Load()
 {
@@ -96,7 +96,7 @@ var richList = Session.Query&lt;Account&gt;().Where(a =&gt; a.Amount &gt; 100000
 
 <p>We can now create an Ninject kernel and ask it for instances:</p>
 
-<pre class="brush: c#">var kernel = new StandardKernel(new BoostrapDependencyModule());
+<pre data-language="generic"">var kernel = new StandardKernel(new BoostrapDependencyModule());
 var repository = kernel.Get&lt;IUserRepository();
 </pre>
 

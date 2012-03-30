@@ -11,7 +11,7 @@ Your personal page, like a project page, is a special github project though. Eve
 
 Extracting my existing content from mysql was pretty easy:
 
-<pre class="brush:ruby">
+<pre data-language="ruby">
 conn = Mysql.real_connect("localhost", "user", "pass", "db")
 res = conn.query("select slug, title, summary, body, created_at, id from posts")
 while row = res.fetch_row do

@@ -7,7 +7,7 @@ title: "CouchDB And MongoDB Performance"
 <p>For the record, journaling is enabled in MongoDB <strong>and</strong> I'm doing a full fscync on each insert (the ruby driver doesn't support journal commit yet (which would be faster than a full data file fsync)?! guess what I'm doing next...)</p>
 
 <p>The MongoDB code:</p>
-<pre class="brush:ruby">require 'mongo'
+<pre data-language="ruby">require 'mongo'
 require 'benchmark'
 
 db = Mongo::Connection.new.db("test") 
@@ -33,7 +33,7 @@ end
 
 
 <p>The CouchDB code:</p>
-<pre class="brush:ruby">require 'couchdb'
+<pre data-language="ruby">require 'couchdb'
 require 'uuid'
 require 'benchmark'
 

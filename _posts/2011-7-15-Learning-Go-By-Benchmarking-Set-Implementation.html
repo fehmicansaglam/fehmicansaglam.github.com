@@ -11,7 +11,7 @@ disqus_id: 96
 
 <p>My goal tonight was to benchmark various Set implementation, in the hope that I'd not only find a good implementation but also familiarize myself with Go. I want to be very clear: I have specific requirements for my Set. I'm therefore focusing on testing against <strong>my</strong> use-case. What is my use-case? Basically I want to populate a collection with integers and explicitly remove all duplicates on demand. In other words, I only care about unique values when I care about unique values - the rest of the time, duplicates are ok. Ordering isn't important. Here's an example of how I might use it: </p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 func Load(users []User) ([]int) {
   ids := new(MySpecialCollection)
   for user := range users {
@@ -28,7 +28,7 @@ func Load(users []User) ([]int) {
 
 <p>We'll begin by defining an interface: </p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 type Set interface {
   Add(value int)
   Contains(value int) (bool)
@@ -41,7 +41,7 @@ type Set interface {
 
 <p>The first implementation uses a map (Go's built-in hashtable type). This is our baseline because it's the simplest most obvious solution. Here's the implementation: </p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 type HashSet struct {
   data map[int]bool
 }
@@ -72,7 +72,7 @@ func NewSet() (Set) {
 
 <p>We'll create two tests to make sure our implementation works:</p>
 
-<pre class="brush:c#">
+<pre data-language="generic">
 import(
   "testing"
   "rand"
@@ -115,7 +115,7 @@ func Assert(t *testing.T, condition bool, message string) {
 
 <p>Now comes the interesting part. Go has built-in benchmarking capabilities, and it's pretty neat. Rather than define a <code>Test</code> function, we define a <code>Benchmark</code> method, like so:</p>
 
-<pre class="brush:c#">
+<pre data-language="generic">
 func BenchmarkSmallSetWithFewCollisions(b *testing.B){
   for i := 0; i < b.N; i++ {
     set := NewSet()
@@ -131,7 +131,7 @@ func BenchmarkSmallSetWithFewCollisions(b *testing.B){
 
 <p>My goal was to test the performance of a small, medium and large set (100, 5000 and 100000 items) and for each of those, with a small, medium and large number of duplicates. The above code will generate a set of 100 values, where a given value can be between 0 and 699 - so duplicates are pretty rare. Here's what all 9 benchmarks look like:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 func benchmark(b *testing.B, size int, fill int) {
   for i := 0; i < b.N; i++ {
     set := NewSet()
@@ -172,7 +172,7 @@ func BenchmarkLargeSetWithManyCollisions(b *testing.B){
 
 <p>And, here's the output from running this against our simple <code>HashSet</code> implementation:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 set.BenchmarkSmallSetWithFewCollisions		50000		52600 ns/op
 set.BenchmarkSmallSetWithMoreCollisions		50000		42991 ns/op
 set.BenchmarkSmallSetWithManyCollisions		50000		31406 ns/op
@@ -189,7 +189,7 @@ set.BenchmarkLargeSetWithManyCollisions		50			34149020 ns/op
 
 <p>For my second implementation, I decided to use an array and scan the array for a duplicate before adding it. The interesting method here is <code>Add</code> and <code>Contains</code>:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 func (this *RealtimeArraySet) Add(value int) {
   if this.Contains(value) == false {
     this.data = append(this.data, value)
@@ -207,7 +207,7 @@ func (this *RealtimeArraySet) Contains(value int) (exists bool) {
 
 <p>And, here are the results:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 set.BenchmarkSmallSetWithFewCollisions		100000		22390 ns/op
 set.BenchmarkSmallSetWithMoreCollisions		100000		19421 ns/op
 set.BenchmarkSmallSetWithManyCollisions		100000		17037 ns/op
@@ -223,7 +223,7 @@ set.BenchmarkLargeSetWithManyCollisions		1			1785185000 ns/op
 
 <p>The last implementation I did was to allow duplicates to get added to the array, but to remove them when explicitly told to:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 func (this *OnDemandArraySet) Add(value int) {
   //the append method will automatically grow our array if needed
   this.data = append(this.data, value)
@@ -245,7 +245,7 @@ func (this *OnDemandArraySet) RemoveDuplicates() {
 
 <p>We remove duplicates by comparing every value to every other value. This leans heavily on Go slices. You can think of a Go slice as a movable window above an array. Slices are really efficient. When we find a duplicate, we replace it with the last element and shrink by 1. So, if we have:  [1,2,3,2,5,6] it'll become [1,2,3,6,5]  (the 6 overwrites the duplicate 2 and the slice is shrank). Again, all of this is efficient - we aren't creating copies of array, just playing with pointers. The results:</p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 set.BenchmarkSmallSetWithFewCollisions		200000		12362 ns/op
 set.BenchmarkSmallSetWithMoreCollisions		200000		12425 ns/op
 set.BenchmarkSmallSetWithManyCollisions		200000		12430 ns/op
@@ -261,7 +261,7 @@ set.BenchmarkLargeSetWithManyCollisions		100			12863000 ns/op
 
 <p>Beyond raw speed, we can also measure how much memory each approach takes. For this, I simply enabled Go's memoryprofile and looped through each set a fixed number of times. To be honest, I'm not positive what all the values mean, but I extracted the three which seemed the most relevant: </p>
 
-<pre class="brush:text">
+<pre data-language="generic">
 HashSet
 Alloc = 1227039448
 TotalAlloc = 2249302288

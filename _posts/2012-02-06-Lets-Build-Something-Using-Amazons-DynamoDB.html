@@ -16,7 +16,7 @@ title: "Let's Build Something Using Amazon's DynamoDB"
 <h3>&lt;Application&gt;</h3>
 <p>The application that we are going to build is a simple API that can be used to store and retrieve change logs. A change log record would look something like: </p>
 
-<pre class="brush: js">
+<pre data-language="javascript">
 {
   user: 'leto',
   asset: 'video-of-sand',
@@ -35,7 +35,7 @@ title: "Let's Build Something Using Amazon's DynamoDB"
 <h3>Saving Change Logs</h3>
 <p>The first thing we'll do is save a change log. To do that, we must first create a table in DynanoDB: </p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 ddb.createTable 'logs', { hash: ['id', ddb.schemaTypes().string] }, {read: 10, write: 10} , ->
 </pre>
 
@@ -43,7 +43,7 @@ ddb.createTable 'logs', { hash: ['id', ddb.schemaTypes().string] }, {read: 10, w
 
 <p>Now that our table is created, we can write new log records: </p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 class Log
   constructor: (@user, @asset, @changes) ->
     @id = uuid.v4()
@@ -58,7 +58,7 @@ class Log
 
 <p>The above code could be used like so: </p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 app.post '/log', (req, res, next) ->
   log = new Log(req.body.user, req.body.asset, req.body.changes)
   log.save ->
@@ -74,7 +74,7 @@ app.post '/log', (req, res, next) ->
 <h3>Getting a Change Log</h3>
 <p>Next we want to make it so that change logs can be retrieved by id. So, given the following code:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 app.get '/log/:id', (req, res, next) ->
   Log.load req.params.id, (err, log) ->
     res.end(JSON.stringify(log))
@@ -82,7 +82,7 @@ app.get '/log/:id', (req, res, next) ->
 
 <p>We'll write our <code>Log.load</code> method as:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 class Log
   ...
 
@@ -104,7 +104,7 @@ class Log
 
 <p>To achieve this, we need to maintain our own indexes. An index is nothing more than the value we are indexing and a reference to the record the value belongs to. We can achieve this by using another table. And, while we are at it, it makes sense to get change logs back ordered by creation date. Let's visualize what we are talking about: </p>
 
-<pre class="brush: text">
+<pre data-language="generic">
 logs table:
 id   |   user   |  asset  |  created  |  changes
 1        leto      sand      4909449     ....
@@ -121,13 +121,13 @@ spice     5001001      3
 <p>Now, if we set the key of <code>logs_by_asset</code> to be a hash on <code>asset</code> and a range  on <code>created</code> we'll be able to find change logs by asset. How? Well, first we'll get all the ids which belong to a certain asset via <code>logs_by_asset</code>, then we can retrieve those records by id in <code>logs</code>.</p>
 
 <p>First thing we need to do is create our new table:</p>
-<pre class="brush: ruby">
+<pre data-language="ruby">
 ddb.createTable 'logs_by_asset', { hash: ['asset', ddb.schemaTypes().string], range: ['created', ddb.schemaTypes().number] }, {read: 10, write: 10} , ->
 </pre>
 
 <p>Next we change our <code>save</code> method to also create the index:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 save: (callback) =>
   ddb.putItem 'logs', this.serialize(), {}, (err, res) =>
     ddb.putItem 'logs_by_asset', {asset: @asset, created: @created.getTime(), id: @id}, {}, ->
@@ -136,7 +136,7 @@ save: (callback) =>
 
 <p>Finally, we can do our two-phase lookup:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 @find: (asset, callback) =>
   ddb.query 'logs_by_asset', asset, null, {attributesToGet: ['id']}, (err, res) =>
     ids = (key.id for key in res.Items)

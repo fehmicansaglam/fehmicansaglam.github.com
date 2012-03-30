@@ -25,7 +25,7 @@ disqus_id: 17
 <h3>Step 4 - Configure</h3>
 <p>In following steps we'll make (which builds the code) and then make install (which installs the built code). Before we do that we need to generate a MakeFile (which those two steps use). This is where we change our package from what we could otherwise get from Aptitude (that's essentially what Aptitude does, it gives us a pre-configured and pre-built package). The <a href="http://wiki.nginx.org/NginxInstallOptions">nginx install page</a> gives us the possible compile-time options as well as samples. We can run one of the samples from the nginx page (all it does is create a Makefile, so go ahead and play with it). Change to the nginx directory and run (./XYZ is how you execute XYZ in Linux, the \ lets us break the command across multiple lines):</p>
 
-<pre class="brush: plain">
+<pre data-language="generic">
 ./configure \
   --conf-path=/etc/nginx/nginx.conf \
   --error-log-path=/var/log/nginx/error.log \
@@ -49,7 +49,7 @@ disqus_id: 17
 
 <h3>Step 6 - Our Configure</h3>
 <p>Here's the actual configuration options I'll be using:</p>
-<pre class="brush: plain">
+<pre data-language="generic">
 ./configure \
   --conf-path=/etc/nginx/nginx.conf \
   --error-log-path=/var/log/nginx/error.log \
@@ -73,7 +73,7 @@ disqus_id: 17
 
 <h3>Step 8 - Configuring nginx</h3>
 <p>You'll want to configure nginx to fit your specific needs, but to get passenger working you'll need to specify these two directives (in the http section of the configuration):</p>
-<pre class="brush: plain">
+<pre data-language="generic">
   passenger_root /opt/ruby-enterprise-1.8.7-2010.02/lib/ruby/gems/1.8/gems/passenger-2.2.15;
   passenger_ruby /opt/ruby-enterprise-1.8.7-2010.02/bin/ruby;
 </pre>

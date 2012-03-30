@@ -15,7 +15,7 @@ disqus_id: 91
 
 <p>As a simple example, we might create a factory for our <code>game</code> object like so:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 Factory.define :game do |g|
   g.secret "it's over 9000"
   g.name "power level?"
@@ -24,7 +24,7 @@ end
 
 <p>We can now create a new instance within our tests by using <code>game = Factory.build(:game)</code>. Alternatively, we can create and persist the same object by using <code>create</code> instead of <code>build</code>. We can also pass either method an additional parameter which are the values to use instead of the defaults: <code>Factory.create(:game, {:secret =&gt; 'what?!'})</code>. Factories support more advanced logic. For example, sequences let us ensure a unique value for each built/created instance:</p>
 
-<pre class="brush: ruby">
+<pre data-language="ruby">
 Factory.sequence :name do |n|
   "duncan-#{n}"
 end
@@ -42,7 +42,7 @@ end
 
 <p>I mentioned that a benefit of this approach is that it makes our tests more explicit. Let me give you a real example of what I mean. We have a method which lets us <em>activate</em> a developer. This essentially switches his or her status from <code>Pending</code> to <code>Enabled</code> and saves the object. Here's the test:</p>
 
-<pre class="brush: ruby">it &quot;enables the developer&quot; do
+<pre data-language="ruby">it &quot;enables the developer&quot; do
   developer = Factory.create(:developer, {:status =&gt; DeveloperStatus::Pending})
   developer.activate!
   developer.status.should == DeveloperStatus::Enabled

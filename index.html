@@ -3,8 +3,26 @@ layout: default
 title: Karl Seguin
 ---
 
-<ul class="posts">
-  {% for post in site.posts %}
-    <li><span>{{ post.date | date_to_string }}</span> <a href="{{ post.url }}">{{ post.title }}</a></li>
-  {% endfor %}
-</ul>
+<header>
+  <a href="/" id="hello">Hello.</a>
+  <a href="//feeds.feedburner.com/KarlSeguinsBlog"><img id="rss" src="/assets/rss.png" width="24" height="24" alt="rss" /></a>
+</header>
+
+<div id="site">
+  <nav>
+    <p><a href="/about.html" id="about">about</a></p>
+    <p><a href="//github.com/karlseguin">on github</a></p>
+    <p><a href="//twitter.com/karlseguin">at twitter</a></p>
+    <p><a href="mailto:karl@openmymind.net">via email</a></p>
+    {% if page.url != '/index.html' %}<p><a href="/">home</a></p>{% endif %}
+  </nav>
+  <div id="content"> 
+    <ul class="posts">
+      {% for post in site.posts %}
+        <li><span>{{ post.date | date_to_string }}</span> <a href="{{ post.url }}">{{ post.title }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+

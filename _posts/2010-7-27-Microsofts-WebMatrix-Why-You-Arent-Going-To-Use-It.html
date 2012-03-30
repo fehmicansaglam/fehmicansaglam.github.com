@@ -15,7 +15,7 @@ disqus_id: 24
 
 <p>I decided to focus on the only really interesting part - pulling and displaying the thumbnail images from PicasaWeb's RSS feed (because everything else is just HTML). Here's what the PHP version ended up looking like:</p>
 
-<pre class="brush: text">
+<pre data-language="generic">
 $xml = simplexml_load_file('http://picasaweb.google.com/data/feed/base/user/114741487348646937381/albumid/5494564502704076449?kind=photo');
 foreach ($xml->entry as $entry) 
 { 
@@ -27,7 +27,7 @@ foreach ($xml->entry as $entry)
    
 <p>And the WebMatrix vesion:</p>
 
-<pre class="brush: c#">
+<pre data-language="generic"">
 @using System.Xml
 @{        
  var xml = new XmlDocument();
