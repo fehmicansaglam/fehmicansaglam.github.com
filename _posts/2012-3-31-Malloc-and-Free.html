@@ -12,7 +12,7 @@ title: "Malloc and Free"
   char name[10];
 </pre>
 
-<p>Not only is this easy to do, it's also easy to understand. Especially when you know that each type has a size, and static allocation simply allocates that size. In the case of an array, it allocates the size * the number of elements. The best thing about statically allocated memory is the variables fall out of scope, memory is automatically freed.</p>
+<p>Not only is this easy to do, it's also easy to understand. Especially when you know that each type has a size, and static allocation simply allocates that size. In the case of an array, it allocates the size * the number of elements. The best thing about statically allocated memory is that when variables fall out of scope, their associated memory is automatically freed.</p>
 
 <p>Unfortunately, you won't always know upfront how much memory you are going to need. In our above example, will <code>char[10]</code> be enough, what about 100? In some cases you could simply allocate the maximum possible value, but even on modern hardware with gigs of memory, sometimes that just isn't feasible (and it's certainly never efficient!) The solution is to dynamically allocate memory. This is done with the <code>malloc</code> function: </p>
 
