@@ -3,7 +3,7 @@ layout: post
 title: "Malloc and Free"
 ---
 
-<p>Last week we vaguely covered what happens, with respect to memory, when we create an array and access a value by index. I really do believe that the basics of memory allocation isn't something to ignore, so let's look at some more lower-level examples.</p>
+<p>Yesterday we vaguely covered what happens, with respect to memory, when we create an array and access a value by index. I really do believe that the basics of memory allocation isn't something to ignore, so let's look at some more lower-level examples.</p>
 
 <p>In C there are two ways to allocate memory: statically and dynamically. Here's a couple example of static memory allocation:</p>
 
@@ -21,7 +21,7 @@ title: "Malloc and Free"
   char *name = malloc(nameSize * sizeof(char));
 </pre>
 
-<p><code>malloc</code> returns a pointer which points to the memory address at the start of the allocated memory. How we use this pointer isn't really the goal of this article, but as we saw last week, for the most part, pointers and arrays are interchangeable. So, the following is perfectly ok:</p>
+<p><code>malloc</code> returns a pointer which points to the memory address at the start of the allocated memory. How we use this pointer isn't really the goal of this article, but as we saw yesterday, for the most part, pointers and arrays are interchangeable. So, the following is perfectly ok:</p>
 
 <pre data-language="generic">
   int nameSize = 10; //this could come from an input or any other source
