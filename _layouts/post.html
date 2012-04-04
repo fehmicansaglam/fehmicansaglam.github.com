@@ -8,8 +8,7 @@ layout: default
   <a href="http://disqus.com" class="dsq-brlink attribution">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
 
-<script>
-$(document).ready(function() {
+<script  type="text/javascript">
 {% if page.disqus_id %}var disqus_identifier = {{ page.disqus_id }};{% else %}var disqus_identifier = '{{ page.url }}';{% endif %}
 
 (function() {
@@ -17,6 +16,5 @@ $(document).ready(function() {
  dsq.src = 'http://karlseguin.disqus.com/embed.js';
  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
 })();
-});
 </script>
 <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=karlseguin">comments powered by Disqus.</a></noscript>
