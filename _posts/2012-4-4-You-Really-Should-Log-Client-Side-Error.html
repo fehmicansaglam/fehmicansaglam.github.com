@@ -28,7 +28,7 @@ window.onerror = function(message, file, line) {
 };
 </pre>
 
-<p>If you are using jQuery, then hooking into <code>ajaxError</code> isn't a bad idea either (as pointed out in a HN comment, this probably *is* a bad idea, since ajaxError fires for server errors which server-based logging is a much better fit):</p>
+<p>If you are using jQuery, then hooking into <code>ajaxError</code> isn't a bad idea either (as pointed out in <a href="https://news.ycombinator.com/item?id=3796970">a HN comment</a>, this probably <strong>is</strong> a bad idea, since <code>ajaxError</code> fires for server errors which server-based logging is a much better fit):</p>
 
 <pre data-language="javascript">
 $(document).ajaxError(function(e, xhr, settings) {
