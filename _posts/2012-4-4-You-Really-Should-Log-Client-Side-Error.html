@@ -3,7 +3,7 @@ layout: post
 title: "You Really Should Log Client-Side Errors"
 ---
 
-<p>Let's keep this short. Too few websites log JavaScript errors. To me, this seems unacceptable. It either means you don't care or you think your code doesn't have errors. Or both. Let's build a simple system to track client-side errors.</p>
+<p>Let's keep this short. Too few websites log JavaScript errors. Let's build a simple system to track client-side errors.</p>
 
 <p>First, we'll create a <code>logError</code> method in JavaScript:</p>
 
@@ -28,7 +28,7 @@ window.onerror = function(message, file, line) {
 };
 </pre>
 
-<p>If you are using jQuery, then hooking into <code>ajaxError</code> isn't a bad idea either:</p>
+<p>If you are using jQuery, then hooking into <code>ajaxError</code> isn't a bad idea either (as pointed out in a HN comment, this probably *is* a bad idea, since ajaxError fires for server errors which server-based logging is a much better fit):</p>
 
 <pre data-language="javascript">
 $(document).ajaxError(function(e, xhr, settings) {
