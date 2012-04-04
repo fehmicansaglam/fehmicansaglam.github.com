@@ -20,7 +20,7 @@ function logError(details) {
 
 <p>This assumes jQuery is available, and if it isn't, you can change the ajax implementation.</p>
 
-<p>How do we use this function. At the very least, we want to hook into <code>window.onerror</code>:</p>
+<p>How do we use this function? At the very least, we want to hook into <code>window.onerror</code>:</p>
 
 <pre data-language="javascript">
 window.onerror = function(message, file, line) {
@@ -71,16 +71,14 @@ end
 
 <p>Without looking at a specific display implementation, let's look at how we might get our data back out of Redis.</p>
 
-<p>First, to get the last X errors, we can use <code>zrevrange errors 0 X</code>. We want the reverse range because new errors have a higher rank (<code>time.to_i</code>). If you wanted errors that happened within a specific time frame, you could use:
+<p>First, to get the last X errors, we can use <code>zrevrange errors 0 X</code>. We want the reverse range because new errors have a higher rank (<code>Time.now.utc.to_i</code>). If you wanted errors that happened within a specific time frame, you could use:
 
 <pre data-language="ruby">
-  now = Time.now.utc
-  from = now - 86400  # (3600 * 24, 1 day)
-  redis.zrevrangebyscore 'errors', from, now
+  to = Time.now.utc
+  from = to - 86400  # (3600 * 24, 1 day)
+  redis.zrevrangebyscore 'errors', from, to
 </pre>
 
-<p>This returns all the hashes. We can then use <code>lindex HASH 0</code> on each hash to get the last instance of that particular message. We can also use <code>llen HASH</code> to get how often a specific error has happened</p>
+<p>This returns all the hashes. We can then use <code>lindex HASH 0</code> on each hash to get the last instance of that particular error. We can also use <code>llen HASH</code> to get how often a specific error has happened</p>
 
 <p>That's pretty much it. It's as simple as it is useful.</p>
-
-<p>I do want to point out that some people might be tempted to added additional error information. Maybe an error level (debug, info, error, fatal) or possibly doing additional parsing of the <code>userAgent</code>. Personally, I think those are mistakes. Logging systems which generate too much noise tend to be ignored by developers.</p>
