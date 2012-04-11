@@ -23,7 +23,8 @@ nav{position:absolute;right:50px;top:15px;}
 nav a {text-decoration:none;padding:5px 10px;text-decoration:underline;}
 nav a img{position:relative;top:5px;}
 nav a:hover{color:#888;}
-li{list-style:none;}
+li{margin:10px 0 10px 50px}
+ul{margin-bottom:20px;}
 
 #posts {width:920px;margin:0 auto;}
 #posts span{display:inline-block;width:125px;float:left;padding:15px 0;}
