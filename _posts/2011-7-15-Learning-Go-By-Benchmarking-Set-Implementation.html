@@ -11,7 +11,7 @@ disqus_id: 96
 
 <p>My goal tonight was to benchmark various Set implementation, in the hope that I'd not only find a good implementation but also familiarize myself with Go. I want to be very clear: I have specific requirements for my Set. I'm therefore focusing on testing against <strong>my</strong> use-case. What is my use-case? Basically I want to populate a collection with integers and explicitly remove all duplicates on demand. In other words, I only care about unique values when I care about unique values - the rest of the time, duplicates are ok. Ordering isn't important. Here's an example of how I might use it: </p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 func Load(users []User) ([]int) {
   ids := new(MySpecialCollection)
   for user := range users {
@@ -28,7 +28,7 @@ func Load(users []User) ([]int) {
 
 <p>We'll begin by defining an interface: </p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 type Set interface {
   Add(value int)
   Contains(value int) (bool)
@@ -41,7 +41,7 @@ type Set interface {
 
 <p>The first implementation uses a map (Go's built-in hashtable type). This is our baseline because it's the simplest most obvious solution. Here's the implementation: </p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 type HashSet struct {
   data map[int]bool
 }
@@ -131,7 +131,7 @@ func BenchmarkSmallSetWithFewCollisions(b *testing.B){
 
 <p>My goal was to test the performance of a small, medium and large set (100, 5000 and 100000 items) and for each of those, with a small, medium and large number of duplicates. The above code will generate a set of 100 values, where a given value can be between 0 and 699 - so duplicates are pretty rare. Here's what all 9 benchmarks look like:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 func benchmark(b *testing.B, size int, fill int) {
   for i := 0; i < b.N; i++ {
     set := NewSet()
@@ -189,7 +189,7 @@ set.BenchmarkLargeSetWithManyCollisions		50			34149020 ns/op
 
 <p>For my second implementation, I decided to use an array and scan the array for a duplicate before adding it. The interesting method here is <code>Add</code> and <code>Contains</code>:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 func (this *RealtimeArraySet) Add(value int) {
   if this.Contains(value) == false {
     this.data = append(this.data, value)
@@ -223,7 +223,7 @@ set.BenchmarkLargeSetWithManyCollisions		1			1785185000 ns/op
 
 <p>The last implementation I did was to allow duplicates to get added to the array, but to remove them when explicitly told to:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 func (this *OnDemandArraySet) Add(value int) {
   //the append method will automatically grow our array if needed
   this.data = append(this.data, value)
