@@ -35,7 +35,7 @@ var richList = Session.Query&lt;Account&gt;().Where(a =&gt; a.Amount &gt; 100000
 
 <p>Take the following example:</p>
 
-<pre data-language="generic"">public class UserRepository
+<pre data-language="generic">public class UserRepository
 {
     public User FindByCredentials(string username, string password)
     {
@@ -81,7 +81,7 @@ var richList = Session.Query&lt;Account&gt;().Where(a =&gt; a.Amount &gt; 100000
 
 <p>Let's look at an example using <a href="http://ninject.org/">Ninject</a>. The first thing we do is configure our DI framework. The details of this will vary based on the framework you use, Ninject uses a fluent interface.</p>
 
-<pre data-language="generic"">private sealed class BoostrapDependencyModule : NinjectModule
+<pre data-language="generic">private sealed class BoostrapDependencyModule : NinjectModule
 {
     public override void Load()
 {
@@ -96,7 +96,7 @@ var richList = Session.Query&lt;Account&gt;().Where(a =&gt; a.Amount &gt; 100000
 
 <p>We can now create an Ninject kernel and ask it for instances:</p>
 
-<pre data-language="generic"">var kernel = new StandardKernel(new BoostrapDependencyModule());
+<pre data-language="generic">var kernel = new StandardKernel(new BoostrapDependencyModule());
 var repository = kernel.Get&lt;IUserRepository();
 </pre>
 

@@ -12,7 +12,7 @@ disqus_id: 77
 
 <p>Let's look at a method that we want to test:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 //i don't want to hear how this isn't a repository
 public class UserRepository
 {
@@ -52,7 +52,7 @@ public class UserRepository
 
 <p>I want to show you the wrong way to test our 2nd expectation, which is that null should be returned when the passwords don't match:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 [Test]
 public void ReturnsNullIfThePasswordsDontMatch()
 {
@@ -72,7 +72,7 @@ public void ReturnsNullIfThePasswordsDontMatch()
 
 <p>So, the proper way to test this:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 [Test]
 public void ReturnsNullIfThePasswordsDontMatch()
 {
@@ -92,7 +92,7 @@ public void ReturnsNullIfThePasswordsDontMatch()
 
 <p>Remember that this is only 1 of our 5 tests we plan on writing. On its own, it doesn't give us the coverage that we need. That should be true of almost any unit test though. Let's look at a complementary test, which is that the passwords are compared by the encryption code:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 [Test]
 public void VerifiesTheSubmittedPasswordAgainstTheStoredOne() 
 {
@@ -109,7 +109,7 @@ public void VerifiesTheSubmittedPasswordAgainstTheStoredOne()
 
 <p>When you combine these two tests, you have focused and robust code. Here we specify a setup to return a specific user (with a controllable password) - but do so by being as generic in our specification as our framework lets us. Let's look at all 5 tests now (2 of these we've already seen):</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 [Test]
 public void ReturnsNullWhenTheUserDoesntExist()
 {

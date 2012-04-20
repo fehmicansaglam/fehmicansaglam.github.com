@@ -18,7 +18,7 @@ disqus_id: 102
 
 <p>A number of the challenges I ran into were caused by JSON not being a first-class citizen. This is an example of my third point, because the conclusion that I draw is that the core-Play developers are still building websites as though it's 2008. For example, while Play is happy to bind form parameters to a POJO, it can't (as far as I can tell) handle JSON input. This means that you need to define a <code>@Global</code> binder and, in every action, manually deserialize the body:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 User user = new Gson().fromJson(body, User.class);
 </pre>
 
@@ -26,7 +26,7 @@ User user = new Gson().fromJson(body, User.class);
 
 <p>These oversights, in addition to a few others, means that I have a <code>ExcludePasswordStrategy</code>, <code>FieldError</code>, <code>GsonBinder</code> and a <code>ObjectIdAdapter</code> in a <code>utils</code> package. I also created a <code>BaseController</code> with the following helper method:</p>
 
-<pre data-language="generic"">
+<pre data-language="generic">
 protected static void renderJSON(Object object, int status) {
   GsonBuilder gson = new GsonBuilder().setExclusionStrategies(new ExcludePasswordStrategy());
   gson.registerTypeAdapter(ObjectId.class, new ObjectIdAdapter());  
