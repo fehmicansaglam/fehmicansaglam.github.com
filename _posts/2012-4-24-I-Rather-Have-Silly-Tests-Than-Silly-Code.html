@@ -74,7 +74,7 @@ def process(data)
 end
 </pre>
 
-<p>To do this in a static language, you'd probably end up injecting a <code>TransormationProvider</code> which implements <code>ITransformationProvider</code> go that route. With a dynamic language, you can either stub out each of those methods directly, or you could integrate the heavy-handed Provider directly in the class:
+<p>To do this in a static language, you'd probably end up injecting a <code>TransormationProvider</code> which implements <code>ITransformationProvider</code> go down that familiar rabbit hole. With a dynamic language, you can either stub out each of those methods directly, or you could integrate the lightweight "provider" directly in the class:
 
 <pre data-language="ruby">
 class Processor
