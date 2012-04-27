@@ -42,6 +42,8 @@ curl -v -X PUT -d '{"bar":"baz"}' -H "Content-Type: application/json" -H "X-Riak
 db.test.insert({doc: 'baz'});
 </pre>
 
+<p>Again, understanding riak's underlying protocol is important. But, if it's gonna be so yuck,  documentation should use something cleaner. Show how it's done from Ruby or Java (or let people switch languages).</p>
+
 <h3>Real World</h3>
 <p>My final observation is that, after spending quite a bit of time on their site, it isn't clear to me how I'd build an app using Riak. Is Riak a general purpose solution? Or is it more specialized? How would I model a forum or a blog? What about a time series, or a leaderboard?</p>
 
