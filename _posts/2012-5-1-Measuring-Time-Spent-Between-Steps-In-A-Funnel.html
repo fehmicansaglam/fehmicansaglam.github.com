@@ -42,9 +42,9 @@ function() {
 <p>We'd expect the following emits (key is the step): </p>
 
 <pre data-language="javascript">
-  {key: 1, value: {count: 1, time_count: 1, time: 120}}
-  {key: 2, value: {count: 1, time_count: 1, time: 90}}
-  {key: 3, value: {count: 1, time_count: 1, time: 0}}
+  {key: 1, value: {count: 1, time: 120}}
+  {key: 2, value: {count: 1, time: 90}}
+  {key: 3, value: {count: 1, time: 0}}
 </pre>
 
 <p>Before we can write our reduce function, there's something we absolutely have to understand about reduce: values associated with a key can be broken into chunks. In fact, this is how reduce is able to scale so well. What exactly does this mean? Well, if we go back to a simple count example where 'about.html' had 4 hits, you might expect reduce to be called with the following values parameter:</p>
