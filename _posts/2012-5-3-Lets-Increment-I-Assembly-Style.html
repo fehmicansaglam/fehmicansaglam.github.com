@@ -3,7 +3,7 @@ layout: post
 title: "Let's Increment i, Assembly Style"
 ---
 
-<p>How do computers actually work? We write code, but how do our inputs become outputs? As you know, there are a number of layers between the code that we write and the electrical impulses that race through our hardware. If we stick to the software end of things though, we're actually pretty close to the lowest levels. What I'm talking about, of course, is assembly. Assembly is pretty complicated, but there's no reason we can't look at some basics.</p>
+<p>How do computers actually work? We write code, but how do our inputs become outputs? As you know, there are a number of layers between the code that we write and the electrical impulses that race through our hardware. If we stick to the software end of things though, we're actually pretty close to the lowest levels. What I'm talking about, of course, is assembly. Assembly can quickly get complicated, but there's no reason we can't look at some basics.</p>
 
 <p>With that in mind, consider this simple code:</p>
 
@@ -12,7 +12,7 @@ title: "Let's Increment i, Assembly Style"
   i += 1;
 </pre>
 
-<p>What does the assembly behind this look like? It actually isn't that complicated: </p>
+<p>Here are the four assembly instructions behind the code: </p>
 
 <pre data-language="generic">
 movl  $5, -4(%rbp)
@@ -21,7 +21,7 @@ addl  $1,%eax
 movl  %eax, -4(%rbp)
 </pre>
 
-<p>Before we explain the above 4 lines, do keep in mind that the above would vary based on platform, architecture or compiler. This is the assembly produced by a vanilla GCC for x86-64 on OS X. I made slight modifications to make it easier to read.</p>
+<p>Before we explain the above lines, do keep in mind that the above would vary based on platform, architecture or compiler. This is the assembly produced by a vanilla GCC for x86-64 on OS X. I made slight modifications to make it easier to read.</p>
 
 <p>The first command, <code>movl  $5,-4(%rbp)</code> corresponds directly to to the first line of our code <code>int i = 5;</code>. It is moving the value 5 into a specific address. Let's break it down thoroughly. The <code>mov</code> instruction moves something into something else. The values themselves tell <code>mov</code> whether it's dealing with constants, addresses or registers. In this case, it is moving the constant (identified via the <code>$</code> prefix) 5.</p>
 
