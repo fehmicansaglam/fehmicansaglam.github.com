@@ -14,7 +14,7 @@ disqus_id: 89
 <p>Data in version 1 of mogade is modeled much like you'd expect to see using a traditional approach. Essentially, a player's score is stored in a <code>scores</code> collection. The collection contains the leaderboard's id, player's name, a unique identifier for the player (think device id + name), the date the score was achieved, and how many points the player got:</p>
 
 <pre data-language="generic">
-|	lid	|	name	|	unique			|	date				|	points	|
+|	lid	|	name	|	unique		|	date			|	points	|
 |	1	|	leto	|	device-1-leto	|	2011/04/11 10:32	|	100000	|
 |	1	|	paul	|	device-1-paul	|	2011/04/12 09:22	|	200000	|
 |	2	|	duke	|	device-3-duke	|	2011/04/12 18:34	|	200000	|
@@ -45,15 +45,15 @@ disqus_id: 89
 <p>The truly interesting changes though were done to address our ranking problem. The goal is to make the performance less dependent on the number of scores in a leaderboard. The first approach I toyed with was to try to store denormalized ranks in their own collection. Forgetting the multiple scopes and leaderboards for the time being, I was thinking something like:</p>
 
 <pre data-language="generic">
-|	points	|	rank	|		count	|
-|	100000	|	5233	|		2		|
-|	200000	|	2088	|		1		|
-|	300000	|	1002	|		4		|
+|	points	|	rank	|	count	|
+|	100000	|	5233	|	2	|
+|	200000	|	2088	|	1	|
+|	300000	|	1002	|	4	|
 </pre>
 
 <p>We could then get a player's score, and figure out his or her rank simply by looking up the corresponding row (keyed by points (and leaderboard id, and scope, and date...)).</p>
 
-<p>Of course, how do you keep the above <code>ranks</code> collection up to date? First, whenever you get a new score, you need to bump up the rank of all worse scores. Second, you somehow have to deal with removing/ignoring ranks that no longer belong to anyone (because we only keep 1 score per player, when he or she gets a better score, his or her old rank is no longer valid). At this point I decided to move on. This wasn't a complete waste of time though, it made my mind start to think about ranking as a non-linear operation, and highlight some of the difficulties I'm going to run into.</p> 
+<p>Of course, how do you keep the above <code>ranks</code> collection up to date? First, whenever you get a new score, you need to bump up the rank of all worse scores. Second, you somehow have to deal with removing/ignoring ranks that no longer belong to anyone (because we only keep 1 score per player, when he or she gets a better score, his or her old rank is no longer valid). At this point I decided to move on. This wasn't a complete waste of time though, it made my mind start to think about ranking as a non-linear operation, and highlight some of the difficulties I'm going to run into.</p>
 
 <h3>New ranking, attempt 2</h3>
 <p>I was a little bit down after the initial (and spectacular) failure above. I decided that I needed a solution outside of what I knew. This is when I turned to Redis. Thankfully I was familiar with earlier version of Redis (from writing an asynch driver in C# a year or so ago), so I knew some concepts.</p>
