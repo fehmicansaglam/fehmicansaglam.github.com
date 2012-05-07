@@ -34,7 +34,7 @@ img{display:block;margin:auto;padding:30px;}
 
 <p>Last week we looked at the <a href="/2012/5/3/Lets-Increment-I-Assembly-Style/">assembly behind incrementing a value</a>. Today, we'll step out of the software world and step into the low-level hardware world: logic gates. Specifically, we want to add two numbers using electricity.</p>
 
-<p>The foundation for modern electronics is, of course, the transistor. Transistors work as a switch either allowing or blocking voltage from flowing through. By combining transistor's and resistors in various configurations, you can build logic gates, which is what we'll be focusing on. There are three basic logic gates you are probably already familiar with: <code>and</code>, <code>or</code> and <code>not</code>.</p>
+<p>The foundation for modern electronics is, of course, the transistor. Transistors work as a switch either allowing or blocking voltage from flowing through. By combining transistors and resistors in various configurations, you can build logic gates, which is what we'll be focusing on. There are three basic logic gates you are probably already familiar with: <code>and</code>, <code>or</code> and <code>not</code>.</p>
 
 <p>Remember, we are in a world of digital circuits and thus are dealing exclusively with 1s and 0s. A <code>not</code> gate takes a single input. When that input is 1, the output is 0. When the input is 0, the output is 1. Both <code>and</code> and <code>or</code> gates take 2 inputs and have 1 ouput. The output of an <code>and</code> gate will only be 1 if both inputs are 1. The output of an <code>or</code> gate however, will be 1 if either inputs are 1. This visualization of some possible inputs and the resulting outputs for <code>and</code> and <code>or</code> gates should help:</p>
 
@@ -71,6 +71,8 @@ img{display:block;margin:auto;padding:30px;}
 
 <p>I'm not sure if you see it, but adding binary numbers is a lot like adding decimal numbers. When a column overflows beyond its maximum capacity, we carry over. In decimal, the maximum capacity of a column is 9. In binary, the maximum capacity is 1.</p>
 
+<p>Here's the step by step process for adding 3 to 3. Hit the <code>next</code> button to go through it</p>
+
 <pre id="addition">
   <span id="carry"></span>  <input type="button" id="next" class="button" value="next" />
   <span class="col4">0</span><span class="col3">0</span><span class="col2">1</span><span class="col1">1</span>   (3)
@@ -79,7 +81,7 @@ img{display:block;margin:auto;padding:30px;}
   <span id="answer"></span>
 </pre>
 
-<p>You might not see the pattern, but look at the above closely and consider it with respect to what we've learned about logic gates. We have two inputs and a single output. Forget about the carryover for a second. When the two inputs are 0, the output is 0. When either input is 1, the output is 1. When both inputs are 1, the output is 0. Remind you of anything? That's exactly how an <code>xor</code> gate behaves. What about that carry bit? Well, the only time we carry 1 is when both inputs are 1. That's an <code>and</code> gate.</p>
+<p>You might not see the pattern, but look at the above closely and consider it with respect to what we've learned about logic gates. On a per-column basis, we have two inputs and a single output. Forget about the carryover for a second. When the two inputs are 0, the output is 0. When either input is 1, the output is 1. When both inputs are 1, the output is 0. Remind you of anything? That's exactly how an <code>xor</code> gate behaves. What about that carry bit? Well, the only time we carry 1 is when both inputs are 1. That's an <code>and</code> gate.</p>
 
 <p>Knowing this, to add two bits together, we need the following circuit (click on the checkboxes to verify the output!): </p>
 
@@ -88,9 +90,9 @@ img{display:block;margin:auto;padding:30px;}
   <input type="radio" name="s" disabled /><input type="radio" name="c" disabled />
 </div>
 
-<p>This is known as a half adder. Given two inputs, we get two outputs. The top gate, which is an <code>xor</code> gate gives us the sum, while the bottom <code>and</code> gate gives us the carry value.</p>
+<p>This is known as a half adder. Given two inputs, we get two outputs. The top gate, which is an <code>xor</code>, gives us the sum, while the bottom <code>and</code> gate gives us the carry value.</p>
 
-<p>There's an obvious reason this is known as a <strong>half</strong> adder. If you go back to our sample binary addition, you'll notice that in order to add binary numbers, we actually need to support 3 inputs: the two values being added plus the carry value from the previous operation. For this, we use a full adder:</p>
+<p>There's an obvious reason this is known as a <strong>half</strong> adder. If you go back to our sample binary addition, you'll notice that in order to add binary numbers, we actually need to support 3 inputs: the two values being added plus the carry value from the previous operation. For this, we use a full adder, which is actually two half adders with an additional <code>or</code> gate:</p>
 
 <div id="fulladder">
   <input type="checkbox" name="a"><input type="checkbox" name="b" /><input type="checkbox" name="cin" />
