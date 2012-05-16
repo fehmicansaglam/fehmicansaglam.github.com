@@ -204,6 +204,7 @@ User.findById = function() {};</pre>
   <div class="js">
     <pre data-language="javascript">function User(id) {
   this.id = id;
+  this.save = __bind(this.save, this);
 }
 
 User.findById = function(id) {};
