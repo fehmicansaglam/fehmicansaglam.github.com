@@ -64,7 +64,7 @@ title: "Ten Features I Like About CoffeeScript"
 
 
 <h3>Comprehensions</h3>
-<p>Looping over arrays and hashes is pretty fundamental, and the more we can enhance the experience, the better. And even if you don't leverage comprehensions as-is, simply having a for loop that exposes the value and index of an array, or the key value of a hash, is a nice addition.</p>
+<p>Looping over arrays and hashes is pretty fundamental, and the more we can enhance the experience, the better. Even if you don't leverage comprehensions as-is, simply having a for loop that exposes the value+index of an array, or the key+value of a hash, is a nice addition.</p>
 
 <div class="compare">
   <div class="cs">
@@ -139,27 +139,21 @@ DataTable.prototype.highlight = function() {
   </div>
 </div>
 
-<p>Sometimes you'll want the normal JavaScript behavior (via a slim arrow), and sometimes you'll want to fat-arrow behavior. In general, I find myself using slim arrows more often in client-side code, and fat arrows more often on server-side code.</p>
+<p>Sometimes you'll want the normal JavaScript behavior (via a slim arrow), and sometimes you'll want to fat arrow behavior. In general, I find myself using slim arrows more often in client-side code, and fat arrows more often on server-side code.</p>
 
 
 <h3>@ Alias</h3>
-<p>Speaking of <code>this</code>, CoffeeScript has a shortcut for it, the <code>@</code> symbol. It's easy to write this off as meaningless syntactical sugar, but it useful. First, constructor parameters prefixed with <code>@</code> are converted into properties:</p>
+<p>Speaking of <code>this</code>, CoffeeScript has a shortcut for it, the <code>@</code> symbol. It's easy to write this off as meaningless syntactical sugar, but it is useful. First, constructor parameters prefixed with <code>@</code> are converted into properties:</p>
 
 <div class="compare">
   <div class="cs">
     <pre data-language="ruby">class User
-  constructor: (@id) ->
-
-  save: () =>
-     ...</pre>
+  constructor: (@id) -></pre>
   </div>
   <div class="js">
-    <pre data-language="javascript">__bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-function User(id) {
+    <pre data-language="javascript">function User(id) {
   this.id = id;
-  this.save = __bind(this.save, this);
-}
-User.prototype.save = function() {};</pre>
+}</pre>
   </div>
 </div>
 
@@ -174,8 +168,7 @@ User.prototype.save = function() {};</pre>
      ...</pre>
   </div>
   <div class="js">
-    <pre data-language="javascript">__bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-function User(id) {
+    <pre data-language="javascript">function User(id) {
   this.id = id;
 }
 User.findById = function() {};</pre>
@@ -183,23 +176,6 @@ User.findById = function() {};</pre>
 </div>
 
 <p>Neither <code>@</code> nor the fat arrow mean that you don't have to worry about the current meaning of <code>this</code> (or its alias <code>@</code>). They aren't silver bullets, which isn't to say that they don't add value.</p>
-
-<div class="compare">
-  <div class="cs">
-    <pre data-language="ruby">class User
-  constructor: (@id) ->
-
-  @findById: (id) =>
-     ...</pre>
-  </div>
-  <div class="js">
-    <pre data-language="javascript">__bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
-function User(id) {
-  this.id = id;
-}
-User.findById = function() {};</pre>
-  </div>
-</div>
 
 
 <h3>Scoping</h3>
