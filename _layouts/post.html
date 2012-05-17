@@ -1,10 +1,13 @@
 ---
 layout: default
 ---
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="/assets/rainbow.js"></script>
+
 <div id="title"><a href="/" id="home">home</a><h1>{{ page.title  | xml_escape }}</h1></div>
 <article>{{ content }}</article>
 <div id="comments" class="section">
-  <div id="disqus_thread"></div> 
+  <div id="disqus_thread"></div>
   <a href="http://disqus.com" class="dsq-brlink attribution">blog comments powered by <span class="logo-disqus">Disqus</span></a>
 </div>
 
