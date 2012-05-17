@@ -12,17 +12,17 @@ li{margin:10px 0 10px 50px}
 ul{margin-bottom:20px;}
 h3{margin-top:20px;}
 
-header{height:50px;width:920px;margin:5px auto;display:block;}
+#h{height:50px;width:920px;margin:5px auto;display:block;}
 #hello{font-size:2.5em;color:#222}
-nav{float:right;}
-nav a{padding:5px 10px;text-decoration:underline;}
-nav a:hover{color:#888;}
+#n{float:right;}
+#n a{padding:5px 10px;text-decoration:underline;}
+#n a:hover{color:#888;}
 #posts {width:920px;margin:0 auto;}
 #posts div{display:inline-block;width:125px;float:left;padding:15px 0;}
 #posts a{display:block;padding:15px;}
 
 #title{margin:20px 0;padding:10px 0 10px 10px;background:#eee;border:solid #ddd;border-width:1px 0;position:relative;}
 #title h1{font-size:28px;color:#444;}
-#title h1, article, #comments{width:85%;margin:0 auto;}
+#title h1, #a, #comments{width:85%;margin:0 auto;}
 #comments{margin-top:40px;}
 #home{position:absolute;left:25px;top:15px;background:#e3e3e3;border:1px solid #ddd;padding:4px;border-radius:4px;text-decoration:none;font-size:80%;}
