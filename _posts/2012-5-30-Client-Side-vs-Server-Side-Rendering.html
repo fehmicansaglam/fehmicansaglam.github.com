@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Client Side vs. Server Side Rendering"
+title: "Client-Side vs. Server-Side Rendering"
 ---
 <p>Yesterday Twitter announced that it was <a href="http://engineering.twitter.com/2012/05/improving-performance-on-twittercom.html">moving away from client-side rendering back to server-side rendering</a> in order to improve page load time. Today I found myself having to defend my position that server-side rendering will almost always be faster. I figured I'd blog about it.</p>
 
@@ -54,7 +54,7 @@ title: "Client Side vs. Server Side Rendering"
 <h3>Conclusion</h3>
 <p>Only considering performance, should you ever use client-side rendering? There's one obvious scenario where it makes sense: when you render based on existing data. That is, if you don't need to go to the server to render, say because you are going to display known data in a different perspective, client-side rendering makes sense.</p>
 
-<p>Otherwise, client-side rendering requires a heavier initial load with a 2nd request, not being able to cache the final output and greater dependency on slower CPUs and rendering engines. Any one of those is a going to make client-side rendering slower. Combine them? Well, Twitter's server-side rendering take 1/5 the time as client-side rendering.</p>
+<p>Otherwise, client-side rendering requires a heavier initial load with a 2nd request, not being able to cache the final output and greater dependency on slower CPUs and rendering engines. Any one of those is a going to make client-side rendering slower. Combine them? Well, Twitter's server-side rendering takes 1/5 the time as client-side rendering.</p>
 
 <p>If you are interested in learning more, I suggest you also check out <a href="http://37signals.com/svn/posts/3112-how-basecamp-next-got-to-be-so-damn-fast-without-using-much-client-side-ui">How Basecamp Next was built to be so fast</a>.</p>
 
