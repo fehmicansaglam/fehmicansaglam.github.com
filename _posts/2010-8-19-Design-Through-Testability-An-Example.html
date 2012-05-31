@@ -1,4 +1,5 @@
 ---
+permalink: "/2010/8/19/Design-Through-Testability-An-Example"
 layout: post
 title: "Design Through Testability - An Example"
 disqus_id: 30
@@ -27,11 +28,11 @@ public class EmployeeLookup : IEmployeeLookup
       if (found == null)
       {
          found = GetItFromActualSource(id);
-         _cache.Insert(key, found);	
+         _cache.Insert(key, found);
       }
       return found;
    }
-   
+
    private Employee GetItFromActualSource(string id)
    {
        //implementation doesn't matter
@@ -52,7 +53,7 @@ public class EmployeeLookup : IEmployeeLookup
    {
       return GetItFromActualSource(id);
    }
-   
+
    private Employee GetItFromActualSource(string id)
    {
        //implementation doesn't matter
@@ -73,7 +74,7 @@ public sealed class CachedEmployeeLookup : EmployeeLookup
       if (found == null)
       {
          found = base.Find(id);
-         _cache.Insert(key, found);	
+         _cache.Insert(key, found);
       }
       return found;
    }
@@ -89,7 +90,7 @@ public class EmployeeLookup : IEmployeeLookup
    {
       return GetItFromActualSource(id);
    }
-   
+
    private Employee GetItFromActualSource(string id)
    {
        //implementation doesn't matter
@@ -111,7 +112,7 @@ public class CachedEmployeeLookup : IEmployeeLookup
       if (found == null)
       {
          found = _actualLookup.Find(id);
-         _cache.Insert(key, found);	
+         _cache.Insert(key, found);
       }
       return found;
    }
@@ -127,12 +128,12 @@ public void CachesTheEmployeeFromTheStoreWhenTheEmployeeIsNotAlreadyCached()
    var cache = Dynamic&lt;ICache&gt;();
    var lookup = Dynamic&lt;IEmployeeLookup&gt;();
    var employee = new Employee();
-   
+
    cache.Stub(c =&gt; c.Get(&quot;employee_23&quot;)).Return(null);
    lookup.Stub(l =&gt; l.Find(&quot;23&quot;)).Return(employee);
    cache.Expect(c =&gt; c.Insert(&quot;employee_23&quot;, employee));
    ReplayAll();
-   
+
    new CachedEmployeeLookup(cache, lookup).Find(&quot;23&quot;);
    cache.VerifyExpectations();
 }

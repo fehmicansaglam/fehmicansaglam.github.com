@@ -1,4 +1,5 @@
 ---
+permalink: "/2011/10/17/Today-I-Played-With-RavenDB"
 layout: post
 title: "Today I Played With RavenDB"
 ---

@@ -1,4 +1,5 @@
 ---
+permalink: "/2011/10/16/8-Movies-For-Your-Consideration"
 layout: post
 title: "8 Movies For Your Consideration"
 ---

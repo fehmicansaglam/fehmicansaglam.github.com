@@ -1,4 +1,5 @@
 ---
+permalink: "/2011/11/8/Redis-Zero-To-Master-In-30-Minutes-Part-1"
 layout: post
 title: "Redis: Zero to Master in 30 minutes - Part 1"
 ---
@@ -45,7 +46,7 @@ HSET users:goku power 9001</pre>
 if length > 100
   #trim is to we only keep 100 "newest" users
   redis.rpop('users:newest')
-end</pre> 
+end</pre>
 
 <p>The above code keeps a reference to the newest registered users in a list. Here we maintain the lists length in real-time, though that could be moved to a background task. How would we use this?:</p>
 

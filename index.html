@@ -12,5 +12,4 @@ ul{margin-top:20px;list-style:none;padding:0} li{padding:15px}
 </style>
 <body>
 <span>Hello.</span>
-<div><a href=/about.html>about</a><a href=//github.com/karlseguin>github</a><a href=//twitter.com/karlseguin>twitter</a><a href=mailto:karl@openmymind.net>email</a><a href=//feeds.feedburner.com/KarlSeguinsBlog>rss</a></div>
 <ul>{% for post in site.posts %}<li>{{ post.date | date: '%b %d' }}<a href={{ post.url | replace_first: '/', ''}}>{{ post.title }}</a>{% endfor %}

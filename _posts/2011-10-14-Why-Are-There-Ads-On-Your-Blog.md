@@ -1,4 +1,5 @@
 ---
+permalink: "/2011/10/14/Why-Are-There-Ads-On-Your-Blog"
 layout: post
 title: "Why are there ads on your blog?"
 ---

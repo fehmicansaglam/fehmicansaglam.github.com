@@ -1,9 +1,10 @@
 ---
+permalink: "/2010/10/7/My-Programming-Sins-2-Manually-Managing-References"
 layout: post
 title: "My Programming Sins - 2. Manually Managing References"
 disqus_id: 44
 ---
-<p>So you're building a system, simple or complex, and sooner than later you'll need to start thinking about how your objects get loaded from the storage engine. Chances are the solution you pick is to lean heavily on whatever OR mapping framework you're using. Lets say that's Hibernate, not because I want to pick on it, but because if you are doing <em>traditional</em> development (you know, with Java/C# against a RDBMS) that's probably what you ought to be using. 
+<p>So you're building a system, simple or complex, and sooner than later you'll need to start thinking about how your objects get loaded from the storage engine. Chances are the solution you pick is to lean heavily on whatever OR mapping framework you're using. Lets say that's Hibernate, not because I want to pick on it, but because if you are doing <em>traditional</em> development (you know, with Java/C# against a RDBMS) that's probably what you ought to be using.
 
 <p>The correct approach is to leverage Hibernate's collection mappings, lazy loading and fetching strategies. Aside from being somewhat complicated to setup the first few times through (more so on the .NET side since MS thoughts its developers needed to get eased into the concept of a Set over a 10 year period), the approach largely works. But to me, it doesn't feel right. First, lazy loading in a statically typed language is a hard nut to crack - and that difficulty <em>will</em> leak over into your app. Secondly, for those of us who feel that performance <em>is</em> a feature, there's often a performance hit to swallow. Finally for those of us who are control freaks, there's the loss of control.</p>
 
