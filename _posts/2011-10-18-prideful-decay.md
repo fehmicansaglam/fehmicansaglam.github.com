@@ -1,4 +1,5 @@
 ---
+permalink: "/2011/10/18/prideful-decay"
 layout: quote
 title: "prideful decay"
 theme: dark

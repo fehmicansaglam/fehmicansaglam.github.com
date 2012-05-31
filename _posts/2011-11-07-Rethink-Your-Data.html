@@ -1,4 +1,5 @@
 ---
+permalink: "/2011/11/7/Rethink-Your-Data"
 layout: post
 title: "Rethink Your Data"
 ---
@@ -67,7 +68,7 @@ db.scores.mapReduce(m, r, {query: {user: {$in: friendsList}}, out: {inline: 1}})
 
 <pre data-language="javascript">db.scores.find({user: 'Gurney'})</pre>
 
-<p>This query is simple, it requires a single index on <code>user</code> and it can scale (we'd shard on <code>user</code>). In order to work, a score document would need to look like: </p> 
+<p>This query is simple, it requires a single index on <code>user</code> and it can scale (we'd shard on <code>user</code>). In order to work, a score document would need to look like: </p>
 <pre data-language="javascript">
 db.scores.find()
  {_id: ObjectId("..."), level: 1, score: 500, user: 'Gurney', best: {user: Leto, score: 900}},
@@ -87,9 +88,9 @@ if (updated) {
   //find everyone who has Paul as a friend
   var cursor = db.users.find({friends: 'Paul'}, {_id:1})
   var friends = cursor.map(function(doc) { return doc._id; })
-  
+
   // update their best entry if Paul's new score is better than their existing best
-  db.scores.update({user: {$in: friends}, 'best.score': {$lt: 500}}, 
+  db.scores.update({user: {$in: friends}, 'best.score': {$lt: 500}},
                    {$set: {'best.user': 'Paul', 'best.score': 500}}, false, true);
 }
 </pre>

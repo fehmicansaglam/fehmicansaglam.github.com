@@ -1,4 +1,5 @@
 ---
+permalink: "/2012/1/17/Refactoring-Common-API-Functionaly-Into-A-Node-Proxy"
 layout: post
 title: "Refactoring Common API Functionality Into A Node.js Proxy"
 ---
@@ -28,7 +29,7 @@ appLoader =  ->
 
 invalid = (response) ->
   response.writeHead(400, {'Content-Type': 'application/json'});
-  response.end(JSON.stringify({error: 'the key is not valid'}))    
+  response.end(JSON.stringify({error: 'the key is not valid'}))
 
 module.exports = appLoader
 </pre>
@@ -47,7 +48,7 @@ proxy = (config) ->
     return next() if request._proxy
     request._proxy = true
 
-    options = 
+    options =
       port: config.port
       host: config.host
       method: request.method
@@ -62,7 +63,7 @@ proxy = (config) ->
     prequest.on 'error', (err) ->
       response.statusCode = 503
       response.end('connection to application server refused')
-      
+
     prequest.write(request.bodyRaw, 'binary') if request.bodyRaw?
     prequest.end()
 

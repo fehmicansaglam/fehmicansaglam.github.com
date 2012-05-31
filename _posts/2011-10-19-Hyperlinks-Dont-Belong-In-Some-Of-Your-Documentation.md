@@ -1,4 +1,5 @@
 ---
+permalink: "/2011/10/19/Hyperlinks-Dont-Belong-In-Some-Of-Your-Documentation"
 layout: post
 title: "Hyperlinks don't belong in some of your documentation"
 ---
