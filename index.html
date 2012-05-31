@@ -7,8 +7,8 @@ published: true
 <link href=//rss.openmymind.net rel=alternate type=application/atom+xml>
 <style>
 body{width:920px;margin:auto;font-family:verdana} a{color:#047} a:hover{color:#c51}
-div{float:right} ul{list-style:none;padding:0} a,li{padding:15px}
+p{float:right} ul{list-style:none;padding:0} a,li{padding:15px}
 </style>
-<div><a href=about.html>about</a><a href=//github.com/karlseguin>github</a><a href=//twitter.com/karlseguin>twitter</a><a href=mailto:karl@openmymind.net>email</a><a href=//rss.openmymind.net>rss</a></div>
+<p><a href=about.html>about</a><a href=//github.com/karlseguin>github</a><a href=//twitter.com/karlseguin>twitter</a><a href=mailto:karl@openmymind.net>email</a><a href=//rss.openmymind.net>rss</a></p>
 <h1>Hello.</h1>
 <ul>{% for post in site.posts %}<li>{{ post.date | date: '%b %d' | replace: '01', '1' | replace: '02', '2' | replace: '03', '3' | replace: '04', '4' | replace: '05', '5' | replace: '06', '6' | replace: '07', '7' | replace: '08', '8' | replace: '09', '9' }}<a href={{ post.url | replace_first: '/', ''}}>{{ post.title | escape}}</a>{% endfor %}</ul>
