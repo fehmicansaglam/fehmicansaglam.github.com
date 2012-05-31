@@ -18,6 +18,6 @@ ul{width:920px;margin:0 auto;list-style:none;padding:0} li{padding:15px 0} li a{
    <span id="he">Hello.</span>
    <div id="n"><a href="/about.html">about</a><a href="//github.com/karlseguin">github</a><a href="//twitter.com/karlseguin">twitter</a><a href="mailto:karl@openmymind.net">email</a><a href="//feeds.feedburner.com/KarlSeguinsBlog">rss</a></div>
   </div>
-  <ul>{% for post in site.posts %}<li>{{ post.date | date_to_string }}<a href="{{ post.url }}">{{ post.title }}</a>{% endfor %}</li></ul>
+  <ul>{% for post in site.posts %}<li>{{ post.date | date_to_string }}<a href="{{ post.url }}">{{ post.title }}</a></li>{% endfor %}</ul>
 </body>
 </html>
