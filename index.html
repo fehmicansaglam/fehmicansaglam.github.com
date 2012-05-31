@@ -1,15 +1,36 @@
 ---
-layout: default
-title: Karl Seguin
+published: true
 ---
-<div id="h">
-  <span id="hello">Hello.</span>
-  <div id="n">
-    <a href="/about.html">about</a>
-    <a href="//github.com/karlseguin">github</a>
-    <a href="//twitter.com/karlseguin">twitter</a>
-    <a href="mailto:karl@openmymind.net">email</a>
-    <a href="//feeds.feedburner.com/KarlSeguinsBlog">rss</a>
-  </div>
-</div>
-<div id="posts">{% for post in site.posts %}<div>{{ post.date | date_to_string }}</div><a href="{{ post.url }}">{{ post.title }}</a>{% endfor %}</div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Karl Seguin</title>
+    <meta name="description" content="code, write, think" />
+    <link href="//feeds.feedburner.com/KarlSeguinsBlog" rel="alternate" type="application/atom+xml">
+    <style>
+html{background:#fff;font-family:verdana;}
+a{color:#004A7F;}
+a:hover{color:#c35617;}
+#h{height:50px;width:920px;margin:5px auto;display:block;}
+#he{font-size:2.5em;color:#222}
+#n{float:right;}
+#n a{padding:5px 10px}
+#posts {width:920px;margin:0 auto;}
+#posts div{display:inline-block;width:125px;float:left;padding:15px 0;}
+#posts a{display:block;padding:15px;}
+    </style>
+  </head>
+  <body>
+    <div id="h">
+      <span id="he">Hello.</span>
+      <div id="n">
+        <a href="/about.html">about</a>
+        <a href="//github.com/karlseguin">github</a>
+        <a href="//twitter.com/karlseguin">twitter</a>
+        <a href="mailto:karl@openmymind.net">email</a>
+        <a href="//feeds.feedburner.com/KarlSeguinsBlog">rss</a>
+      </div>
+    </div>
+    <div id="posts">{% for post in site.posts %}<div>{{ post.date | date_to_string }}</div><a href="{{ post.url }}">{{ post.title }}</a>{% endfor %}</div>
+  </body>
+</html>
