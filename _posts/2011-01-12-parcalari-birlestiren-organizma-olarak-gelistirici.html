@@ -1,0 +1,145 @@
+--- 
+meta: 
+  dsq_thread_id: "339326628"
+  _edit_last: "1"
+  _wp_old_slug: ""
+type: post
+title: "Par\xC3\xA7alar\xC4\xB1 birle\xC5\x9Ftiren organizma olarak geli\xC5\x9Ftirici"
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+Bilgisayar mühendislerinin artık şaka yollu Google mühendisi olarak adlandırıldığı bir dönemde yaşıyoruz. Her karşılaştığımız problemde çözümü önce Google'da arıyoruz ve bulduğumuz çözümü kendi kodumuza ekliyoruz. Başka bir deyişle parçaları birleştiriyoruz. Geçenlerde, arkadaşım <a href="http://profil.im/gurkavcu" target="_blank">Umut Fikret Gürkavcu</a> sodoku oyununu çözen bir uygulama yazarken, çözümün bir aşaması için ona bir yöntem önerdim. Her ne kadar kendisi problemi benim önerdiğim yöntemi kullanmadan çözmüş olsa bile önerdiğim yöntemi kodladım ve paylaşmaya karar verdim.
+
+Yazının sonunda hayal kırıklığına sebebiyet vermemek maksadıyla ne problemin çok zor bir problem olduğunu ne de çözümün harika bir çözüm olduğunu söyleyerek gerekli uyarıyı yapayım:) Ayrıca problemin çözümü için Google'da arama yapmadığımı ve olası muhteşem çözümlerin orada bir yerlerde olabileceğini de belirtmeliyim.
+<pre>            |            |            |            |            |            |
+            |            |            |            |            |            |
+            |            |            |            |            |            |
+            |____________|            |____________|            |____________|
+                1,4,5                      2,7                      6,3,9,8
+</pre>
+<!--more-->
+Hala okumaya devam ediyorsanız sizin için önce problemi tanımlamaya  çalışayım. Elimizde yukarıdaki gibi kutuların olduğunu düşünelim (Evet  onlar kutu). Her kutunun altındaki sayılar o kutuya koyabileceğimiz sayıları gösteriyor olsun. Her seferinde bir kutuya yalnız bir sayı koyabiliyorsak ve kutu sayısı ile her kutuya koyulabilecek sayı adedi değişken ise tüm durumları nasıl elde edebiliriz?
+
+Yukarıdaki kutular için olası durumlara örnek olarak 1,2,6 ya da 4,7,3 durumlarını verebiliriz. Bu problemde tüm durumların sayısı her kutuya gelebilecek sayı adedinin çarpımı ile elde edilebilir. Bizim örneğimiz için tüm durumlar sayısı 3*2*4=24 olur. Elimizdeki problem gereğince bu 24 durumu hesaplayarak ekrana yazmamız gerekiyor. Aşağıda hesaplanmışı var:)
+<pre style="text-align: center;">5 7 8
+5 7 9
+5 7 3
+5 7 6
+5 2 8
+5 2 9
+5 2 3
+5 2 6
+4 7 8
+4 7 9
+4 7 3
+4 7 6
+4 2 8
+4 2 9
+4 2 3
+4 2 6
+1 7 8
+1 7 9
+1 7 3
+1 7 6
+1 2 8
+1 2 9
+1 2 3
+1 2 6
+</pre>
+Problemin nispeten kolay göründüğü bu noktada kutu sayısının yüzlerce olabileceğini söyleyerek küçük bir sürpriz yapalım. Bu eklemeyle birlikte özyinelemeli(recursive) çözümler bizim için imkansız hale geliyor. O halde çözüm için iteratif bir yöntem kullanmak zorundayız. Özyinelemeyi destekleyen diller bize bu desteği yığın(stack) veri yapısını kullarak sağladıklarına göre biz de yığın veri yapısını kullanarak bu problemi çözebiliriz.
+
+Çözüm için, örnekteki kutuların yanına bir de yığın kutusu ekleyelim. Bu kutuya atılan her eleman bir sayının yanısıra o sayının yer aldığı kutunun numarasını da içersin. Bu elemanları ifade etmek için gerekli olan Item sınıfı aşağıda görülüyor. index alanı kutu numarasını ifade ederken value alanı sayıyı belirtiyor.
+[cc lang="java"]
+public class Item {
+
+    private int index;
+    private int value;
+
+    public Item(int index, int value) {
+        this.index = index;
+        this.value = value;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
+[/cc]
+
+Önerdiğim algoritma şu şekilde işliyor:
+<ol>
+	<li>İlk kutuya koyulabilecek sayıları yığına it.</li>
+	<li>Yığından bir eleman çek.</li>
+	<li>Çekilen elemanın index alanında belirtilen kutuya git.</li>
+	<li>Çekilen elemanın value alanındaki sayıyı kutuya at.</li>
+	<li>Son kutuda mı bulunuyoruz?
+<ul>
+	<li>Evet ise sonucu ekrana yazdır.</li>
+	<li>Hayır ise bir sonraki kutuya git ve bu kutudaki sayıları yığına it.</li>
+</ul>
+</li>
+	<li>Yığında hiç eleman kalmamışsa bitir</li>
+	<li>2. adıma git</li>
+</ol>
+Algoritmamızı belirledikten sonra gereken kodu yazmadan kutuları ve o kutulara atılabilecek sayıları tutabileceğimiz veri yapısını belirleyelim. Her bir kutuya gelebilecek sayıları bir Integer List ile ifade edebiliriz. Bu listelerden oluşan bir dizi ile de kutularımızı tanımlayabiliriz. Yukarıdaki kutuları bu veri yapısına aktaran kod parçası aşağıda bulunuyor.
+
+[cc lang="java"]
+List[] array = new ArrayList[3];
+for (int i = 0; i < array.length; ++i) {
+    array[i] = new ArrayList();
+}
+
+array[0].add(1);
+array[0].add(4);
+array[0].add(5);
+
+array[1].add(2);
+array[1].add(7);
+
+array[2].add(6);
+array[2].add(3);
+array[2].add(9);
+array[2].add(8);
+[/cc]
+
+Burada da yukarıda anlatmaya çalıştığım algoritmanın kodlanmışı var.
+
+[cc lang="java"]
+private static void calculate(List<Integer>[] array) {
+    Stack stack = new Stack();
+    Integer[] result = new Integer[array.length];
+    int index = 0;
+    for (Integer value : array[index]) {
+        stack.push(new Item(index, value));
+    }
+    while (true) {
+        Item item = null;
+        if (!stack.empty()) {
+            item = stack.pop();
+        } else {
+            break;
+        }
+        index = item.getIndex();
+        result[index++] = item.getValue();
+        if (index == array.length) {
+            printResult(result);
+            --index;
+        } else {
+            for (Integer value : array[index]) {
+                stack.push(new Item(index, value));
+            }
+        }
+    }
+}
+[/cc]
+
+Yazının sonuna geldiğimiz bu satırlarda, paylaştığım çözümün hangi problemin parçası olarak kullanabileceğine dair bir öneri sunmam gerekiyor sanırım. En kolay örnek olarak kutuya atılan sayıların toplamı 20 olacak şekilde kaç farklı durum vardır sorusunun çözümünü öne sürebilirim. Bunun dışında giriş kısmında da değindiğim gibi çok daha karmaşık bir problem olarak sudoku oyununun çözümünde de bu parça kullanılabilir. 
+
+Verdiğim kod örneklerinde hata varsa bildirmenizi rica ediyorum. Yorumlarınız da memnuniyetle karşılanacaktır:)

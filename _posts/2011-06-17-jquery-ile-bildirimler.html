@@ -1,0 +1,103 @@
+--- 
+meta: 
+  Hide OgTags: "0"
+  dsq_thread_id: "339327161"
+  _edit_last: "1"
+  Hide SexyBookmarks: "0"
+type: post
+title: jQuery ile bildirimler
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+Aşağıdaki görüntüdekine benzer şekilde bildirimler oluşturmak jQuery ile oldukça kolay. Benzer işlevi sağlayan pek çok jQuery plugini olsa da kendi geliştirdiğim(bir kısmını da <a href="http://pandiyachendur.blogspot.com/2010/07/twitter-like-notification-bar-in-jquery.html">buradan</a> ödünç aldığım) aşağıdaki kodun mevcut pluginlerden daha esnek olduğunu düşünüyorum(tamamen duygusal:)).
+<center>
+<img src="http://fehmicans.net/blog/wp-content/uploads/2011/06/Screen-shot-2011-06-17-at-4.06.56-PM.png" alt="" title="Screen shot 2011-06-17 at 4.06.56 PM" />
+</center>
+<!--more-->
+Plugini kullanmak için yapmanız gereken aşağıdaki kodu jquery.notification.js adıyla kaydetmek ve html sayfanıza dahil etmek. 
+
+[cc lang="javascript"]
+(function($) {
+	$.extend({
+		notification : function(options) {
+			var settings = {
+				'hide' : 400,
+				'show' : 600,
+				'wait' : 2000,
+				'css' : {
+					'font-size' : '135%',
+					'font-weight' : 'bold',
+					'width' : '100%',
+					'position' : 'fixed',
+					'top' : 0,
+					'left' : 0,
+					'z-index' : 32768,
+					'background-color' : '#efefef',
+					'color' : '#000',
+					'text-align' : 'center',
+					'padding' : '10px 0px',
+					'border-bottom' : '1px solid #bbb',
+					'cursor' : 'pointer',
+					'overflow' : 'hidden',
+					'opacity' : '.9',
+					'display' : 'none'
+				}
+			};
+			if (options) {
+				$.extend(true, settings, options);
+			}
+			
+			var $div = $('#notification');
+			if ($div.length == 0) {
+				$div = $('<div id="notification"/>');
+			}
+			$div.text(settings.text);
+			$div.css(settings.css);
+			$div.bind('click', function() {
+				$(this).slideUp(settings.hide);
+			});
+
+			$(document.body).append($div);
+			$div.slideDown(settings.show);
+			setTimeout(function() {
+				$div.slideUp(settings.hide)
+			}, settings.wait);
+		}
+	});
+})(jQuery);
+[/cc]
+
+Plugini vereceğiniz parametreler ile özelleştirebilirsiniz. En basit kullanım aşağıdaki örnekte mevcut.
+
+[cc lang="javascript"]
+$.notification({
+   text: 'Giriş başarısız'
+});
+[/cc]
+
+Ekran görüntüsündeki gibi kırmızı tonlarında bir yazı rengi kullanmak için color stilini değiştirebilirsiniz.
+
+[cc lang="javascript"]
+$.notification({
+   text: 'Giriş başarısız', 
+   css: { 
+       'color': 'maroon' 
+   } 
+});
+[/cc]
+
+Değiştirmek istediğiniz diğer stilleri css içine ekleyebilirsiniz.
+
+
+[cc lang="javascript"]
+$.notification({
+   text: 'Giriş başarısız', 
+   css: { 
+       'color': 'maroon' ,
+       'background-color': '#000'
+   } 
+});
+[/cc]

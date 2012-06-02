@@ -1,0 +1,39 @@
+--- 
+meta: 
+  dsq_thread_id: "339326569"
+  _edit_last: "1"
+type: post
+title: gcc parametreleri
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+hepimizin bildiği gibi gcc pek çok parametre alabiliyor ve bu parametrelere göre oluşan sonuç çok farklılık gösterebiliyor. bu parametrelerden belki de en önemlisi optimizasyon için kullanılan -O parametresi.<br />
+<br />
+-O0<br />
+optimize etme. bu varsayılan ayardır. yani herhangi bir -O parametresi verilmezse -O0 kabul edilir.<br />
+<br />
+-O ya da -O1<br />
+optimize et. bu durumda derleyici çok fazla zaman almayan optimizasyon işlemleri uygulayarak hem kod boyutunu, hem de çalışma zamanını optimize etmeye çalışır.<br />
+<br />
+-O2<br />
+daha fazla optimize et. derleyici, boyut-hız trade-off'u olmayan bütün optimizasyonları gerçekleştirir. -O ile kıyaslandığında daha performanslı kod üretir.<br /><br /><!--more--><br /><br />
+-O3<br />
+daha da fazla optimize et. bu seçenek genelde -O2 den daha hızlı fakat boyut olarak daha büyük kod üretir.<br />
+<br />
+-Os<br />
+boyut için optimize et. kod boyutunu artırmayan -O2 optimizasyonlarının yanında kod boyutunu azaltmak için tasarlanmış bazı optimizasyonlar da uygulanır.<br />
+<br />
+bunun dışında bir de -D parametresinden bahsetmek istiyorum. bu parametre ile macro tanımlaması yapılabilir. örneğin -Ddeger şeklinde bir kullanım<br />
+[cc lang="c"]
+#define deger 1
+[/cc]
+önişlemci komutuna karşılık gelir. -Dmymacro=... kullanımı ile de herhangi bir macro tanımı bu parametre aracılığı ile yapılabilir. Bu parametrenin en güzel kullanımı debug için kullandığınız printf() satırlarını<br />
+[cc lang="c"]
+#ifdef DEBUG
+printf("...");
+#endif
+[/cc]
+şeklinde yazmak ve -DDEBUG parametresini kullanmak olabilir. böylelikle -DDEBUG parametresi kullanılmadığı zamanlar kodun bu kısmı derlenmemiş olur.

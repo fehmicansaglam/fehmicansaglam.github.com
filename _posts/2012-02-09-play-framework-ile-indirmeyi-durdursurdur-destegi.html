@@ -1,0 +1,25 @@
+--- 
+meta: 
+  dsq_thread_id: "570361666"
+  Hide OgTags: "0"
+  _edit_last: "1"
+  Hide SexyBookmarks: "0"
+type: post
+title: "Play! Framework ile indirmeyi durdur/s\xC3\xBCrd\xC3\xBCr deste\xC4\x9Fi"
+status: publish
+layout: post
+published: true
+tags: 
+- Bir player olarak canavar
+---
+Şu sıralar geliştirmekte olduğum bir uygulamada kullanıcıların oldukça büyük dosyaları indirebilmelerini sağlıyorum. Dosya boyutları sıklıkla 1GB'ın üzerinde olabiliyor. Her indirme isteğinden önce uygulama, kullanıcının o dosyayı indirme yetkisi olduğunu doğruluyor ve doğrulama başarılı ise indirmeye izin veriyor. Diğer bir deyişle dosyalar statik olarak değil aksine dinamik olarak sunuluyor. Web sunucu olarak Apache HTTP proxy arkasında çalışan ve Play! Framework 1.2.4 içerisinde gelen <a href="http://netty.io/">Netty</a> HTTP sunucuyu kullanıyorum.
+
+Dosya boyutlarının oldukça fazla olduğundan bahsetmiştim. Bu durumda kullanıcıların indirme işlemine herhangi bir sebeple oluşan kesintinin ardından kaldıkları yerden devam etmeleri büyük önem kazanıyor. Flashget ya da <a href="https://addons.mozilla.org/en-US/firefox/addon/downthemall/">DownThemAll!</a> gibi indirme yöneticileri kullanıcılarına bu imkanı veriyorlar. Fakat söz konusu süreç yalnızca istemci tarafında bitmiyor. Eğer web sunucu bu desteği vermiyorsa durdur/sürdür(pause/resume) işlemi gerçekleşemiyor. Bu işlem için HTTP protokolünün <a href="http://tools.ietf.org/html/rfc2616#section-14.35">Range başlığı</a> kullanılıyor. Ayrıca sunucunun istemciye Range başlığını kabul ettiğini belirtmek için <a href="http://tools.ietf.org/html/rfc2616#section-14.5">Accept-Ranges</a> başlığını göndermesi gerekiyor. Aslında tüm bu süreç hem Apache HTTP server hem de Netty server tarafından destekleniyor. Fakat dosyaları statik sunmadığınız zaman durum ne yazık ki değişiyor.
+
+Play! Framework ile gelen renderBinary() metodu binary dosyaları istemciye gönderebilmeniz için hem yalın hem de çok kullanışlı bir özellik olsa da Range başlığı desteği sunmuyor. Konu üzerinde biraz araştırma yaptığımda kuyrukta bekleyen bir <a href="https://github.com/playframework/play/pull/320">pull isteğine</a> rastladım. Söz konusu yama renderBinary metoduna Range başlığı desteği ekliyor. Ancak yama henüz kuyrukta olduğundan en erken bir sonraki Play! Framework sürümüne dahil edilecek.
+
+Durum böyle olunca kendi başımın çaresine bakmak durumunda kaldım. HTTP protokolüne uygun şekilde bir gerçekleme yaptım ve DownThemAll! ile başarılı sonuç aldım. Böylece kullanıcılarım birden fazla thread ile dosya indirme ve indirmeyi durdurup sürdürme imkanına kavuştular. Gereken kodları içeren bir gist hazırladım. Aşağıda paylaşıyorum.
+
+<script src="https://gist.github.com/1781977.js?file=Application.java"></script>
+
+<script src="https://gist.github.com/1781977.js?file=PartialContent.java"></script>

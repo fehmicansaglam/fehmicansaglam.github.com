@@ -1,0 +1,95 @@
+--- 
+meta: 
+  dsq_thread_id: "356229345"
+  _edit_last: "1"
+type: post
+title: bilye
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+<p>
+Oyunun çözümü ile ilgili PDF formatındaki dokümanı buradan <a href="/blog/doc/Bilye.pdf">indirebilirsiniz.</a>
+</p>
+<p>
+Eski çağlarda Zekado ülkesinde şöyle bir oyun oynanırmış:
+</p>
+<p>
+<ul>
+<li>Ortaya belli sayıda (n) bilye konur.</li>
+<li>İki kişi sıra ile hamleler yapar.</li>
+<li>Birinci oyuncu ilk hamlesinde ortadan 2 ya da 3 bilye alır.</li>
+<li>Sırası gelen oyuncu, bir önceki oyuncunun aldığı bilye sayısı k ise, k+1&#8804;m&#8804;2k olacak şekilde m tane bilye alır. Son hamlede geriye kalan bilyelerin sayısı &#8804;k ise bu bilyelerin hepsini alabilir.</li>
+<li>Son bilye grubunu alan oyunu kazanır.</li>
+</ul>
+</p><br /><!--more--><br /><br />
+Örnek bir oyun:
+<p>
+Ortada 25 tane bilye var:
+</p>
+<table border="1" cellpadding="0" cellspacing="0">
+<tr>
+<td>&nbsp;</td>
+<td>Aldığı Bilye Sayısı</td>
+<td>Kalan Bilye Sayısı</td>
+</tr>
+<tr>
+<td>1. Oyuncu</td>
+<td>2</td>
+<td>23</td>
+</tr>
+<tr>
+<td>2. Oyuncu</td>
+<td>3</td>
+<td>20</td>
+</tr>
+<tr>
+<td>1. Oyuncu</td>
+<td>5</td>
+<td>15</td>
+</tr>
+<tr>
+<td>2. Oyuncu</td>
+<td>8</td>
+<td>7</td>
+</tr>
+<tr>
+<td>1. Oyuncu</td>
+<td>7</td>
+<td>0</td>
+</tr>
+</table>
+<p>
+Bu durumda son hamleyi yapmış olan 1. oyuncu kazanıyor. 
+</p>
+
+<p>
+Sizden istenen ise bu oyunu hem 1. hem de 2. oyuncu için oynayan bir program yazmanız.
+</p>
+
+<p>
+VARSAYIMLAR
+<br />
+<ul>
+<li>2&#8804;n&#8804;100</li>
+<li>Programınız standart girdiden (stdin) hamleleri alıp standart çıktıya (stdout) hamlelerini (aldığı bilye sayılarını) yazmalıdır. </li>
+</ul>
+</p>
+<p>
+GİRDİ - ÇIKTI 
+<br />
+<ul>
+<li>Programınız oyun başlarken standart girdiden  bilye sayısını (n) ve oyuncu numarasını belirten iki adet tamsayı okuyacaktır. Oyuncu numarasının değeri, birinci oyuncu iseniz 1, ikinci oyuncu iseniz 2 olacaktır.</li>
+<li>İlerleyen aşamalarda, hamle sırası karşıdaki oyuncuda ise onun yaptığı hamleyi okuyacak (1 adet tamsayı), sıra kendinde ise hamlesini yazacaktır (1 adet tamsayı).</li>
+</ul><ul>
+</ul></p>
+<p>
+DEÐERLENDİRME
+<br />
+<ul>
+<li>Verilen &#8216;n&#8217; değerleri için, herhangi bir kod diğer bütün kodlarla hem 1. hem de 2. oyuncu için oyunu oynayacaktır.</li>
+<li>Herhangi bir anda yanlış bir hamle yapan oyuncu o oyunu kaybetmiş sayılacaktır.</li>
+</ul>
+</p>

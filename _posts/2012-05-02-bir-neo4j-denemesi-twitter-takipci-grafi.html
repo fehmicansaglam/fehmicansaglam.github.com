@@ -1,0 +1,35 @@
+--- 
+meta: 
+  dsq_thread_id: "673333772"
+  Hide OgTags: "0"
+  _edit_last: "1"
+  _oembed_27fdee1782146fa097cb87a375306a2c: "{{unknown}}"
+  Hide SexyBookmarks: "0"
+type: post
+title: "Bir Neo4j denemesi: Twitter takip\xC3\xA7i graf\xC4\xB1"
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+<a href="http://neo4j.org/">Neo4j</a> ile ilk karşılaşmam 2009 yılında olmuştu. O sıralar -henüz badem bıyıklılarla dolmamış en bir bilimsel ve teknolojik kurumumuzda- çeşitli veritabanlarına ait kullanım istatistiklerini saklamak üzere embed edilebilir bir veritabanı arıyordum. Bu süreçte bir hafta kadar bir süre Neo4j'e şans versem de gerek disk alanı, gerekse performans sorunları yüzünden BerkeleyDB'ye geçiş yapmıştım. Şimdi dönüp baktığımda asıl sorunun bir graf(Türkçe karşılığı çizge olarak geçiyor ama benim kulağıma pek aşina gelmedi. Bilen birileri beni düzeltirse sevinirim.) <a href="http://en.wikipedia.org/wiki/Graph_database">veritabanının</a> ne amaçla kullanılacağını o zamanlar bilmeyen bende olduğunu düşünüyorum.
+
+Geçen zaman içerisinde Neo4j büyük bir gelişme gösterdi ve yaygınlaştı. Ben de bu popüler veritabanını tekrar kurcalamak istedim. Örnek uygulamamda kendi Twitter takipçilerimden başlayarak bir takipçi grafı oluşturmaya karar verdim. Uygulama benim takipçilerimi çekecek ve ve aramızda FOLLOWS ilişkisi ile Neo4j veritabanına kaydedecek. Daha sonra takipçilerimin takipçilerini çekecek ve aynı işlemi veritabanında olmayan kişi kalmayana dek devam ettirecek.
+
+İşe önce Neo4j'i indirerek başladım. Konsol aracılığıyla sunucuyu herhangi bir sorunla karşılaşmadan başlattım. neo4j-shell ile sunucuya bağlanıp komutları biraz kurcaladım. Daha sonra dokümantasyonda gezerken Neo4j'in bir <a href="http://docs.neo4j.org/chunked/stable/rest-api.html">REST API</a> sağladığını fark ettim. Benzer bir <a href="https://dev.twitter.com/docs/api">REST API</a>'yi Twitter da sağladığı için uygulamayı bu API'leri kullanarak JavaScript ile geliştirmeye karar verdim.
+
+Twitter, istenilen kullanıcının takipçilerinin ID listesini döndüren bir API sunuyor. 
+<pre>
+http://api.twitter.com/1/followers/ids.json?user_id=...
+</pre>
+Belki tek sıkıntı saatte 150 sorgu sınırının olması. Yazdığım kod bu API aracılığıyla her bir kullanıcının takipçilerini çekiyor ve createNode fonksiyonu ile Neo4j içinde her bir kullanıcı için bir düğüm oluşturuyor. Kullanıcıların tekrarlanmasını engellemek için Neo4j'in <a href="http://docs.neo4j.org/chunked/stable/rest-api-unique-indexes.html">unique indexlerinden</a> faydalandım. İndexlenmek istenen veri ilk kez indexleniyorsa API'nin kendisi otomatik olarak bir düğüm oluşturuyor. Aksi halde yeni düğüm oluşturulmuyor. 7474. portta çalışan bir Neo4j sunucusu olduğunu varsayan kodu aşağıda paylaşıyorum. 
+
+<script src="https://gist.github.com/2579695.js?file=twitter-graph.js"></script>
+
+Mevcut kod kullanıcıların yalnızca ID'lerini çekiyor. Tüm graf oluştuktan sonra ayrı bir kodun bu ID'lere ait ayrıntıları çekip düğümleri güncellemesini planlıyorum. Böylece aynı anda en çok 100 kullanıcının ayrıntılarını döndürebilen <a href="https://dev.twitter.com/docs/api/1/get/users/lookup">Twitter API'sini</a> de etkin kullanmış olacağım.
+
+Elde bu graf olduktan sonra iki düğüm arasındaki en kısa yolu hesaplamak <a href="http://docs.neo4j.org/chunked/stable/rest-api-graph-algos.html">Neo4j ile oldukça kolay</a>. Ayrıca graf, <a href="http://en.wikipedia.org/wiki/Centrality">centrality</a> açısından da kolayca incelenebilecektir diye tahmin ediyorum.
+
+ 
+

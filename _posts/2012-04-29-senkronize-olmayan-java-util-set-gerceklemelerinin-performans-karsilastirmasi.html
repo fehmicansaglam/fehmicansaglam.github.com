@@ -1,0 +1,160 @@
+--- 
+meta: 
+  dsq_thread_id: "669261240"
+  Hide OgTags: "0"
+  _edit_last: "1"
+  Hide SexyBookmarks: "0"
+type: post
+title: "Senkronize olmayan java.util.Set ger\xC3\xA7eklemelerinin performans kar\xC5\x9F\xC4\xB1la\xC5\x9Ft\xC4\xB1rmas\xC4\xB1"
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+Yine bir Pazar günü evde aylaklık edip uzun zamandır birikmiş olan <a href="http://twitter.com/#!/fehmicansaglam/favorites">Twitter favorilerimi</a> eritmeye çalışırken hangi durumda hangi <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html">java.util.Set</a> gerçeklemesinin kullanılması gerektiği konusunda net bir fikrim olmadığını farkettim. Bu sebeple senkronize olmayan <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html">java.util.Set</a> gerçeklemelerini performans açısından karşılaştırarak dokümantasyonlarında yazan bilgileri doğrulamak istedim. Yaptığım testte <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html">HashSet</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashSet.html">LinkedHashSet</a> ve <a href="http://docs.oracle.com/javase/7/docs/api/java/util/TreeSet.html">TreeSet</a> için temel Set işlevlerini(add, remove, contains, size ve iterator) 1,000,000 kez tekrarladım ve geçen süreyi ölçtüm. Elde ettiğim sonuçlar bu üç gerçeklemenin de dokümantasyonlarında yazdığı şekilde çalıştığını gösterdi. Sonuçları aşağıdaki tabloda paylaşıyorum. Süreler µs(1/1000ms) cinsindendir.
+
+<table>
+<tr>
+<th></th>
+<th>add</th>
+<th>remove</th>
+<th>contains</th>
+<th>size</th>
+<th>iterator</th>
+</tr>
+<tr>
+<td><b>HashSet</b></td>
+<td>2039583</td>
+<td>970396</td>
+<td>1032553</td>
+<td>4176</td>
+<td>44500</td>
+</tr>
+<tr>
+<td><b>LinkedHashSet</b></td>
+<td>2158727</td>
+<td>987442</td>
+<td>1073558</td>
+<td>11339</td>
+<td>34027</td>
+</tr>
+<tr>
+<td><b>TreeSet</b></td>
+<td>4754283</td>
+<td>4287016</td>
+<td>4394679</td>
+<td>12125</td>
+<td>114829</td>
+</tr>
+</table>
+
+Tabloyu şöyle özetleyebiliriz. HashSet ve LinkedHashSet performansı birbirine oldukça yakın. Fazladan yönetilmesi gereken LinkedList sebebiyle LinkedHashSet add, remove ve contains işlevlerinde HashSet'e göre çok az da olsa kötü performans sergiliyor. Buna karşılık LinkedHashSet'in iterator performansı HashSet'e göre %30 kadar daha iyi. TreeSet ise gerçekten Set elemanlarının sıralanması istenmiyorsa yanına yaklaşılmaması gereken bir gerçekleme olarak kendini gösteriyor. 
+
+<del datetime="2012-05-01T07:23:38+00:00">Bu sonuçlara bakarak ben varsayılan gerçekleme olarak LinkedHashSet ile yoluma devam etmeye karar verdim. Başka bir Pazar günü de senkronize olan gerçeklemelere bulaşmaya çalışacağım.</del>
+
+Bu arada <a href="http://implement.asyonturkcedegil.com/">http://implement.asyonturkcedegil.com/</a>
+
+<strong><u>Güncelleme</u></strong> 
+Ahmet A. Akın ve Mehmet D. Akın'ın önerileriyle test kodunu ve sonuç analizini güncelledim. Testleri art arda 3 kez çalıştırıp sonuçları add, remove ve contains için ayrı tablolarda gösterdim. Süreler ms cinsindendir. Denemek isterseniz Ahmet A. Akın'ın biraz daha geliştirdiği test kodu <a href="https://gist.github.com/2556469">burada</a>. 
+
+<table>
+<tr>
+<th><b><u>add testi</u></b></th>
+<th>Test 0</th>
+<th>Test 1</th>
+<th>Test 2</th>
+</tr>
+<tr>
+<td><b>HashSet</b></td>
+<td>1021</td>
+<td>563</td>
+<td>697</td>
+</tr>
+<tr>
+<td><b>LinkedHashSet</b></td>
+<td>978</td>
+<td>984</td>
+<td>800</td>
+</tr>
+<tr>
+<td><b>TreeSet</b></td>
+<td>3830</td>
+<td>3569</td>
+<td>3837</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th><b><u>remove testi</u></b></th>
+<th>Test 0</th>
+<th>Test 1</th>
+<th>Test 2</th>
+</tr>
+<tr>
+<td><b>HashSet</b></td>
+<td>489</td>
+<td>497</td>
+<td>686</td>
+</tr>
+<tr>
+<td><b>LinkedHashSet</b></td>
+<td>749</td>
+<td>789</td>
+<td>550</td>
+</tr>
+<tr>
+<td><b>TreeSet</b></td>
+<td>3786</td>
+<td>3440</td>
+<td>3291</td>
+</tr>
+</table>
+
+<table>
+<tr>
+<th><b><u>contains testi</u></b></th>
+<th>Test 0</th>
+<th>Test 1</th>
+<th>Test 2</th>
+</tr>
+<tr>
+<td><b>HashSet</b></td>
+<td>264</td>
+<td>261</td>
+<td>418</td>
+</tr>
+<tr>
+<td><b>LinkedHashSet</b></td>
+<td>359</td>
+<td>432</td>
+<td>334</td>
+</tr>
+<tr>
+<td><b>TreeSet</b></td>
+<td>3331</td>
+<td>3247</td>
+<td>3245</td>
+</tr>
+</table>
+
+<p>&nbsp;</p>
+<u><i>Ahmet A. Akın:</i></u>
+<blockquote>
+Eğer ciddi bir bellek ve performans kaygım yoksa,
+- Ekleme sırası önemsiz ise HashSet
+- Ekleme sırası önemli ise LinkedHashSet
+- Nesnelerin doğal sıralanışı önemli ise TreeSet
+gönül rahatlığı ile kullanıyorum. Yani bu durumda hızdan çok işe göre yapıyı seçmek daha makul. Özel durumlar için ise özel kütüphaneleri tercih edilebilir. Guava, muhtelif primitive collections vs.
+</blockquote>
+
+<blockquote>Mikrobenchmarking'i bu devirde doğru yapmak neredeyse mümkün değil (<a href="http://www.parleys.com/#id=2103&st=5">http://www.parleys.com/#id=2103&st=5</a> <a href="http://wiki.jvmlangsummit.com/images/1/1d/PerformanceAnxiety2010.pdf">http://wiki.jvmlangsummit.com/images/1/1d/PerformanceAnxiety2010.pdf</a>). O nedenle kafayı küçük farklara takmamak iyidir derim. Sonuçta farklı işletim sistemleri, işlemciler ve JVM sürümleri ile testler yapılıyor. </blockquote>
+
+
+<u><i>Mehmet D. Akın:</i></u>
+<blockquote>
+size() metodunu olcmek cok anlamli degil cunku hepsi de sadece nesnenin icindeki size ismindeki bir integerin degerini donduruyor, rakamlardaki farklilik gürültuden ibaret.
+</blockquote>
+
+<blockquote>Microbenchmarking cok ince bir is, ozellikle Java gibi JVM userinde calisan ve GC iceren bir ortamda islemci, isletim sistemi, JVM versiyonu ve daha baska bir cok etken sonuclari degistirebiliyor.</blockquote>
