@@ -1,19 +1,10 @@
 --- 
-meta: 
-  dsq_thread_id: "669261240"
-  Hide OgTags: "0"
-  _edit_last: "1"
-  Hide SexyBookmarks: "0"
-type: post
-title: "Senkronize olmayan java.util.Set ger\xC3\xA7eklemelerinin performans kar\xC5\x9F\xC4\xB1la\xC5\x9Ft\xC4\xB1rmas\xC4\xB1"
-status: publish
+title: "Senkronize olmayan java.util.Set gerçeklemelerinin performans karşılaştırması"
 layout: post
-published: true
-tags: 
-- canavARGE
 ---
+<p>
 Yine bir Pazar günü evde aylaklık edip uzun zamandır birikmiş olan <a href="http://twitter.com/#!/fehmicansaglam/favorites">Twitter favorilerimi</a> eritmeye çalışırken hangi durumda hangi <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html">java.util.Set</a> gerçeklemesinin kullanılması gerektiği konusunda net bir fikrim olmadığını farkettim. Bu sebeple senkronize olmayan <a href="http://docs.oracle.com/javase/7/docs/api/java/util/Set.html">java.util.Set</a> gerçeklemelerini performans açısından karşılaştırarak dokümantasyonlarında yazan bilgileri doğrulamak istedim. Yaptığım testte <a href="http://docs.oracle.com/javase/7/docs/api/java/util/HashSet.html">HashSet</a>, <a href="http://docs.oracle.com/javase/7/docs/api/java/util/LinkedHashSet.html">LinkedHashSet</a> ve <a href="http://docs.oracle.com/javase/7/docs/api/java/util/TreeSet.html">TreeSet</a> için temel Set işlevlerini(add, remove, contains, size ve iterator) 1,000,000 kez tekrarladım ve geçen süreyi ölçtüm. Elde ettiğim sonuçlar bu üç gerçeklemenin de dokümantasyonlarında yazdığı şekilde çalıştığını gösterdi. Sonuçları aşağıdaki tabloda paylaşıyorum. Süreler µs(1/1000ms) cinsindendir.
-
+</p>
 <table>
 <tr>
 <th></th>
@@ -49,14 +40,22 @@ Yine bir Pazar günü evde aylaklık edip uzun zamandır birikmiş olan <a href=
 </tr>
 </table>
 
+<p>
 Tabloyu şöyle özetleyebiliriz. HashSet ve LinkedHashSet performansı birbirine oldukça yakın. Fazladan yönetilmesi gereken LinkedList sebebiyle LinkedHashSet add, remove ve contains işlevlerinde HashSet'e göre çok az da olsa kötü performans sergiliyor. Buna karşılık LinkedHashSet'in iterator performansı HashSet'e göre %30 kadar daha iyi. TreeSet ise gerçekten Set elemanlarının sıralanması istenmiyorsa yanına yaklaşılmaması gereken bir gerçekleme olarak kendini gösteriyor. 
+</p>
 
+<p>
 <del datetime="2012-05-01T07:23:38+00:00">Bu sonuçlara bakarak ben varsayılan gerçekleme olarak LinkedHashSet ile yoluma devam etmeye karar verdim. Başka bir Pazar günü de senkronize olan gerçeklemelere bulaşmaya çalışacağım.</del>
+</p>
 
+<p>
 Bu arada <a href="http://implement.asyonturkcedegil.com/">http://implement.asyonturkcedegil.com/</a>
+</p>
 
-<strong><u>Güncelleme</u></strong> 
+<h3>Güncelleme</h3> 
+<p>
 Ahmet A. Akın ve Mehmet D. Akın'ın önerileriyle test kodunu ve sonuç analizini güncelledim. Testleri art arda 3 kez çalıştırıp sonuçları add, remove ve contains için ayrı tablolarda gösterdim. Süreler ms cinsindendir. Denemek isterseniz Ahmet A. Akın'ın biraz daha geliştirdiği test kodu <a href="https://gist.github.com/2556469">burada</a>. 
+</p>
 
 <table>
 <tr>

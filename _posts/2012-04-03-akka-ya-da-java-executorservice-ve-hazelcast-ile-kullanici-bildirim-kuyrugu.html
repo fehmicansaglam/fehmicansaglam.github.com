@@ -1,22 +1,18 @@
 --- 
-meta: 
-  dsq_thread_id: "635171202"
-  Hide OgTags: "0"
-  _edit_last: "1"
-  Hide SexyBookmarks: "0"
-type: post
 title: "Akka ya da Java ExecutorService ve Hazelcast ile kullan\xC4\xB1c\xC4\xB1 bildirim kuyru\xC4\x9Fu"
-status: publish
 layout: post
-published: true
-tags: 
-- canavARGE
 ---
+<p>
 Son zamanlarda Hazelcast'i dağıtık bir bildirim kuyruğu olarak kullanmak üzerine kafa yoruyorum. Amacım, farklı node'ların sistem çapındaki herhangi bir kullanıcı için üreteceği bildirimleri ortak bir kuyrukta tutmak ve bu bildirimleri gerekli zamanlarda işleyerek ilgili kullanıcıya ulaştırmak. Burada gerekli zaman ile bir kullanıcı için bildirim kuyruğu uzunluğunun belli bir sayıyı geçmesi ya da bu kullanıcı için kuyruktaki en eski bildirimin belli bir zamandan önce oluşturulmuş olmasını kastetmekteyim. Bu doğrultuda bir yandan hangi Hazelcast veri yapısını kullanacağımı düşünürken bir yandan da yazma işlemini ne şekilde yapabileceğimi araştırıyorum.
+</p>
 
+<p>
 Önceleri bildirimleri saklamak için <a href="http://www.hazelcast.com/docs/2.0/manual/single_html/#Queue">Queue</a> kullanmayı düşündüm. Fakat yukarıda belirttiğim ihtiyaçları değerlendirince her kullanıcı için ayrı bir kuyruğa sahip olmam gerektiğini fark ettim. Her kullanıcı için ayrı bir Queue oluşturmak ve bunları yönetmek çok maliyetli olacağından ihtiyacıma en uygun veri yapısının <a href="http://www.hazelcast.com/docs/2.0/javadoc/com/hazelcast/core/MultiMap.html">MultiMap</a> olduğuna kanaat getirdim. MultiMap içinde kullanacağım anahtarlar kullanıcı adına(username), değerler de bildirimlere(Notification) karşılık gelecek. Bir kullanıcı için birden fazla bildirim olabilecek. 
+</p>
 
+<p>
 Sonraki adımda bildirim kuyruğundaki bildirim sayısı belli bir değerin üstünde ve en eski bildirimin oluşturulma tarihi belli bir zamandan önce olan kullanıcıları en performanslı şekilde nasıl elde edebileceğimi düşündüm. Hazelcast, <a href="http://www.hazelcast.com/docs/2.0/manual/single_html/#Map">Map</a> içindeki değerleri sorgulayabilmemiz için SQL benzeri bir <a href="http://www.hazelcast.com/docs/2.0/manual/single_html/#MapQuery">DSL</a> sağlıyor. Yalnız bu özellik MultiMap için geçerli değil. Bu sebeple veriyi denormalize etmeye ve kullanıcı kuyruklarına ait bilgileri(her bir kullanıcı kuyruğu için eleman sayısı ve en eski bildirim zamanı) ayrı bir Map içinde tutmaya karar verdim.
+</p>
 
 MultiMap içine yazacağım bildirimler için bir Notification sınıfı oluşturdum.
 <script src="https://gist.github.com/2292578.js?file=Notification.java"></script>
@@ -24,9 +20,15 @@ MultiMap içine yazacağım bildirimler için bir Notification sınıfı oluştu
 Her bir kullanıcı için kuyruk bilgilerini saklamak amacıyla oluşturduğum QueueMetaData sınıfı ise şöyle:
 <script src="https://gist.github.com/2292578.js?file=QueueMetadata.java"></script>
 
+<p>
 Daha sonra, bir ExecutorService kullanarak 6 farklı kullanıcı için 16384 adet rastgele bildirim oluşturan bir kod yazdım. Buradaki belki en önemli problem Map ve MultiMap için senkronizasyonu sağlamak idi. Hazelcast'in sağladığı anahtar bazlı <a href="http://www.hazelcast.com/docs/2.0/manual/single_html/#Lock">lock</a> mekanizması yaptığım testlerde sorunsuz çalıştı. Yazma işleminin ayrıntısı için aşağıdaki Producer koduna bakabilirsiniz.
+</p>
+
 <script src="https://gist.github.com/2292578.js?file=(ExecutorService)Producer.java"></script>
+
+<p>
 Her bir Producer opCount kadar Notification oluşturmakta. Serialization için JSON kullanmaya karar verdim. Bu sebeple <a href="http://code.google.com/p/google-gson/">google-gson</a> kütüphanesinden faydalandım. Farklı sayıda Producer ile testler yaptım. Sonuçları yazının sonunda paylaşacağım. Producer sınıfının çalışabilmesi için gerekli olan LatchWorker ve HazelcastManager sınıflarının kodları aşağıda.
+</p>
 
 <script src="https://gist.github.com/2292578.js?file=LatchWorker.java"></script>
 <script src="https://gist.github.com/2292578.js?file=HazelcastManager.java"></script>
@@ -84,5 +86,5 @@ Akka
 
 </table>
 
-Eğer bariz bir hata yapmıyorsam Akka yöntemi hem yönetim hem de performans açısından ExecutorService yöntemine göre daha önde. Hata bildirimi/öneri için yorumlarınızı beklemekteyim.
+<p>Eğer bariz bir hata yapmıyorsam Akka yöntemi hem yönetim hem de performans açısından ExecutorService yöntemine göre daha önde. Hata bildirimi/öneri için yorumlarınızı beklemekteyim.</p>
  

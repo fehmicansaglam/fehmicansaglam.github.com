@@ -1,20 +1,14 @@
 --- 
-meta: 
-  dsq_thread_id: "622137715"
-  Hide OgTags: "0"
-  _edit_last: "1"
-  Hide SexyBookmarks: "0"
-type: post
 title: Play! Framework ile asenkron HTTP
-status: publish
 layout: post
-published: true
-tags: 
-- Bir player olarak canavar
 ---
+<p>
 Geçtiğimiz hafta içerisinde Play! Framework Türkiye Google Grubu'nda güzel bir tartışma <a href="https://groups.google.com/forum/?fromgroups#!topic/play-framework-tr/JRSDsDVlg_M">konusu</a> oldu. <a href="http://ahmetalpbalkan.com/">Ahmet Alp Balkan</a>'ın başlattığı tartışmaya <a href="http://agaoglu.name.tr/">Erdem Ağaoğlu</a>'nun yazdığı <a href="https://groups.google.com/d/msg/play-framework-tr/JRSDsDVlg_M/_TiCVn8sPr0J">mail</a> damga vurdu:) Aynı tartışmada konuyla ilgili uzun boylu bir yazı yazacağıma söz vermiştim. Bu yazıda, söz verdiğim konulara değinmeden Play! Framework ile asenkron işlerin nasıl yapıldığını örneklemeye çalışacağım. Söz vermiş olduğum 'Neden non-blocking IO, neden Tomcat "eski teknoloji", neden Java ile ancak bu kadar' konularına ise daha fazla zaman ayırarak ileriki bir zamanda değinmeyi düşünüyorum.
+</p>
 
+<p>
 Anlatmaya çalışacağım örnek iki ayrı uygulamadan oluşmakta. İlk uygulama bir REST API sağlayıcı olmakla birlikte <u>kullanıcı oluşturan</u> ve <u>kullanıcı ayrıntılarını döndüren</u> iki API sağlıyor olacak. Diğer uygulama ise ilk uygulamanın sağladığı API'leri kullanacak. İlk uygulamaya "<b>Provider</b>", ikinci uygulamaya "<b>Client</b>" diyeceğim.
+</p>
 
 Önce Provider içinde kullanıcıları saklamak üzere User modelini oluşturarak işe başlayalım.
 
@@ -33,7 +27,9 @@ POST    /api/user                               Provider.createUser
 
 Dikkat edeceğiniz üzere iki API için de aynı route'u kullanacağız. Hangi API'ye ulaşmak istendiği ayrımını HTTP metodu(GET ya da POST) ile yapıyoruz.
 
+<p>
 Provider uygulamasını böylece tamamlamış olduk. Client uygulamasına HTTP metodlarını içeren bir enum ekleyerek devam edelim. Bu enum yapacağımız API isteklerini yönetmemizi kolaylaştıracak. Provider içine eklediğimiz User modelinin bir benzerini Client uygulamasına da eklememiz gerekiyor. Fakat bu kez JPA annotation'larına ihtiyacımız olmayacak çünkü kullanıcıları Client uygulamasında veritabanına kaydetmeyeceğiz.
+</p>
 
 <script src="https://gist.github.com/2173771.js?file=HttpMethod.java"></script>
 
@@ -43,7 +39,9 @@ Sırada Client uygulamasının kalbi ClientJob ve Client sınıfları var.
 
 <script src="https://gist.github.com/2173771.js?file=Client.java"></script>
 
+<p>
 Provider uygulamasını http://localhost:9001 adresinde çalıştırıyoruz. ClientJob sınıfı Provider uygulamasına HTTP isteğini yaptıktan sonra sonucu <a href="http://www.playframework.org/documentation/1.2/libs">Either</a> içerisinde döndürüyor. Böylece dönen cevap ya bir Throwable ya da bir User oluyor. Client uygulamasındaki fonksiyonlar geriye Promise döndürüyorlar. Dönen Promise herhangi bir controller içerisinde await fonksiyonuna verilebilir. Örnek olarak Client uygulamasında Application.index içerisinde bu fonksiyonları kullanalım. Önce bir kullanıcı oluşturalım, sonra bu kullanıcının ayrıntılarını isteyelim.
+</p>
 
 <script src="https://gist.github.com/2173771.js?file=Application.java"></script>
 
@@ -53,6 +51,10 @@ Provider uygulamasını http://localhost:9001 adresinde çalıştırıyoruz. Cli
 INFO  ~ Kullanıcı oluşturuldu: name:Foo surname:Bar
 </pre>
 
+<p>
 Örneği oldukça basit tutmaya çalıştım. Ancak <a href="http://4primes.com">4Primes</a> bünyesinde geliştirmekte olduğumuz KURAM(*) platformu da çok benzer bir yapı kullanmakta. Bu yapının oldukça karmaşık ve büyük ölçekli ortamlarda sorunsuz çalıştığını da belirtmek isterim. Umarım faydalı olmuştur.
+</p>
 
+<p>
 (*): KURAM platformu bir tür Tümleşik Yönetim Bilgi Sistemi Platformu'dur. SSO, Kullanıcı ve Yetki yönetimi, Doküman Yönetimi, Log Yönetimi, Dağıtık Arama, Dağıtık Önbellek gibi özellikler sunmaktadır. KURAM hakkında yakın zamanda güzel yazılar yazabilmeyi umuyorum.
+</p>
