@@ -1,32 +1,31 @@
 --- 
-meta: 
-  dsq_thread_id: "639311950"
-  Hide OgTags: "0"
-  _edit_last: "1"
-  Hide SexyBookmarks: "0"
-type: post
 title: Herkes RESTful Web API tasarlayabilir
-status: publish
 layout: post
-published: true
-tags: 
-- canavARGE
 ---
-<b>Herkes RESTful Web API tasarlayabilir <em>ama bazı kurallara uymak koşuluyla...</em></b>
+<h3>Herkes RESTful Web API tasarlayabilir <em>ama bazı kurallara uymak koşuluyla...</em></h3>
 
+<p>
 Geçenlerde Twitter'da kaynağını tam olarak bilemediğim fakat çok beğendiğim bir tweet dolaştı.
+</p>
+
 <blockquote>HTTP response codes for dummies. 50x: we fucked up. 40x: you fucked up. 30x: ask that dude over there. 20x: cool.</blockquote>
 
+<p>
 Kısmen usturuplu Türkçe çevirisi şöyle:
+</p>
 
 <blockquote>Zor öğrenenler için HTTP durum kodları. 50x: biz sıçtık. 40x: sen sıçtın. 30x: şu karşıdaki elemana sor. 20x: tamamdır.</blockquote>
 
+<p>
 <a href="http://tr.wikipedia.org/wiki/HTTP_durum_kodlar%C4%B1">HTTP durum kodları</a> bundan daha iyi anlatılamazdı sanırım. Bu tweetten bir zaman sonra <a href="http://openmymind.net/">Karl Seguin</a>'in <a href="https://twitter.com/#!/karlseguin/status/185582971871428608">şu tweeti</a> geldi. Kısaca söylediği şuydu:   web servisiniz hataları neden 200 durum kodu ile döndürüyor? 
+</p>
 
+<p>
 Bu iki tweet RESTful Web API geliştiricileri için önemli ipuçları veriyor. Ben de kendi tecrübelerim ışığında bir RESTful Web API'nin nasıl tasarlanması gerektiğinden bahsetmeye çalışacağım. Anlatacaklarımın %100 geçerli ya da doğru olmasını beklemek büyük bir yanılgı olur. Bu sebeple bu yazıyı bir tür başlangıç noktası olarak değerlendirmenizi öneririm. 
+</p>
 
 <h3>Hangi durumda hangi <a href="http://en.wikipedia.org/wiki/Hypertext_Transfer_Protocol#Request_methods">HTTP metodu</a> kullanılmalı?</h3>
-<table style="width:100%">
+<table>
 <tr>
 <th>HTTP Metodu</th>
 <th>Açıklama</th>
@@ -63,28 +62,36 @@ DELETE metodunu bir kaynağı silmek için kullanabilirsiniz. Hangi kaynağın s
 </tr>
 </table>
 
+<p>
 HTTP metodlarını kullanırken dikkat edilmesi gereken belki en önemli nokta <u>HEAD ve GET metodlarının salt okunur olması gereğidir</u>. Başka bir deyişle HEAD ve GET metodları ile kaynak bilgilerini güncellememeli ya da yeni kaynak oluşturmamalısınız. Yazma işleri için POST, PUT ve DELETE metodlarını kullanmalısınız. Diğer yandan PUT ve DELETE metodları idempotent metodlardır. Bu sebeple art arda çağrılmaları sorun oluşturmaz/oluşturmamalıdır.
+</p>
 
 <h3>URI'ler nasıl olmalı?</h3>
+<p>
 Google'da arama yaparsanız bu konuda pek çok farklı öneriye/gerçeklemeye ulaşabilirsiniz. Ben de kendi önerilerimi sıralayacağım. Wikipedia'da yapılan <a href="http://en.wikipedia.org/wiki/Representational_state_transfer#RESTful_web_services">açıklama</a> oldukça güzel. Benim önerilerim de bu tabloya benzer olacak.
+</p>
 
-<b>URI'leriniz ID dışında parametre içermemeli.</b> 
-Parametreleri URI içine yazdığınızda URI'leriniz yönetilemez bir hale gelecektir. Bir örnek vereyim:
+<h5>URI'leriniz ID dışında parametre içermemeli.</h5>
+<p>Parametreleri URI içine yazdığınızda URI'leriniz yönetilemez bir hale gelecektir. Bir örnek vereyim:</p>
 <pre>
 GET /api/{TICKET}/{DOMAIN}/users/{ROLE}/
 </pre>
+<p>
 Bu API ile belli bir etki alanında(DOMAIN) belli bir role(ROLE) sahip olan kullanıcıların sorgulandığını varsayalım. TICKET parametresinin ise güvenlik amacılığıyla gönderilen bir anahtar olduğunu kabul edelim. Bu URI'nin istemci tarafında oluşturulması oldukça zordur. Bu sebeple ben ID parametresi dışındaki parametrelerin URI'de bulunmasını pratikte çok uygun bulmuyorum. Buna bir istisna olarak örnekteki TICKET parametresini verebilirim. Eğer TICKET parametresi her URI'de bulunacak ise (bu tür parametrelere statik parametre diyorum) bu URI'lerin istemci tarafında ortak bir kod ile oluşturulması pek zor olmayacaktır. Bunun diğer bir faydası da TICKET içermeyen istekler için doğrudan HTTP 404 döndürülebilmesine imkan sağlamasıdır. Sonuç olarak önerilerim doğrultusunda yukarıdaki URI şu hale gelmelidir.
+</p>
 <pre>
 GET /api/{TICKET}/users?domain=...&role=...
 </pre>
 
-<b>URI'lerde büyük harf kullanılmamalı.</b>
-Bu önerimin nesnel bir açıklaması yok ama genel kullanımda /dailySessions yerine /daily_sessions ya da /sessions/daily kullanımı daha düzgün ve kolay görünüyor.
+<h5>URI'lerde büyük harf kullanılmamalı.</h5>
+<p>Bu önerimin nesnel bir açıklaması yok ama genel kullanımda /dailySessions yerine /daily_sessions ya da /sessions/daily kullanımı daha düzgün ve kolay görünüyor.</p>
 
 <h3>Hangi durumda hangi <a href="http://tr.wikipedia.org/wiki/HTTP_durum_kodlar%C4%B1">HTTP durum kodu</a> kullanılmalı?</h3>
+<p>
 Yazının başında verdiğim tweet örneği durum kodlarını oldukça iyi açıklıyor. 50x durum kodları servis sağlayıcı tarafında bir hata olduğuna, 40x durum kodları istemci tarafında bir hata olduğuna işaret ediyor. 20x durum kodları ise isteğin başarıyla sonuçladığını ifade ediyor. Bu sebeple hata mesajları asla ve asla 20x durum kodu ile gönderilmemelidir. Hata türüne uygun durum kodu seçilerek hata mesajı bu durum kodu ile istemciye gönderilmelidir. Oldukça fazla sayıda durum kodu olsa da ben 200, 400, 403, 404 ve 500 durum kodlarını yeterli buluyorum. Ama belli durumlarda diğer durum kodlarını kullanma gereği olabileceğini de aklınızdan çıkarmayın derim. 
+</p>
 
-<table style="width:100%">
+<table>
 <tr>
 <th>HTTP Durum Kodu</th>
 <th>Açıklama</th>
@@ -121,12 +128,20 @@ Servis sağlayıcıda beklenmeyen bir hata olduğunda bu kodu kullanmalısınız
 </tr>
 </table>
 
+<p>
 Durum kodu ile birlikte hata mesajı gönderme zorunluluğunuz bulunmasa da hata mesajı vermek API kullanıcılarının işini oldukça kolaylaştıracaktır. Bu sebeple 400, 403, 404 ve 500 durum kodları ile birlikte mutlaka hata mesajı dönmenizi öneririm.
+</p>
 
 <h3>Yanıt hangi formatta olmalı?</h3>
+<p>
 Yanıt için yeni bir format keşfetmenize inanın hiç gerek yok. JSON formatı hem güzel, hem parse edilmesi kolay, hem de çok fazla kütüphane desteğine sahiptir. Bu sebeple yanıtlarınızı aksi çok gerekli olmadıkça JSON formatında dönmenizi öneririm. 
+</p>
 
 <h3><a href="http://en.wikipedia.org/wiki/JSONP">JSONP</a> ve <a href="http://en.wikipedia.org/wiki/Cross-Origin_Resource_Sharing">CORS</a></h3>
+<p>
 Bu iki yöntemin ayrıntılarına burada değinmeyeceğim ama geliştirdiğiniz API Javascript istemciler ile kullanılacaksa iki yönteme de destek vermeniz yerinde olacaktır.
+</p>
 
+<p>
 Buraya kadar sabırla okuduğunuz için teşekkür ederim. Umarım faydalı olmuştur.
+</p>

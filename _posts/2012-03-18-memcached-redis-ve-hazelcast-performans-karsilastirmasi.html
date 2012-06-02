@@ -1,18 +1,10 @@
 --- 
-meta: 
-  dsq_thread_id: "615181382"
-  Hide OgTags: "0"
-  _edit_last: "1"
-  Hide SexyBookmarks: "0"
-type: post
 title: "Memcached, Redis ve Hazelcast performans kar\xC5\x9F\xC4\xB1la\xC5\x9Ft\xC4\xB1rmas\xC4\xB1"
-status: publish
 layout: post
-published: true
-tags: 
-- canavARGE
 ---
+<p>
 <a href="http://ankara.yazilimatolyesi.org/ankara-yazilim-atolyesi-mart-2012-etkinligi/">Ankara Yazılım Atölyesi Mart Etkinliği</a>'nde Osman Üngür başarılı bir <a href="http://redis.io/">Redis</a> sunumu yaptı. Sunumda gelen performans soruları üzerine Memcached, Redis ve Hazelcast ürünlerini kendi makinamda karşılaştırmaya karar verdim. Makina konfigürasyonum şöyle:
+</p>
 <pre>
 OS:        Mac OS X Lion 10.7.3
 İşlemci:   2.4 GHz Intel Core 2 Duo
@@ -22,9 +14,13 @@ Redis:     2.4.8
 Hazelcast: 2.0.1
 </pre>
 
+<p>
 Memcached testi için <a href="http://code.google.com/p/spymemcached/">spymemcached</a>, Redis testi için <a href="http://code.google.com/p/jedis/">Jedis</a>, Hazelcast testi için <a href="http://www.hazelcast.com/docs/2.0/manual/single_html/#JavaClient">Hazelcast Native Java Client</a> kütüphanelerini kullandım. 
+</p>
 
+<p>
 Uyguladığım testte üç ürüne de 16 byte uzunluğunda bir String'i 131072 kez yazıp okudum ve geçen süreyi ölçtüm. Aynı testi her ürün için 1, 2, 4, 8, 16, 32, 64 ve 128 thread ile tekrarladım. Ürünleri ayrı bir sunucuda değil yine kendi makinamda çalıştırdım. Başka bir deyişle test uygulaması ve ürünler aynı makinada çalıştılar. Hazelcast için yaptığım testi Memcached istemcisi ve Hazelcast Java istemcisi ile tekrarladım. Aslına bakılırsa sonuçlar üç ürün için de tatmin edici oldu. Yorumlamadan önce sonuçları paylaşayım. Süreler µs(1/1000ms) cinsindendir.
+</p>
 
 <table>
 <tr>
@@ -59,10 +55,12 @@ Uyguladığım testte üç ürüne de 16 byte uzunluğunda bir String'i 131072 k
 </tr>
 </table>
 
+<p>
 Genel görünümde Redis'in thread sayısından bağımsız olarak aynı performansı sürdürdüğünü görebiliyoruz. Thread sayısı arttıkça Hazelcast performansındaki artışa dikkat etmek gerek. Talip Ozturk ve Fuad Malikov çok iyi iş çıkarmışlar. Native Java Client ile Hazelcast'in 32, 64 ve 128 thread sayısındaki performansının üstüne çıkabilen yalnızca 8, 16 ve 32 thread sayısında Memcached oldu. Testin başlangıcında ürünler arasında en az özelliğe sahip olan Memcached performansının çok daha üstün olmasını bekliyordum. Memcached'in ortalama performansı üstün olsa da yoğun concurrent ortamlarda zirvenin sahibi Hazelcast olarak görünüyor. Redis de güçlü özellikleri, performansı ve kararlılığı ile kendini gösteriyor.
+</p>
 
+<p>
 Testi tekrarlamak isteyenler için kodları aşağıda paylaşıyorum. Yaptığım testteki eksikleri/hataları yorum olarak bekliyorum.
-
-<!--more-->
+</p>
 
 <script src="https://gist.github.com/2070166.js"> </script>
