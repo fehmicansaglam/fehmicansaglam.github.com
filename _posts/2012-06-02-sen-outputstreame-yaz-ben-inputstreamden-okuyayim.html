@@ -6,19 +6,26 @@ title: "Sen OutputStream'e yaz, ben InputStream'den okuyayım"
 Yakın zamanda yaşadığım görece karmaşık bir sorundan yola çıkarak bir Java OutputStream'in nasıl InputStream'e dönüştürülebileceğinden bahsetmek istiyorum. Bu gereksinim OutputStream'e veri yazan bir sınıfın oluşturduğu veriyi, InputStream'den veri okuyan bir sınıfa göndermek istediğimiz durumda ortaya çıkıyor. Stephen Ostermiller bu konuda çok güzel bir <a href="http://ostermiller.org/convert_java_outputstream_inputstream.html">yazı</a> yazmış ve soruna üç farklı çözüm yolu getirmiş. 
 </p>
 
-<strong>1.yöntem: Byte Array kullanın</strong>
-<pre>
+<h3>1.yöntem: Byte Array kullanın</h3>
+
+<pre data-language="java">
 ByteArrayOutputStream out = new ByteArrayOutputStream();
 class1.putDataOnOutputStream(out);
 class2.processDataFromInputStream(
     new ByteArrayInputStream(out.toByteArray())
 );
 </pre>
-Bu yöntem oldukça kolay ancak tüm veriyi bellekteki bir byte dizisine aldığınızdan büyük veriler için Out Of Memory hatası ile karşılaşmanız olası.
 
-<strong>2.yöntem: Pipe kullanın</strong>
+<p>
+Bu yöntem oldukça kolay ancak tüm veriyi bellekteki bir byte dizisine aldığınızdan büyük veriler için Out Of Memory hatası ile karşılaşmanız olası.
+</p>
+
+<h3>2.yöntem: Pipe kullanın</h3>
+<p>
 Veriyi PipedOutputStream'e yazan ayrı bir thread oluşturun. Veri yazıldıkça asıl thread PipedInputSream'den veriyi okuyabilir.
-<pre>
+</p>
+
+<pre data-language="java">
 PipedInputStream in = new PipedInputStream();
 PipedOUtputStream out = new PipedOutputStream(in);
   new Thread(
@@ -30,13 +37,18 @@ PipedOUtputStream out = new PipedOutputStream(in);
 ).start();
 class2.processDataFromInputStream(in);
 </pre>
-Bu yöntem ek bir kütüphaneye/koda ihtiyaç duyulmadan gerçeklendiği için benim önerebileceğim en iyi yöntem. Fakat okuma ve yazma işlerinin ayrı threadler içinde yapıldığından emin olmalısınız. Aksi halde yüksek olasılıkla threadiniz bloklanacaktır. 
 
-<strong>3.yöntem: Circular Buffer kullanın</strong>
+<p>
+Bu yöntem ek bir kütüphaneye/koda ihtiyaç duyulmadan gerçeklendiği için benim önerebileceğim en iyi yöntem. Fakat okuma ve yazma işlerinin ayrı threadler içinde yapıldığından emin olmalısınız. Aksi halde yüksek olasılıkla threadiniz bloklanacaktır.
+</p>
+
+<h3>3.yöntem: Circular Buffer kullanın</h3>
+<p>
 Bu yöntemde Ostermiller, kendi geliştirdiği <a href="http://ostermiller.org/utils/CircularBuffer.html">CircularBuffer</a> sınıflarının kullanımını öneriyor. Geliştirdiği kodlar GPLv2 lisanslı olduğundan açık kaynak projelerinizde gönül rahatlığıyla kullanabilirsiniz.
+</p>
 
-Multiple Threaded Örneği
-<pre>
+<h5>Multiple Threaded Örneği</h5>
+<pre data-language="java">
 CircularByteBuffer cbb = new CircularByteBuffer();
 new Thread(
 new Runnable(){
@@ -48,21 +60,27 @@ new Runnable(){
 class2.processDataFromInputStream(cbb.getInputStream());
 </pre>
 
-Single Thread Örneği
-<pre>
+<h5>Single Thread Örneği</h5>
+<pre data-language="java">
 // buffer all data in a circular buffer of infinite size
 CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
 class1.putDataOnOutputStream(cbb.getOutputStream());
 class2.processDataFromInputStream(cbb.getInputStream());
 </pre>
 
+<p>
 Yazımın başında bahsettiğim görece karmaşık soruna gelelim. Amacım bir RESTful API aracılığıyla çektiğim dosya verisini(genelde büyük boyutlu), <a href="http://en.wikipedia.org/wiki/Zero-copy">bellekte başka bir yere kopyalamadan</a> doğrudan istemciye(tarayıcıya) göndermek idi. Uygulamamı her zamanki gibi Play! Framework kullanarak geliştiriyordum. API çağrısı için <a href="https://github.com/sonatype/async-http-client">Async Http Client</a> kullanmaktaydım. Async Http Client veri geldikçe bir OutputStream'e yazabilmenize imkan sağlıyor.
+</p>
 
 <script src="https://gist.github.com/2858265.js?file=AsyncStreamHandler.java"></script>
 <script src="https://gist.github.com/2858265.js?file=ApiClient.java"></script>
 
+<p>
 OutputStream olarak Play!'in response.out üyesini kullanmak istediğimde OOM hatası alınca bu OutputStream'in bir ByteArrayOutputStream olduğunu farkettim. Bunun yerine response.direct üyesine bir InputStream vermek ve Content-Length başlığını setlemek gerekiyor. Content-Length setlemezseniz HTTP protokolü gereği response başlıklarının body'den önce gitmesi gerektiği için tüm stream'in yine belleğe alınıp boyutunun hesaplanması gerekiyor. Bu da OOM almanıza sebep oluyor. Çözüm yöntemini bulunca (response.direct üyesine bir InputStream vermek ve Content-Length başlığını setlemek) geriye tek bir sorun kaldı: Async Http Client'ın yazdığı OutputStream'i InputStream'e dönüştürerek response.direct'e atamak. Bunun için de yukarıda önerdiğim Pipe yöntemini kullandım.
+</p>
 
 <script src="https://gist.github.com/2858265.js?file=Application.java"></script>
 
+<p>
 Sorularınızı ya da önerilerinizi yorum olarak bekliyorum.
+</p>
