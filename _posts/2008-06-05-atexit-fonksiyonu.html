@@ -1,0 +1,18 @@
+--- 
+meta: 
+  dsq_thread_id: "345223162"
+  _edit_last: "1"
+type: post
+title: atexit() fonksiyonu
+status: publish
+layout: post
+published: true
+tags: 
+- atexit()
+- canavARGE
+- exit()
+---
+[cc lang="c"]
+int atexit ( void ( * function ) (void) );
+[/cc]
+Bu fonksiyon program normal şekilde sonlandığında çağrılacak olan fonksiyonu belirler. Eğer bu fonksiyon farklı yerlerde çağrılarak birden çok atexit fonksiyonu belirlenmişse, bu fonksiyonlar bir yığın yapısı şeklinde ters sırada çağrılır. Başka bir deyişle en son belirtilen fonksiyon en önce çağrılır. Aynı fonksiyon birden çok kez eklenebilir. Programın normal şekilde sonlandırılmasına exit() fonksiyonunun çağrılması da dahildir. 

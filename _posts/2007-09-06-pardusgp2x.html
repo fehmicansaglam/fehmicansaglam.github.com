@@ -1,0 +1,58 @@
+--- 
+meta: 
+  dsq_thread_id: "344983986"
+  _edit_last: "1"
+type: post
+title: Pardus+GP2X
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+<p align="right">
+<b><u>Yazıyı indir:</u></b>
+Pardus+GP2X.<a href="/blog/doc/Pardus+GP2X.pdf">pdf</a><br />
+Pardus+GP2X.<a href="/blog/doc/Pardus+GP2X.odt">odt</a>
+</p>
+
+<p>
+Bu yazının amacı GP2X için yazılım geliştirmek isteyen fakat nereden başlaması gerektiğini bilmeyen geliştiricilere yardımcı olmaktır. Ayrıntılı bilgilerden öte bu yazıda, gerekli bilgilere nereden ve nasıl ulaşabileceğiniz sorularına yanıt vermeye ve sizler için kapıyı aralamaya çalıştım. Sorularınızı  bana gönderebilir ya da çok daha iyisi <a href="http://forum.gp2xtr.com/">http://forum.gp2xtr.com/</a> adresindeki GP2X Türkiye Forumlarına yazabilirsiniz. Bunun yanında aradığınız cevap belki de <a href="http://wiki.gp2xtr.com"> http://wiki.gp2xtr.com </a> adresinde çoktan yerini almıştır.
+</p> 
+<br /><!--more--><br /><p>
+GP2X için kod yazmaya başlamadan önce bence ilk işimiz geliştirme makinası üzerinde kullanacağımız işletim sistemini seçmek olmalı. Windows mu kullanmalıyız yoksa bir Linux dağıtımı mı? Ya da [[MacOS]] mu? Bu sorunun cevabını vermek benim gibi Windows sistemler üzerinde yalnızca çile çekmiş; baskıya, dayatmalara karşı duran; kendine özgü olarak değiştirebildiği, geliştirebildiği sistemleri tercih eden ve MacOS sistemleri zorunlu olmadıkça uzaktan seyretmekle yetinmiş biri için oldukça kolay. Ancak yine de Windows fanatikleri için mantıklı bir cevap bulmak gerekiyor. Þurası açık ki GP2X üzerinde Linux çekirdeği çalıştığı için elbette ki geliştirme yapılan sistemin de Linux tabanlı olması geliştirme ve test açısından daha verimli olacaktır. Ayrıca Linux için pek çok açık kaynak araç bulunması da biz geliştiricilere büyük kolaylık sağlıyor. Hatta benim en sevdiğim özellik bu araçlar üzerinde değişiklikler yapabiliyor olmak. Örneğin Code::Blocks editörü üzerinde ihtiyaç duyduğum değişiklikleri yaptıktan sonra "Code::Blocks Canavar Edition" adıyla kullanmak beni dünyanın en mutlu insanı yapıyor. Çünkü bahsettiğim editörün bu halini tüm evrende kullanan tek insan benim ve bu durum beni bütün insanlar arasında özel kılıyor.
+</p>
+ 
+<p>
+Linux kullanacağımıza biraz emrivaki de olsa karar verdiğimize göre şimdi sıra şu can alıcı soruya geliyor: Hangi Linux dağıtımını seçmeli? Elimizde pek çok seçenek olması seçim yapmayı oldukça zorlaştırıyor. Uzun zaman [[Fedora Core]] kullanmış ben için yanıt bu sefer aynı dağıtım olmayacak. Ben bu konuda tüm ihtiyaçlarımı fazlasıyla karşıladığı için, biraz da milliyetçilik yapıp [[Pardus]] dağıtımını seçtim. 
+</p>
+
+<p>
+Pardus'u <a href="http://pardus.org.tr">http://pardus.org.tr</a>'den indirip kuruyoruz. Bu noktada Pardus ile ilgili bir kaç yararlı bağlantı vermeden de geçmeyeyim.
+</p>
+
+<p>
+1.<a href="http://gezegen.pardus.org.tr/">http://gezegen.pardus.org.tr/</a> <br />
+2.<a href="http://tr.pardus-wiki.org/">http://tr.pardus-wiki.org/</a> <br />
+3.<a href="http://www.ozgurlukicin.com/">http://www.ozgurlukicin.com/</a> <br />
+4.<a href="http://www.pardus-oyun.org/">http://www.pardus-oyun.org/</a> <br />
+</p>
+
+<p>
+Evet artık canavar gibi çalışan bir işletim sistemimiz var. Yeni sistemimizin orasıyla burasıyla oynamak elbette ki çok zevkli. Ama çok fazla zaman kaybetmeden yeni görevimiz olan GP2X için bir SDK(Software Development Kit) kurmaya başlamamız gerek. Önce <a href="http://wiki.gp2xtr.com/">http://wiki.gp2xtr.com/</a> adresine bir göz atalım. Burada Yazılım Geliştirme kısmında Linux bağlantısına tıklıyoruz. Açılan sayfada gelen öneriler arasından ben pek çok kütüphaneyi içinde barındıran Oopo's DevKit'i tercih ettim(Saygılar Oopo). <a href="http://archive.gp2x.de/cgi-bin/cfiles.cgi?0,0,0,0,14,1609"> http://archive.gp2x.de/cgi-bin/cfiles.cgi?0,0,0,0,14,1609 </a> adresinden bu SDK'yı indiriyoruz. Ýndirdiğimiz dosyayı açtığımızda elimizde 2 klasör olacak. Önce toolchain klasörüne giriyoruz. Buradaki readme.txt dosyasında yazanları yapınca toolchain'imiz(Ekşi sözlükten detached der ki; yazilim dunyasinda belli bir urunu gelistirmek icin kullanilan araclar grubuna bu adi veririz. ornek olarak editor, compiler, linker ve hedef platforma yonelik temel kutuphaneler. [Canavar'dan not: Genelde toolchain ile beraber bir editor gelmez.]) kurulmuş olacak. Ancak bu işlemleri yapmadan önce
+</p>
+[code]
+export LC_ALL=en_US 
+[/code]
+<p>
+yazmak zorundayız(Niye? Konsolda dil problemini çözmek için...). Toolchain'i kurduktan sonra sıra kütüphaneleri kurmaya geliyor. lib klasörünün içinde bulunan readme.txt dosyasında anlatılanları yaptığımızda bu işlem de bitmiş olacak. Bu yazıyı yazarken o readme dosyalarını silmiş olduğum için ayrıntılı bir açıklama yapamıyorum. Ama giriş seviyesinde İngilizce'si olanlar için orada anlatılanları yapmanın çok zor bir iş olacağını düşünmüyorum. Yalnızca SDK'yı /gp2xdev klasörüne kurmanızı tavsiye ederim.
+</p>
+<p>
+SDK'mızı kurduktan sonra yanıt aramamız gereken bir soru ile daha karşılaşıyoruz: Hangi editörü kullanacağız? Bu soruya benim verdiğim cevap VI (<a href="http://www.vim.org/"> http://www.vim.org/ </a>). Bu editörün sağladığı kolaylığın ne kadar büyük olduğunu bildiğim kadar acemilere verdiği ızdırabın büyüklüğünü de iyi biliyorum. Bu yüzden Code::Blocks (<a href="http://www.codeblocks.org">http://www.codeblocks.org</a>) ya da CDT plugini (<a href="http://www.eclipse.org/cdt/">http://www.eclipse.org/cdt/</a>) ile Eclipse(<a href="http://www.eclipse.org/">http://www.eclipse.org/ </a>) sizler için daha iyi bir çözüm olabilir.
+</p>
+<p>
+SDK'mızı kurduktan sonra sıra artık bir test uygulaması yazmaya geliyor. Ancak bu uygulama her ne kadar basit olsa da [[SDL]], SDL_image, libpng, libjpeg ve libz kütüphanelerinin kullanılabilirliğini de test etmeli. Bu noktada Oopo abimizden bir miktar daha yardım alıyoruz (<a href="http://www.oopo.net/consoledev/">http://www.oopo.net/consoledev/</a>). Kendisi SDL, SDL_ttf ve SDL_mixer kütüphanelerinin portlarını test etmek için bir test uygulaması yazmış. Ben de bu test uygulamasından yola çıkarak libpng, libjpeg ve libz kütüphanelerini de test eden küçük bir uygulama yazdım. Bu uygulamayı örnek resim ve ses dosyaları ile birlikte <a href="http://fehmicans.net/joomla/source/sdl-tester.tar.gz"> http://fehmicans.net/joomla/source/sdl-tester.tar.gz</a> adresinden indirebilirsiniz.
+</p>
+<p>
+SDL kütüphanesinin İngilizce dokümantasyonuna <a href="http://www.libsdl.org/docs.php">http://www.libsdl.org/docs.php</a> adresinden ulaşılabilir. Ya da &#8220;Ben İngilizce doküman istemem, Türkçe olanı yok mu bunun?&#8221; derseniz ragnor(<a href="http://ozanemirhan.blogspot.com/">http://ozanemirhan.blogspot.com/</a>) kardeşimizin yazmış olduğu <a href="http://www.geocities.com/ragnor_whr/sdl_doc.txt"> http://www.geocities.com/ragnor_whr/sdl_doc.txt</a> bağlantısından indirebileceğiniz doküman isteğinizi fazlasıyla karşılayacaktır.
+</p>

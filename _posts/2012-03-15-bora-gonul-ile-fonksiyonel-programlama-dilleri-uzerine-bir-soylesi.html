@@ -1,0 +1,103 @@
+--- 
+meta: 
+  dsq_thread_id: "612430474"
+  Hide OgTags: "0"
+  _edit_last: "1"
+  Hide SexyBookmarks: "0"
+type: post
+title: "Bora G\xC3\xB6n\xC3\xBCl ile Fonksiyonel programlama dilleri \xC3\xBCzerine bir s\xC3\xB6yle\xC5\x9Fi"
+status: publish
+layout: post
+published: true
+tags: 
+- Bir player olarak canavar
+- "canavar'\xC4\xB1n sesi radyosu"
+---
+Fonksiyonel programlama dilleri deyince ülkemizde akla ilk gelen isimlerden olan <a href="http://www.linkedin.com/in/boragonul">Bora Gönül</a> ile kısa bir söyleşi yaptık. Bilgi dolu yorumları için kendisine tekrar teşekkür ederim.
+
+<ol>
+	<li><strong>Okuyucuların sizi daha iyi tanıması adına kendinizi kısaca tanıtır mısınız?</strong></li>
+Merhaba. Adım Bora Gönül, 1974 doğumluyum. Yazılımla ilgilenmeye ortaokul yıllarında Commodore-64 ve Amiga oyun introlarını kırıp kendi adımı yazmak niyetiyle başladım. Daha sonra İTÜ Elektronik ve Haberleşme Bölümü'nde okudum. Buna paralel çalışmaya başladım. Yaklaşık 17 senedir İstanbul'da IT sektorundeyim. Pek çok yerli ve yabancı firmada çalıştım. Şu anda da Software & Solutions Architect olarak freelance çalışıyorum.
+
+	<li><strong>Fonksiyonel programlama dilleri aslında çok uzun zamandır ortalardalar. Siz ne kadar zamandır fonksiyonel programlama dilleri ile ilgileniyorsunuz?</strong></li>
+Yazılım benim hem işim, hem hobim. Bu yüzden birçok farklı dilde uygulama geliştirdim. Imperative dil olarak Java, fonksiyonel programlama dilleri olarak Scala, Haskell, Erlang ve Javascript favorilerim. Bu tanışıklığımız da yaklaşık 15 sene önce Haskell ile başladı.
+
+	<li><strong>Fonksiyonel programlama dillerine olan ilginizin sebebi nedir?</strong></li>
+Bu biraz matematiğe olan sevgimle ilgili. Ortaokulda okuduğum ilk kitapta gördüğüm "X=X+1" beni o kadar rahatsız etmişti ki ( 0=1 ?) kitabı hemen kapatmıştım. Sonra merakım ve arayışım devam etti. Üniversitenin ilk yıllarında Haskell ile tanıştım. Matematiği kullanabileceğim bir yazılım dili bulmak benim için heyecan vericiydi.
+
+	<li><strong>Fonksiyonel dillerin diğer dillere(nesne yönelimli, mantıksal, prosedürel) kıyasla temel avantajları nelerdir? Bu dillerin günümüzdeki kullanım alanları hakkında bilgi verebilir misiniz?</strong></li>
+Oldukça derin bir soru oldu. En temel fark şu:
+ - Imperative dillerde (C, Java, vs) sonuç odaklıyız; değişkenler tutup onları güncelleyerek sonuca ulaşıyoruz.
+ - Applicative dillerde (Scala, Haskell vs) olayın kendisini ifade etmek için hesaplamalara (sonuçlara değil!) odaklanıyoruz.
+
+Şimdi sorsanız kimse fonksiyonel bir dil bilmediğini söyleyecek, halbuki her gün kullandığınız fonksiyonel bir dil var: "Javascript" :) JS'deki "fonksiyon alan fonksiyonlar, fonksiyon dönen fonksiyonlar, closure'lar, callback'ler, vs." ne kadar güçlüler bir düşünün.
+
+Diğer bir önemli fark FP(Fonksiyonel Programlama) dillerinde State olmaması. "Y=X+1".  İşte bu, benim bildiğim matematik... 
+
+Bir başka artısı paralel programlama konusunda. Bir örnek vereyim: Yazdığımız kod kendi makinamızda çalışır ama production ortamında aynı şekilde çalışmaz (Benim makinamda çalışıyor sendromu). Peki bunun sebebi nedir? <u>Determinism = State * Parallelism</u>. Bizse non-deterministik; çalışması ortama bağlı olarak değişmeyen kod istiyoruz.
+
+Nasıl yapacağız?
+- Parallelism istenen bir şey olduğuna göre State'i ortadan kaldıracağız. Bu konuyu okurlara bırakıyorum, başka bir sohbette detaylarını anlatırım. 
+
+Bir başka önemli katkı olarak applicative dillerde business logic kodun içinde kaybolmaz. Örnek:
+
+<b>Java</b>
+<script src="https://gist.github.com/2046699.js?file=Ornek-1.java"></script>
+
+<b>Scala</b>
+<script src="https://gist.github.com/2046699.js?file=Ornek-1.scala"></script>
+
+Peki neden şimdi FP? FP esasında yeni bir şey değil. Ama bildiğiniz gibi Moore yasası doyuma ulaştı. Çekirdeklere daha fazla transistor sığdıramıyoruz. Bunun yerine çekirdek sayısını arttırıyoruz. Amacımız da bu çekirdekleri daha iyi kullanmamızı sağlayacak dilleri bulmak. FP dillerde state olmadığı için multicore'dan verim almak daha kolay. Elbette ki sürekli değişken yaratmanın yan etkileri var(bellek açısından) ama kullandığımız makinalarda en az 4GB RAM var. Bu konu dediğim gibi oldukça derin. Umarım cevabım biraz tatmin etmiştir sizi. Özetle FP yeni değil, eski ve değerli. Her alanda kullanılabilir. Web programlamadan, data mining ya da real-time sistemlere kadar...
+
+	<li><strong>Scala, fonksiyonel programlama dillerinin en popülerlerinden biri olmakla beraber prosedürel ve nesne yönelimli programlama özelliklerini bir arada barındıran C++ diline benzer şekilde nesne yönelimli ve fonksiyonel programlama özelliklerini birlikte sunuyor. C++ oldukça başarılı olsa da hiçbir zaman prosedürel bir dil olan C dilinin önüne geçemedi. Nesne yönelimli diller konusunda zirvenin sahibi ise Java oldu. Sizce Scala bu bilgiler ışığında başarılı olabilecek mi?</strong></li>
+Object oriented programlamanın avantajı insan zihninin bir sorun karşısında olayı küçük
+parçalara ayırıp; detayları tek tek çözüp, sonrasında bunları birleştirebilme yeteneğini simgeliyor olması. Örnek olarak bir film sahnesinde cam ekran üzerinde aktörün bir treni tutup pek çok küçük parçaya böldüğünü ve sonra birleştirdiğini hayal edin.
+
+FP ise apayrı bir dünya. Bildiğiniz tüm tasarım kalıplarını bir kenara koyun, bir de fonksiyonlar ve recursion(özyineleme) ile yapabileceklerinizi.
+
+Bir soru: bana "while" control structure'ının kendisini OO bir dilde gerçekleyebilir misiniz? Scala'da gayet basit:
+
+<script src="https://gist.github.com/2046699.js?file=Ornek-2.scala"></script>
+
+Şu kodda bile High-Order Fonksiyonlar, Currying gibi kavramlar var ve bunlar applicative(kendini anlatıyor). Kısaca Scala ya da FP bir rakip değil aksine bir tamamlayıcı.
+
+	<li><strong>Scala hakkında son zamanlarda, özellikle çok karmaşık olduğuna dair olumsuz yorumlar yayınlanıyor. Hatta bu yorumlar adeta bir karalama kampanyasına dönüşmüş durumda. Sizce yapılan yorumlarda doğruluk payı var mı? Scala gerçekten çok mu karmaşık?</strong></li>
+Evet Scala zor bir dil çünkü:
+
+- FP lisedeki biri için kolay, imperative dil bilen (Java, C vs) biri için çok zor. 
+- Type oriented programming (Varyans, Covariant, Contravariant) karışık.
+- Implicit conversionlar ilginç.
+
+Sanki bu yeni bir gezegen bulmak gibi, keşfetmek için biraz zaman gerekiyor. Ama tadını alınca dünyaya geri dönmek istemiyorsunuz. Bir diğer problemse bu dünyada yalnız kalıyorsunuz. Bu açıdan eleştirilere katılıyorum. Düşünsenize ben kime, nasıl Scala anlatacağım, öğreteceğim ve birlikte ortak bir proje yapacağız? 
+
+	<li><strong>Sizce Türkiye’de gerek üniversiteler, gerekse kurumlar ve şirketler açısından fonksiyonel programlama dillerine gereken ilgi gösteriliyor mu?</strong></li>
+Kesinlikle hayır :( Pek çok üniversitede Scala ile ilgili seminerler verdim. Hocalarımızın çoğu dahil FP ne demek Türkiye'de bilinmiyor. Tüm gençlere aynı şeyi söyledim. Yurt dışında çalışmak mı istiyorsunuz? En az bir FP dili öğrenin.
+
+	<li><strong>Türkiye’de bilişim sektöründe fonksiyonel dillerin payı ne orandadır? Bu konuda kendini geliştiren bir üniversite öğrencisinin sektörde kendine yer bulma şansı nedir?</strong></li>
+Şu anda Türkiye'de odaklanılan konu Web + DB programcılığı. Henüz hatırı sayılır real-time yazılımlarımız bile yok.
+
+İki örnek;
+- Uçakların inmesini kalkmasını sağlayan, sensor verilerini toplayan merkezi bir real-time sistem. FP ve Message Passing Concurrency (Erlang / Akka) için biçilmiş kaftan.
+- Kredi kartı alışverişi real-time data mining. Kim hangi sektörde ne oranda kredi kartı kullanıyor. Yine FP ve Data-Mining/Data-Flow için ideal.
+
+Bu konuda gençler Türkiye'yi değil yurtdışını düşünsün. Orada Haskell, Erlang ve Scala çok aranıyor.
+
+Bir de söyle bir yanlış anlama var. Genişleme daha çok makina demek değil. Aynı makinadan daha iyi verim almak demek. FP'ye bir de bu gözle bakmak lazım.
+
+
+	<li><strong>Nesne yönelimli programlama dillerinden birine yeterince hakim bir geliştirici fonksiyonel programlama dillerinden birinde sizce ne kadar zamanda yeterli hale gelebilir?</strong></li>
+Hiç gelemeyebilir. İkisi apayrı, iki farklı dünya. Biri makinaların dünyası(Java, C altında assembly), diğeri matematiğin, kümelerin, monad, monoidlerin dünyası.
+
+	<li><strong>Türkiye’de Scala eğitimi verdiğini bildiğiniz üniversiteler ya da kurslar var mı? Sizin bu konuda çalışmalarınız oluyor mu?</strong></li>
+Ben Scala ve FP eğitimi vermeyi çok istiyorum. Ama henüz böyle bir oluşuma ihtiyaç yokmuş gibi görünüyor. Keşke olsa... 
+
+	<li><strong>Play! Framework 2.0 çekirdeği radikal bir şekilde değiştirilerek Scala ile yeniden yazıldı. Bu konuda yorum yapmak ister misiniz?</strong></li>
+Evet Play!, Scala ile yeniden yazıldı. Nedenlerini sitesinde bulabilirsiniz. Yukarıda saydığım tüm nedenler orda var. Ayrıca FP ile yazılan kod çok daha basit ve elegant(asil) oluyor. Ne demek istediğimi FP yazınca anlayacaksınız.
+
+Play şu anda TypeSafe'e katıldı. Martin ve ekibi bu konuda çok iyi yoldalar. Özellikle Akka çok doğru bir şekilde Erlang temellerini Scala'da implement etti. 2000'li yıllarda Spring bir gün defakto standard olacak dediğimde kimse inanmamıştı, bugün herkes CV'sine Spring yazıyor. Aynı şekilde Akka(Message Passing Concurrency), concurrent programlama için defakto standart olacak diye düşünüyorum. Lütfen kayıtlara geçin :) 
+
+	<li><strong>Son olarak eklemek istediğiniz noktalar var mı?</strong></li>
+Ne yazık ki FP ya da Scala'yı Türkiye'de kullanırız diyemeyeceğim. Startup olgusu keşke bizde de oluşsa ve düşük maliyetli, cloud üzerinde çalışan Internet tabanlı uygulamaların sayısı artsa. Oyun sunucuları, bankacılık, sigorta sektorü, realtime engine'ler... Bunların hepsi için doğru adres FP, Scala ve Erlang.
+
+Teşekkürler. 
+</ol>

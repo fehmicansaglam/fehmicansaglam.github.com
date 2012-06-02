@@ -1,0 +1,41 @@
+--- 
+meta: 
+  dsq_thread_id: "345221361"
+  _edit_last: "1"
+type: post
+title: cpu load
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+belki hala benim gibi cpu load nasıl hesaplanır bilmeyenler vardır diyerek bu konuyla ilgili küçük bir araştırma yapıp kısa bir özet yazdım.
+
+unix/linux sistemlerde konsolda uptime yazdığımızda karşımıza gelen 3 tane load değeri var. bunlar benim düşündüğüm gibi min, avg, max değil son 1, 5 ve 15 dakikadaki cpu load ortalamalarıymış.
+
+idle bir cpu'nun load sayısı sıfırdır. cpu'yu kullanan ya da bekleyen her bir süreç bu sayıya 1 ekler. unix sistemlerin aksine linux sistemlerde i/o bekleyen süreçler de buna dahil.
+
+<!--more-->
+
+bir örnek verelim:
+[code]
+3.73  7.98  0.50
+[/code]
+
+* son 1 dakikada cpu %273 aşırı yüklenmiş.
+* cpu son 15 dakikalık sürenin yalnızca yarısında meşgulmüş.
+
+son 1 dakikalık süre dikkate alındığında ancak 4 işlemcimiz olsaydı bütün işleri yapabilirdik. ama son 15 dakikaya bakınca cpu gerekenden 2 kat hızlı.
+
+çok işlemcili sistemlerde bu değer işlemci sayısına bölünmelidir. 4 işlemcili bir sistemde 3.73'lük bir load sayısı, her bir süreç bir işlemcide koşabilir anlamına gelir.
+
+ortalama load, load sayısının exponentially weighted moving average'ı ile hesaplanır. EWMA geçmişe doğru azalan ağırlık değerleri kullanır. yani şu ana en yakın load sayısı en yüksek ağırlığa sahipken, geçmişe doğru gidildikçe load sayıları önemini kaybeder.
+
+Herhangi bir t anı için elimizdeki load sayısı L(t), hesapladığımız EWMA değeri A(t), ağırlık azalma derecesi ise @ (@ seçimlik bir değer, linux sistemler hangi değeri kullanıyor?) olsun. bu durumda t&gt;=2 için
+[code]
+A(t) = @*L(t-1) + (1-@)*A(t-1)
+[/code]
+olur.
+
+umarım anlaşılır ve faydalı olmuştur.

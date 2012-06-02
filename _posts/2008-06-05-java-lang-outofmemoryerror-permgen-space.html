@@ -1,0 +1,26 @@
+--- 
+meta: 
+  dsq_thread_id: "342138673"
+  _edit_last: "1"
+type: post
+title: "java.lang.OutOfMemoryError: PermGen space"
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+- eclipse
+- java.lang.OutOfMemoryError
+- permanent generation heap
+- PermGen
+---
+<p>
+son zamanlarda makinemde aynı anda netbeans, eclipse, jboss/tomcat/glassfish çalıştırmam gerekti. özellikle eclipse kullanırken java.lang.OutOfMemoryError: PermGen space hatasını sıkça almaya başlamıştım. nedir bu hata diye biraz araştırma yapınca ortaya şöyle bir sonuç çıktı:
+</p>
+<p>
+bu hata permanent generation heap dolduğunda oluşuyor. permanent generation heap, sınıflar ve metodlar gibi nesneleri tutan bir heap'tir. MaxPermSize parametresi bu heap'in en yüksek boyutunu belirtir. Bu parametre için Java Virtual Machine(JVM) varsayılan değeri çok düşük olduğundan, bu değer artırılmalıdır. Örnek olarak bu değeri 512MB'a yükseltmek için 
+[code]
+-XX:MaxPermSize=512m
+[/code]
+kullanılır. Bu değer en yüksek değeri belirttiğinden, değeri artırmak uygulamanın gerçekten bu kadar belleğe ihtiyacı olup olmadığının bilinmediği durumlarda bile güvenlidir.
+</p>

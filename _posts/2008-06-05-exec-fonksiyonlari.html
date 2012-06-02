@@ -1,0 +1,15 @@
+--- 
+meta: 
+  dsq_thread_id: "345223075"
+type: post
+title: "exec() fonksiyonlar\xC4\xB1"
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+- destructor
+- exec()
+- thread
+---
+exec() fonksiyonları herhangi bir çalıştırabilir dosyadan yeni bir süreç(process) yaratır. Başarılı bir exec() çağrısı asla geri dönmez çünkü çağıran süreç yaratılan yeni süreç ile değiştirilmiştir. Birden fazla thread içeren bir süreç içerisinden exec() fonksiyonu çağrıldığında bütün threadler sonlandırılır ve yeni dosya yüklenip çalıştırılır. Destructor fonksiyonları çağrılmaz.

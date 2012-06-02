@@ -1,0 +1,88 @@
+--- 
+meta: 
+  dsq_thread_id: "339326517"
+  _edit_last: "1"
+type: post
+title: steganografi
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+<p>
+elimizde her bir karakteri 1 bayt ile ifade edilen n karakterlik bir yazı olduğunu kabul edelim. bu yazıyı bir resmin içerisine saklamak istiyoruz. bu durumda gözün renklerde meydana gelecek küçük değişimleri fark edememesinden faydalanabiliriz. elimizdeki resimde her bir baytın en anlamsız bitinde yapacağımız değişikliği insan gözü fark  edemeyecektir. başka bir deyişle resimdeki her bir baytın içine 1 bitlik bilgi saklayabiliriz. bu durumda elimizdeki 1 baytı (1 bayt = 8 bit) resimdeki 8 baytın içine bit bit yerleştirmeliyiz. buradan da anlaşıldığı gibi n baytlık bir yazıyı en az 8*n baytlık bir resme yerleştirebiliriz. diğer türlü ifade edersek m baytlık bir resmin içine &#9553;m/8&#9553; karakter (1 karakter = 1 bayt) saklayabiliriz. bu işlemi gerçekleştiren algoritma aşağıda verilmiştir.
+</p>
+<!--more-->
+<ol type="1">
+<li> i = 0 </li>
+<li> p = 0 </li>
+<li> i = n ise dur </li>
+<li> j = 7 </li>
+<li> resme yerleştirilecek yazıdan i.baytı oku </li>
+<li> okunan baytı j bit sağa kaydır </li>
+<li> 0x01 ile andle </li>
+<li> sonuç 0x01 ise resmin p. baytını 0x01 ile orla </li>
+<li> aksi halde resmin p.baytını 0xfe ile andle </li>
+<li> p = p+1 
+</li><li> j = j-1 
+</li><li> j = -1 ise  i = i+1, 3'e git </li>
+<li> 5'e git </li>
+</ol>
+<p>
+bu algoritmayı gerçekleyen c kodu ise şu şekildedir:
+</p>
+[cc lang="c"]
+p = 0;
+for(i=0; i<n ; ++i)
+  {
+    for(j=7; j>=0; --j)
+    {
+     oku = yazi[i];
+     oku >>= j;
+     oku &= 0x01;
+     if(oku == 0x01)
+      resim[p] |= 0x01;
+     else
+      resim[p] &= 0xfe;
+     p++;
+    }
+  }
+[/cc]
+<p>
+resme gizlenmiş yazıyı okumak için gerekli algoritma ise şu şekildedir:
+</p>
+<br />
+<ol type="1">
+<li> i = 0 </li>
+<li> p = 0 </li>
+<li> i = n ise dur </li>
+<li> yazının i.karakterini 0'a setle </li>
+<li> j = 7 </li>
+<li> resimden p.baytı oku </li>
+<li> 0x01 ile andle </li>
+<li> j bit sola kaydır </li>
+<li> yazının i.karakterini bu sonuçla orla </li>
+<li> p = p+1 </li>
+<li> j = j -1 </li>
+<li> j = -1 ise i = i+1 , 3'e git, </li>
+<li> 6&#8217;ya git </li>
+</ol>
+<p>
+bu algoritmayı gerçekleyen c kodu ise şu şekildedir:
+</p>
+[cc lang="c"]
+p = 0;
+for(i=0; i</n><n ; ++i)
+  {
+   yazi[i] = 0;
+    for(j=7; j>=0; --j)
+    {
+     oku = resim[p];
+     oku &= 0x01;
+     oku < <= j;
+     yazi[i] |= oku;
+     p++;
+    }
+ }
+[/cc]</n></n>

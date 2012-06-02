@@ -1,0 +1,24 @@
+--- 
+meta: 
+  dsq_thread_id: "708424669"
+  _edit_last: "1"
+  _wp_old_slug: gnulinux-sistemlerde-bos-klasorleri-silmek
+type: post
+title: "Linux sistemlerde bo\xC5\x9F klas\xC3\xB6rleri silmek"
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+bulunulan klasörün altındaki boş klasörleri özyinelemeli olarak silmek için şu betik yeterli:
+[code]
+find -depth -type d -empty -exec rmdir {} ;
+[/code]
+
+bazen boş klasörlerin içinde bazı gizli konfigurasyon dosyaları olabiliyor(.directory gibi). tüm alt klasörlerde bu dosyaları silmek için şu betik kullanılabilir:
+[code]
+find -depth -name ".directory" -exec rmdir {} ;
+[/code]
+
+bu şekilde boş klasörler "gerçekten" boşaltıldıktan sonra ilk betik ile silinebilir.

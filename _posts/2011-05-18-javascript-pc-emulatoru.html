@@ -1,0 +1,56 @@
+--- 
+meta: 
+  dsq_thread_id: "346025164"
+  _edit_last: "1"
+type: post
+title: "Javascript PC Em\xC3\xBClat\xC3\xB6r\xC3\xBC"
+status: publish
+layout: post
+published: true
+tags: 
+- canavARGE
+---
+<a href="http://bellard.org/">Fabrice Bellard</a> 14 Mayıs 2011 tarihinde <a href="http://bellard.org/jslinux">jslinux</a> olarak adlandırdığı 32bit CPU emülatörünü yayınladı. Hatta bu emülatör ile içinde Emacs ve C derleyicisi de bulunan Linux 2.6.20 çekirdeğini boot etti. Yazının devamında tarayıcınızda boot eden bir Linux göreceksiniz. (Linux görüntüsünün indirilmesi için bir süre beklemeniz gerekiyor.)
+
+Fabrice Bellard emülatörün <a href="http://bellard.org/jslinux/tech.html">özelliklerini</a> şöyle sıralamış:
+<ul>
+	<li>32 bit x86 uyumlu CPU</li>
+	<li>8259 Programmable Interrupt Controller</li>
+	<li>8254 Programmable Interrupt Timer</li>
+	<li>16450 UART.</li>
+</ul>
+
+Bellard FPU emülasyonunun olmadığını söylemiş ancak Linux çekirdeği FPU emülasyonu yapabildiği için bu durum sorun oluşturmuyor. Yine Bellard'ın geliştirdiği <a href="http://bellard.org/tcc">TinyCC</a> C derleyicisi disk görüntüsüne eklenmiş. Sistem boot ettiğinde hello.c isimli bir C kaynak kod dosyasına da ulaşabiliyorsunuz. 
+<!--more-->
+Aşağıdaki komutlar ile kaynak kodu derleyebilir ve çalıştırabilirsiniz. VI ile kodu editleyerek kendi uygulamanızı da yazabilirsiniz.
+
+[code]
+tcc hello.c
+./a.out
+[/code]
+
+<style>
+.term {
+    font-family: courier,fixed,swiss,sans-serif;
+    font-size: 14px;
+    color: #f0f0f0;
+    background: #000000;
+}
+
+.termReverse {
+    color: #000000;
+    background: #00ff00;
+}
+#note {
+    font-size: 12px;
+}
+#copyright {
+    font-size: 10px;
+}
+</style>
+<script src="/blog/term.js"></script>
+<script src="/blog/cpux86.js"></script>
+<div id="copyright">&copy; 2011 Fabrice Bellard - <a href="tech.html">Technical notes</a></div>
+
+Bellard, eski DOS oyunlarının ve uygulamalarının bu emülatörün biraz daha gelişmiş bir sürümü ile çalıştırılabileceğini söylüyor. Herhangi bir x86 kütüphanesinin Javascript ile çağrılabileceğinden de bahsediyor. Bunlar gerçekleşirse yakın zamanda tam anlamıyla bir front-end devrimi görebiliriz. 
+<script>start();</script>

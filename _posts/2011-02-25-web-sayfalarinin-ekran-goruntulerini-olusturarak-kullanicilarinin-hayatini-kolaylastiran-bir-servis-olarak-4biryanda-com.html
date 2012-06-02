@@ -1,0 +1,49 @@
+--- 
+meta: 
+  dsq_thread_id: "339326389"
+  _edit_last: "1"
+type: post
+title: "Ba\xC4\x9Flant\xC4\xB1lar\xC4\xB1n ekran g\xC3\xB6r\xC3\xBCnt\xC3\xBClerini olu\xC5\x9Fturarak kullan\xC4\xB1c\xC4\xB1lar\xC4\xB1n\xC4\xB1n hayat\xC4\xB1n\xC4\xB1 kolayla\xC5\x9Ft\xC4\xB1ran bir servis olarak 4biryanda.com"
+status: publish
+layout: post
+published: true
+tags: 
+- !binary |
+  QmVuaW0gacOnaW4gYsO8ecO8ayBhbWEgaW5zYW5sxLFrIGnDp2luIGvDvMOn
+  w7xrIMWfZXlsZXI=
+
+- canavARGE
+- cutycapt
+- preview
+- screenshot
+---
+Tüm dünyadaki etkinliklerden kolayca haberdar olabileceğiniz ücretsiz bir servis olan <a href="http://4biryanda.com">4biryanda</a> benim de kurucularından olduğum <a href="http://4primes.com" target="_blank">4Primes</a> tarafından geliştiriliyor. Kendi ihtiyaçlarımızdan yola çıkarak geliştirdiğimiz bu servise vakit buldukça yeni özellikler de ekliyoruz. Son eklediğimiz özellik ise etkinlikler ve yorumlar içerisinde verilen bağlantıların önizlemelerinin o bağlantının üzerine gelindiğinde gösterilmesi oldu. Böylece 4biryanda kullanıcıları bağlantıya tıklamadan gidilecek sayfa hakkında fikir edinebiliyorlar. Aşağıda bazı sitelerin önizlemeleri bulunuyor. Özelliği test etmek isterseniz <a href="http://4biryanda.com" target="_blank">4biryanda.com</a>'a üye girişi yaptıktan sonra bir etkinliğe tıklayıp etkinlik ayrıntıları sayfasında yer alan herhangi bir bağlantının üzerine gelmeniz yeterli. Bu yazımda söz konusu özelliğin altında yatan teknolojiyi paylaşmak istiyorum.
+
+<a href="http://twitter.com" target="_blank"><img class="alignnone size-full wp-image-553" title="twitter" src="http://fehmicans.net/blog/wp-content/uploads/2011/01/twitter.jpg" alt="" width="202" height="152" /></a><a href="http://youtube.com" target="_blank"><img class="alignnone size-full wp-image-556" title="youtube" src="http://fehmicans.net/blog/wp-content/uploads/2011/02/youtube.jpg" alt="" width="202" height="152" /></a><a href="http://imdb.com" target="_blank"><img class="alignnone size-full wp-image-558" title="imdb" src="http://fehmicans.net/blog/wp-content/uploads/2011/02/imdb.jpg" alt="" width="202" height="152" /></a>
+<!--more-->
+Bu hizmetin aslan payı <a href="http://bjoern.hoehrmann.de/">Björn Höhrmann</a> tarafından geliştirilen <a href="http://cutycapt.sourceforge.net/" target="_blank">CutyCapt</a> uygulamasına ait. <a href="http://qt.nokia.com/">Qt</a> ve WebKit gibi dev kütüphanelere bağımlılığı olan bu küçücük uygulama platform bağımsız olarak web sayfalarının ekran görüntülerinin çeşitli vektör ve bitmap formatlarda(SVG, PDF, PS, PNG, JPEG, TIFF, GIF ve BMP) kaydedilebilmesini sağlıyor.
+
+Ben uygulamayı kaynak koddan derleyerek Ubuntu 10.10 64bit üzerinde çalıştırdım. Flash animasyonlar da dahil olmak üzere çok başarılı sonuçlar aldım. Ubuntu üzerinde kaynak kodu indirip derleyebilmek için yalnızca aşağıdaki komutlar yeterli oluyor.
+
+[code]
+% sudo apt-get install subversion libqt4-webkit libqt4-dev g++
+% svn co https://cutycapt.svn.sourceforge.net/svnroot/cutycapt
+% cd cutycapt/CutyCapt
+% qmake
+% make
+% ./CutyCapt --url=http://www.4biryanda.com --out=4biryanda.png
+[/code]
+
+Orijinal halinde CutyCapt, istenen sayfanın tamamının ekran görüntüsünü gerçek boyutunda oluşturuyor. 4biryanda içerisinde bizim kullanmak istediğimiz önizleme boyutu 202x152 olduğundan uygulamanın kaynak kodunda küçük bir değişiklik yapmam gerekti. Yaptığım küçük değişiklik ile oluşturulan önizlemeler önce eni 202 pixel olacak ve en boy oranı korunacak şekilde ölçekleniyor. Oluşan resim, boyu 152 pixel olacak şekilde kesiliyor. Elde edilen ekran görüntüsü, kalitesi 80 olacak şekilde JPEG formatında kaydediliyor. Tüm bunlar için CutyCapt.cpp dosyasının 287. satırını aşağıda olduğu gibi değiştirmek yeterli oldu. Değerlerin uygulamaya parametre olarak verilmesi daha güzel olurdu ancak bu değişiklik benim için yeterli olduğu için daha fazla uğraşmaya gerek duymadım.
+
+[cc lang="c"]
+image.scaledToWidth(202, Qt::SmoothTransformation).copy(0, 0, 202, 152).save(mOutput, "jpeg", 80);
+[/cc]
+
+CutyCapt önizleme oluşturabilmek için Xserver'a ihtiyaç duyuyor. Siz de bizim gibi sunucularınızda Xserver çalıştırmıyorsanız CutyCapt'i aşağıdaki gibi <a href="http://en.wikipedia.org/wiki/Xvfb">Xvfb</a> ile kullanabilirsiniz. Yukarıda verdiğim başarılı önizlemeleri oluşturabilmek için gerekli olan CutyCapt parametrelerini de bu komutta görebilirsiniz.
+
+[code]
+% xvfb-run --server-args="-screen 0, 1024x768x24" ./CutyCapt --url=http://www.4biryanda.com --out=4biryanda.jpg --plugins=on --min-height=768 --min-width=1024 --delay=4000
+[/code]
+
+Son olarak şunu da belirtmek istiyorum: önizleme kodunu 4biryanda.com içerisine gömmedik. <a href="http://en.wikipedia.org/wiki/Service-oriented_architecture">SOA</a> mimarisine uygun şekilde <a href="http://www.playframework.org/">Play! framework</a> ile ayrı bir RESTful servis yazarak tüm uygulamalarımızda kullanabileceğimiz bir bağlantı önizleme servisi elde ettik. Örneğin gelecekte <a href="http://profil.im">profil.im</a> servisimize de aynı özelliği eklemek istersek bu iş için 5 dakika yeterli olacaktır. 
