@@ -13,8 +13,8 @@
   })();
 </script>
 <title>{{ page.title }}</title>
-<div id="title"><a href="/" id="home">dön</a><h1>{{ page.title  | xml_escape }}</h1><span> {{ page.date | date_to_string }}</div>
-<div id="a">{{ content }}</div>
+<div id="title"><a href="/" id="home">dön</a><h1>{{ page.title  | xml_escape }}</h1></div>
+<div id="a"><h5>{{ page.date | date: "%d/%m/%y" }}</h5>{{ content }}</div>
 <div id="comments" class="section">
   <div id="disqus_thread"></div>
   <a href="http://disqus.com" class="dsq-brlink attribution">blog comments powered by <span class="logo-disqus">Disqus</span></a>
