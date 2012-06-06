@@ -8,13 +8,13 @@ Yakın zamanda yaşadığım görece karmaşık bir sorundan yola çıkarak bir 
 
 <h3>1.yöntem: Byte Array kullanın</h3>
 
-<pre data-language="java">
+{% highlight java %}
 ByteArrayOutputStream out = new ByteArrayOutputStream();
 class1.putDataOnOutputStream(out);
 class2.processDataFromInputStream(
     new ByteArrayInputStream(out.toByteArray())
 );
-</pre>
+{% endhighlight %}
 
 <p>
 Bu yöntem oldukça kolay ancak tüm veriyi bellekteki bir byte dizisine aldığınızdan büyük veriler için Out Of Memory hatası ile karşılaşmanız olası.
