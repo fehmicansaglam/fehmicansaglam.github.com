@@ -12,8 +12,17 @@ title: İstatistikler
 
 {% capture average_words %} {{ word_count | divided_by: post_count }} {% endcapture %}
 
+{% for post in site.posts %}
+  {% capture post_words %} {{ post.content | number_of_words }} {% endcapture %}
+   
+  {% capture diff %} {{ post_words | minus: average_words }} {% endcapture %}
+  {% capture diff %} {{ diff | times: diff }} {% endcapture %}
+  {% capture variance %} {{ variance | plus: diff }} {% endcapture %}
+{% endfor %}
+
 <ul>
-  <li><b>Toplam yazı sayısı:</b> {{ post_count }}
+  <li><b>Toplam yazı sayısı:</b> {{ site.posts | size }}
   <li><b>Toplam kelime sayısı:</b> {{ word_count }}
   <li><b>Yazı başına ortalama kelime sayısı:</b> {{ average_words }}
+  <li><b>Yazı başına kelime sayısı standart sapma:</b> <script>document.write(Math.sqrt({{ variance | divided_by: post_count}}).toFixed(0));</script>
 </ul>
