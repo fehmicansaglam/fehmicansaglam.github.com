@@ -25,7 +25,7 @@ Bu yöntem oldukça kolay ancak tüm veriyi bellekteki bir byte dizisine aldığ
 Veriyi PipedOutputStream'e yazan ayrı bir thread oluşturun. Veri yazıldıkça asıl thread PipedInputSream'den veriyi okuyabilir.
 </p>
 
-<pre data-language="java">
+{% highlight java %}
 PipedInputStream in = new PipedInputStream();
 PipedOUtputStream out = new PipedOutputStream(in);
   new Thread(
@@ -36,7 +36,7 @@ PipedOUtputStream out = new PipedOutputStream(in);
     }
 ).start();
 class2.processDataFromInputStream(in);
-</pre>
+{% endhighlight %}
 
 <p>
 Bu yöntem ek bir kütüphaneye/koda ihtiyaç duyulmadan gerçeklendiği için benim önerebileceğim en iyi yöntem. Fakat okuma ve yazma işlerinin ayrı threadler içinde yapıldığından emin olmalısınız. Aksi halde yüksek olasılıkla threadiniz bloklanacaktır.
@@ -47,26 +47,28 @@ Bu yöntem ek bir kütüphaneye/koda ihtiyaç duyulmadan gerçeklendiği için b
 Bu yöntemde Ostermiller, kendi geliştirdiği <a href="http://ostermiller.org/utils/CircularBuffer.html">CircularBuffer</a> sınıflarının kullanımını öneriyor. Geliştirdiği kodlar GPLv2 lisanslı olduğundan açık kaynak projelerinizde gönül rahatlığıyla kullanabilirsiniz.
 </p>
 
-<h5>Multiple Threaded Örneği</h5>
-<pre data-language="java">
+<h5>Multiple Thread Örneği</h5>
+
+{% highlight java %}
 CircularByteBuffer cbb = new CircularByteBuffer();
 new Thread(
-new Runnable(){
-  public void run(){
-    class1.putDataOnOutputStream(cbb.getOutputStream());
-  }
+  new Runnable(){
+    public void run(){
+      class1.putDataOnOutputStream(cbb.getOutputStream());
+    }
 }
 ).start();
 class2.processDataFromInputStream(cbb.getInputStream());
-</pre>
+{% endhighlight %}
 
 <h5>Single Thread Örneği</h5>
-<pre data-language="java">
+
+{% highlight java %}
 // buffer all data in a circular buffer of infinite size
 CircularByteBuffer cbb = new CircularByteBuffer(CircularByteBuffer.INFINITE_SIZE);
 class1.putDataOnOutputStream(cbb.getOutputStream());
 class2.processDataFromInputStream(cbb.getInputStream());
-</pre>
+{% endhighlight %}
 
 <p>
 Yazımın başında bahsettiğim görece karmaşık soruna gelelim. Amacım bir RESTful API aracılığıyla çektiğim dosya verisini(genelde büyük boyutlu), <a href="http://en.wikipedia.org/wiki/Zero-copy">bellekte başka bir yere kopyalamadan</a> doğrudan istemciye(tarayıcıya) göndermek idi. Uygulamamı her zamanki gibi Play! Framework kullanarak geliştiriyordum. API çağrısı için <a href="https://github.com/sonatype/async-http-client">Async Http Client</a> kullanmaktaydım. Async Http Client veri geldikçe bir OutputStream'e yazabilmenize imkan sağlıyor.
