@@ -1,0 +1,19 @@
+---
+layout: default
+title: İstatistikler
+---
+
+{% for post in site.posts %}
+  {% capture post_words %} {{ post.content | number_of_words }} {% endcapture %}
+  {% capture word_count %} {{ word_count | plus: post_words }} {% endcapture %}
+
+  {% capture post_count %} {{ post_count | plus: 1 }} {% endcapture %}
+{% endfor %}
+
+{% capture average_words %} {{ word_count | divided_by: post_count }} {% endcapture %}
+
+<ul>
+  <li><b>Toplam yazı sayısı:</b> {{ post_count }}
+  <li><b>Toplam kelime sayısı:</b> {{ word_count }}
+  <li><b>Yazı başına ortalama kelime sayısı:</b> {{ average_words }}
+</ul>
