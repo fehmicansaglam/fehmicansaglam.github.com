@@ -1,32 +1,27 @@
 --- 
-meta: 
-  dsq_thread_id: "400998565"
-  _edit_last: "1"
-type: post
-title: "c/c++ i\xC3\xA7in y\xC3\xBCksek performansl\xC4\xB1 debug sat\xC4\xB1rlar\xC4\xB1"
-status: publish
+title: c/c++ için yüksek performanslı debug satırları
 layout: post
-published: true
-tags: 
-- !binary |
-  QmVuaW0gacOnaW4gYsO8ecO8ayBhbWEgaW5zYW5sxLFrIGnDp2luIGvDvMOn
-  w7xrIMWfZXlsZXI=
-
-- canavARGE
 ---
-<a href="http://fehmicans.net/blog/2008/06/11/gcc-parametreleri/">bir yazımda</a> gcc -D parametresi kullanarak debug satırlarının yalnızca debug modunda derlenmesini sağlayabileceğimizden bahsetmiştim. örnek olarak debug için kullanacağımız satırları aşağıdaki şekilde tanımlarsak:
 
-[cc lang="c"]
+<p>
+<a href="http://fehmicans.net/blog/2008/06/11/gcc-parametreleri/">bir yazımda</a> gcc -D parametresi kullanarak debug satırlarının yalnızca debug modunda derlenmesini sağlayabileceğimizden bahsetmiştim. örnek olarak debug için kullanacağımız satırları aşağıdaki şekilde tanımlarsak:
+</p>
+
+{% highlight c %}
 #ifdef __debug__
 printf("Uygulama modu: debug");
 #endif
-[/cc]
+{% endhighlight %}
 
+<p>
 kodu gcc -D__debug__ parametresi ile derlediğimizde bu satır derlenecek ve çalışacak, aksi halde derlenmeyecektir. release modu için -D parametresini vermememiz yeterli olmakta. böylece release modunda bu satır hem boyut hem de performans açısından uygulamaya bir yük getirmiyor; çünkü bu modda bu satır derlenmiyor.
-<!--more-->
-geçen zaman içerisinde debug loglarımı daha düzenli hale getirmek istedim. bu amaçla içinde bulunulan metod adını ve mesajı parametre olarak alan bir metod hazırladım. bu metod aldığı parametreleri uygun şekilde formatlayarak standart çıktıya yazıyor.
+</p>
 
-[cc lang="c"]
+<p>
+geçen zaman içerisinde debug loglarımı daha düzenli hale getirmek istedim. bu amaçla içinde bulunulan metod adını ve mesajı parametre olarak alan bir metod hazırladım. bu metod aldığı parametreleri uygun şekilde formatlayarak standart çıktıya yazıyor.
+</p>
+
+{% highlight c %}
 #ifdef __debug__
 /*!
  * External method for debugging. Use this method to print out debug messages.
@@ -35,11 +30,13 @@ extern void Debug(const char *aMethod, const char *aMessage){
     printf("\nCANAVAR.DEBUGGING.ENGINE: In Method '%s': %s", aMethod, aMessage);
 }
 #endif
-[/cc]
+{% endhighlight %}
 
+<p>
 başlangıçta verimli gibi görünen bu metodun zamanla eksikleri ortaya çıktı. printf() fonksiyonuna bir format stringi ve n adet parametre göndererek çıktıyı formatlayabiliyoruz ancak yazdığım bu metod yalnızca tek bir parametre alabiliyor. Biraz araştırma yaptıktan sonra Debug() metodunu n adet parametre alabilir ve aldığı parametreleri printf() fonksiyonuna geçirebilir hale getirdim. metod şu hale geldi:
+</p>
 
-[cc lang="c"]
+{% highlight c %}
 #ifdef __debug__
 #include <stdarg .h>
 #include <stdio .h>
@@ -54,36 +51,38 @@ extern void Debug(const char *aMethod, const char *aMessage, ...){
     va_end(argp);
 }
 #endif
-[/cc]
+{% endhighlight %}
 
 standart çıktıya debug satırları yazmak için bu metodu şu şekilde kullanabiliyoruz:
 
-[cc lang="c"]
+{% highlight c %}
 #ifdef __debug__
 Debug("main", "Value of i: %d", 1);
 #endif
-[/cc]
+{% endhighlight %}
 
 bu satırın çıktısı şu şekilde oluyor:
 
-[cc lang="c"]
+<pre>
 CANAVAR.DEBUGGING:ENGINE: In method 'main': Value of i: 1
-[/cc]
+</pre>
 
+<p>
 kodun geldiği bu son durum beni oldukça tatmin etmişti. ancak zamanla fark ettim ki debug satırlarını her zaman #ifdef __debug__ ve #endif satırları arasına almam gerekiyor. bu da her defasında fazladan iki satır anlamına geliyor. bu satırları Debug() metodunun içine almak sorunumu kısmen çözecekti ancak yan etkisi bir metod çağrısı için geçen işlem zamanı olacaktı. release modunda debug satırlarının ve Debug() metodunun en ufak bir etkisini görmek istemediğim için arkadaşım Mehmet Bilsay Karadeniz ile bilim yuvamızda biraz araştırma yaptık. kısa sürede şu sonuca ulaştık:
+</p>
 
-[cc lang="c"]
+{% highlight c %}
 #ifdef __debug__
 #define DEBUG(x) Debug x;
 #else
 #define DEBUG(x)
 #endif
-[/cc]
+{% endhighlight %}
 
 şeklinde bir macro hazırladık. böylece debug satırı için aşağıdaki kod yeterli hale geldi.
 
-[cc lang="c"]
+<pre>
 DEBUG(("main", "step 2; move %d; x=%f; rect.x: %d, rect.y: %d", i, x, rect.x, rect.y))
-[/cc]
+</pre>
 
-release modunda önişlemci bu satırı boşluk ile değiştiriyor. debug modunda ise aynı satır Debug("main", "step 2; move %d; x=%f; rect.x: %d, rect.y: %d", i, x, rect.x, rect.y); satırı ile değiştiriliyor. böylece kullanımı kolay ve yüksek performanslı bir debug yöntemi elde etmiş olduk.</stdio></stdarg>
+release modunda önişlemci bu satırı boşluk ile değiştiriyor. debug modunda ise aynı satır Debug("main", "step 2; move %d; x=%f; rect.x: %d, rect.y: %d", i, x, rect.x, rect.y); satırı ile değiştiriliyor. böylece kullanımı kolay ve yüksek performanslı bir debug yöntemi elde etmiş olduk.
