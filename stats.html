@@ -3,26 +3,27 @@ layout: default
 title: İstatistikler
 ---
 
-{% for post in site.posts %}
-  {% capture post_words %} {{ post.content | number_of_words }} {% endcapture %}
-  {% capture word_count %} {{ word_count | plus: post_words }} {% endcapture %}
+<script>
+var wc = [],
+    pc = {{ site.posts | size }},
+    total = 0;
 
-  {% capture post_count %} {{ post_count | plus: 1 }} {% endcapture %}
-{% endfor %}
+{% for post in site.posts %}wc.push({{ post.content | number_of_words }});total+={{ post.content | number_of_words }};{% capture post_count %} {{ post_count | plus: 1 }}{% endcapture %}{% endfor %}
 
-{% capture average_words %} {{ word_count | divided_by: post_count }} {% endcapture %}
-
-{% for post in site.posts %}
-  {% capture post_words %} {{ post.content | number_of_words }} {% endcapture %}
-   
-  {% capture diff %} {{ post_words | minus: average_words }} {% endcapture %}
-  {% capture diff %} {{ diff | times: diff }} {% endcapture %}
-  {% capture variance %} {{ variance | plus: diff }} {% endcapture %}
-{% endfor %}
+var average = total / pc,
+    std = 0;
+for(var i=0; i<wc.length; i++){
+  var diff = wc[i]-average;
+  std += diff*diff;
+}
+std = Math.sqrt(std/pc);
+</script>
 
 <ul>
-  <li><b>Toplam yazı sayısı:</b> {{ site.posts | size }}
-  <li><b>Toplam kelime sayısı:</b> {{ word_count }}
-  <li><b>Yazı başına ortalama kelime sayısı:</b> {{ average_words }}
-  <li><b>Yazı başına kelime sayısı standart sapma:</b> <script>document.write(Math.sqrt({{ variance | divided_by: post_count}}).toFixed(0));</script>
+  <li><b>Toplam yazı sayısı:</b> <script>document.write(pc);</script>
+  <li><b>Toplam kelime sayısı:</b> <script>document.write(total);</script>
+  <li><b>Yazı başına en az kelime sayısı:</b> <script>document.write(Math.min.apply(Math,wc));</script>
+  <li><b>Yazı başına en çok kelime sayısı:</b> <script>document.write(Math.max.apply(Math,wc));</script>
+  <li><b>Yazı başına ortalama kelime sayısı:</b> <script>document.write(average.toFixed(0));</script>
+  <li><b>Yazı başına kelime sayısı standart sapma:</b> <script>document.write(std.toFixed(0));</script>
 </ul>
