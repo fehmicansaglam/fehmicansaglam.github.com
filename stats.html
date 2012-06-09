@@ -10,6 +10,7 @@ var wc = [],
 
 {% for post in site.posts %}wc.push({{ post.content | number_of_words }});total+={{ post.content | number_of_words }};{% capture post_count %} {{ post_count | plus: 1 }}{% endcapture %}{% endfor %}
 
+wc.sort(function(a,b){return b-a});
 var average = total / pc,
     std = 0;
 for(var i=0; i<wc.length; i++){
@@ -25,5 +26,6 @@ std = Math.sqrt(std/pc);
   <li><b>Yazı başına en az kelime sayısı:</b> <script>document.write(Math.min.apply(Math,wc));</script>
   <li><b>Yazı başına en çok kelime sayısı:</b> <script>document.write(Math.max.apply(Math,wc));</script>
   <li><b>Yazı başına ortalama kelime sayısı:</b> <script>document.write(average.toFixed(0));</script>
+  <li><b>Yazı başına ortanca kelime sayısı:</b> <script>document.write(wc[Math.floor(pc/2)]);</script>
   <li><b>Yazı başına kelime sayısı standart sapma:</b> <script>document.write(std.toFixed(0));</script>
 </ul>
