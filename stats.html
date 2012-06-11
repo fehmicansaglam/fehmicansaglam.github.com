@@ -1,31 +1,142 @@
 ---
-layout: default
-title: İstatistikler
+published: true
 ---
-
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="description" content=java,scala,playframework,akka,hazelcast,elasticsearch/>
+<link href="/assets/site.css" rel="stylesheet">
+<script src="/assets/d3.v2.min.js"></script>
+<script src="/assets/underscore-min.js"></script>
+<script src="/assets/barchart.js"></script>
+<title>İstatistikler</title>
+<style>
+.container{font-size:14px;margin:40px;}div#a h3{text-decoration:underline;}#break{height:20px;}
+</style>
+</head>
+<body>
+<div id="title"><a href="/" id="home">dön</a><h1>İstatistikler</h1></div>
 <script>
 var wc = [],
-    pc = {{ site.posts | size }},
-    total = 0;
+    postCount = {{ site.posts | size }},
+    format = d3.time.format("%d/%m/%y"),
+    p = function(str){
+        return format.parse(str);
+    };
 
-{% for post in site.posts %}wc.push({{ post.content | number_of_words }});total+={{ post.content | number_of_words }};{% capture post_count %} {{ post_count | plus: 1 }}{% endcapture %}{% endfor %}
+{% for post in site.posts %}wc.push({d:p('{{post.date | date: "%d/%m/%y"}}'),c:{{ post.content | number_of_words }}});{% capture post_count %} {{ post_count | plus: 1 }}{% endcapture %}{% endfor %}
 
-wc.sort(function(a,b){return b-a});
-var average = total / pc,
-    std = 0;
+var totalWordCount = d3.sum(wc, function(item){
+        return item.c;
+    }),
+    averageWordCount = totalWordCount / postCount,
+    extent = d3.extent(wc, function(item){
+        return item.c;
+    }),
+    median = d3.median(wc, function(item){ 
+        return item.c; 
+    });
+
+var std = 0;
 for(var i=0; i<wc.length; i++){
-  var diff = wc[i]-average;
+  var diff = wc[i].c - averageWordCount;
   std += diff*diff;
 }
-std = Math.sqrt(std/pc);
+std = Math.sqrt(std / postCount);
+
+var months = [
+    "Oca",
+    "Şub",
+    "Mar",
+    "Nis",
+    "May",
+    "Haz",
+    "Tem",
+    "Ağu",
+    "Eyl",
+    "Eki",
+    "Kas",
+    "Ara"
+],
+    days = [
+    "Paz",
+    "Pzt",
+    "Sal",
+    "Çar",
+    "Per",
+    "Cum",
+    "Cmt"
+]
+
+var data = _.map(
+                _.groupBy(wc, function(item){
+                    return item.d.getFullYear();
+                }),
+                function(value, key){
+                    return {
+                        year: parseInt(key),
+                        postCount: value.length,
+                        wordCount: d3.sum(value, function(item){
+                            return item.c;
+                        })
+                    };
+                }
+            ),
+    monthData = _.map(
+                    _.groupBy(wc, function(item){
+                        return item.d.getMonth(); 
+                    }),
+                    function(value, key){
+                        return {
+                            month: months[parseInt(key)],
+                            postCount: value.length,
+                            wordCount: d3.sum(value, function(item){
+                                return item.c;
+                            })
+                        };
+                    }
+                ),
+    dayData = _.map(
+                    _.groupBy(wc, function(item){
+                        return item.d.getDay(); 
+                    }),
+                    function(value, key){
+                        return {
+                            day: days[parseInt(key)],
+                            postCount: value.length,
+                            wordCount: d3.sum(value, function(item){
+                                return item.c;
+                            })
+                        };
+                    }
+                );
 </script>
 
-<ul>
-  <li><b>Toplam yazı sayısı:</b> <script>document.write(pc);</script>
-  <li><b>Toplam kelime sayısı:</b> <script>document.write(total);</script>
-  <li><b>Yazı başına en az kelime sayısı:</b> <script>document.write(Math.min.apply(Math,wc));</script>
-  <li><b>Yazı başına en çok kelime sayısı:</b> <script>document.write(Math.max.apply(Math,wc));</script>
-  <li><b>Yazı başına ortalama kelime sayısı:</b> <script>document.write(average.toFixed(0));</script>
-  <li><b>Yazı başına ortanca kelime sayısı:</b> <script>document.write(wc[Math.floor(pc/2)]);</script>
-  <li><b>Yazı başına kelime sayısı standart sapma:</b> <script>document.write(std.toFixed(0));</script>
-</ul>
+
+<div id="a">
+    <ul>
+        <li><b>Toplam yazı sayısı:</b> <script>document.write(postCount);</script>
+        <li><b>Toplam kelime sayısı:</b> <script>document.write(totalWordCount);</script>
+        <li><b>Yazı başına en az kelime sayısı:</b> <script>document.write(extent[0]);</script>
+        <li><b>Yazı başına en çok kelime sayısı:</b> <script>document.write(extent[1]);</script>
+        <li><b>Yazı başına ortalama kelime sayısı:</b> <script>document.write(averageWordCount.toFixed(0));</script>
+        <li><b>Yazı başına ortanca kelime sayısı:</b> <script>document.write(median);</script>
+        <li><b>Yazı başına kelime sayısı standart sapma:</b> <script>document.write(std.toFixed(0));</script>
+    </ul>
+
+    <div id="break"></div>
+
+    <h3>Yıllara göre yazı sayısı dağılımı</h3>
+    <div id="year-bar" class="container"></div>
+
+    <h3>Aylara göre yazı sayısı dağılımı</h3>
+    <div id="month-bar" class="container"></div>
+
+    <h3>Günlere göre yazı sayısı dağılımı</h3>
+    <div id="day-bar" class="container"></div>
+</div>
+
+<script>
+barchart('#year-bar', data, 'year', 'postCount');
+barchart('#month-bar', monthData, 'month', 'postCount');
+barchart('#day-bar', dayData, 'day', 'postCount');
+</script>
