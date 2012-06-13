@@ -20,7 +20,7 @@ chart.selectAll("rect").
   attr("y", function(item) { return height - y(item[_valueProperty]); }).
   attr("height", function(item) { return y(item[_valueProperty]); }).
   attr("width", barWidth).
-  attr("fill", "#2d578b");
+  attr("fill", "#004A7F");
 
 chart.selectAll("text").
   data(_data).

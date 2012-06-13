@@ -87,6 +87,7 @@ var data = _.map(
                     }),
                     function(value, key){
                         return {
+                            monthInt: parseInt(key),
                             month: months[parseInt(key)],
                             postCount: value.length,
                             wordCount: d3.sum(value, function(item){
@@ -101,6 +102,7 @@ var data = _.map(
                     }),
                     function(value, key){
                         return {
+                            dayInt: parseInt(key),
                             day: days[parseInt(key)],
                             postCount: value.length,
                             wordCount: d3.sum(value, function(item){
@@ -109,6 +111,16 @@ var data = _.map(
                         };
                     }
                 );
+
+data = _.sortBy(data, function(item){
+    return item.year;
+});
+monthData = _.sortBy(monthData, function(item){
+    return item.monthInt;
+});
+dayData = _.sortBy(dayData, function(item){
+    return item.dayInt;
+});
 </script>
 
 
