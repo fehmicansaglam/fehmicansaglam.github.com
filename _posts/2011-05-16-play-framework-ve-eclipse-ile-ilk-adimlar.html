@@ -1,65 +1,71 @@
 --- 
-meta: 
-  dsq_thread_id: "339326665"
-  _edit_last: "1"
-type: post
-title: "Play framework ve Eclipse ile ilk ad\xC4\xB1mlar"
-status: publish
+title: "Play framework ve Eclipse ile ilk adımlar"
 layout: post
-published: true
-tags: 
-- Bir player olarak canavar
-- eclipse
-- java
-- play framework
-- web
 ---
-<div style="float: left; margin-top: 20px;"><img style="border: none;" title="logo" src="http://fehmicans.net/blog/wp-content/uploads/2011/05/logo.png" alt="" width="136" height="50" /></div>
-Birer karmaşa haline gelmiş Java web framework'lere paradigma değişikliği sloganıyla yeni bir rakip geldi: <a href="http://www.playframework.org/">Play framework</a>.
 
-Bu yazımın konusu <em>Ubuntu</em> üzerinde <em>Play framework</em> nasıl kurulur ve <em>Eclipse</em> ile basit bir Play uygulaması nasıl yazılır olacak. Anlatacaklarım Ubuntu'yu hedef alıyor olsa da<em> Mac OS X</em> ve <em>Windows</em> sistemlerde de küçük farklarla geçerli olacaktır.
+<div style="float: left; margin-top: 20px; padding:5px"><img style="border: none;" title="logo" src="/assets/images/logo.png" alt="" width="136" height="50" /></div>
+<p>
+Birer karmaşa haline gelmiş Java web framework'lere paradigma değişikliği sloganıyla yeni bir rakip geldi: <a href="http://www.playframework.org/">Play framework</a>. Bu yazımın konusu <em>Ubuntu</em> üzerinde <em>Play framework</em> nasıl kurulur ve <em>Eclipse</em> ile basit bir Play uygulaması nasıl yazılır olacak. Anlatacaklarım Ubuntu'yu hedef alıyor olsa da<em> Mac OS X</em> ve <em>Windows</em> sistemlerde de küçük farklarla geçerli olacaktır.
+</p>
 
+<p>
 İlk adımda eğer sisteminizde Eclipse kurulu değilse indirip kuracağız. <a href="http://www.eclipse.org/downloads/">Eclipse downloads</a> sayfasından Eclipse IDE for JavaScript Web Developers başlıklı paketi indirerek işleme başlıyoruz. Neden bu paketi seçtiğimizin cevabı aslında Play framework manifestosuyla benzer nedenler taşıyor. Diğer paketler ihtiyacımız olmayan pek çok bileşen barındırıyor. İhtiyacımız olan bileşenleri kurulumdan sonra yükleyerek daha saf ve hedefe yönelik bir kurulum elde edeceğiz. Paketi indirdikten sonra istediğiniz bir dizine açmanız ve eclipse isimli dosyayı çalıştırmanız yeterli.
-<!--more-->
+</p>
+<p>
 Sonraki adımda benim bu yazıyı yazdığım sırada en güncel sürüm olan Play framework 1.2.1 sürümünü indireceğiz. <a href="http://www.playframework.org/">Play framework ana sayfası</a>ndan ya da <a href="http://download.playframework.org/releases/play-1.2.1.zip">bu bağlantıdan</a> gerekli paketi indirebilirsiniz. Paketi uygun bir dizine açtığınızda genel anlamda kurulum işlemi tamamlanmış oluyor. Play framework tüm işlerini komut satırından çalıştıracağınız play komutu aracılığıyla yaptığından bu komutun bulunduğu dizini PATH ortam değişkenine eklemeniz size kolaylık sağlayacaktır. Bunun için Ubuntu'da play dosyasının bulunduğu dizin içerisinde aşağıdaki komutu çalıştırmanız yeterlidir.
+</p>
 
-[code]
-echo 'export PATH="$PATH:'`pwd`\" &gt;&gt; ~/.bashrc
-[/code]
+<pre>
+echo 'export PATH="$PATH:'`pwd`\" >> ~/.bashrc
+</pre>
 
+<p>
 İndirdiğimiz play dağıtımı içerisindeki <strong>support/eclipse/</strong> dizininde Eclipse için hazırlanmış olan <strong>org.playframework.playclipse_0.7.0.jar</strong> isimli bir plugin bulunuyor. Bu plugini eclipse kurulumu içerisindeki <strong>dropins</strong> dizinine kopyalayıp Eclipse uygulamasını yeniden başlattığımızda plugin kurulumu tamamlanmış oluyor.
+</p>
 
+<p>
 Böylece araçlarımızın kurulumunu tamamladık. Şimdi de Play framework ile basit bir web uygulaması geliştirelim. Daha önce de söylediğim gibi Play tüm işlerini play komutu aracılığıyla yapıyor. Yeni bir Play uygulaması oluşturmak da play komutunun sorumluluğunda olan işlerden birisi. Aşağıdaki komut ile <em>kolay</em> isimli bir uygulama oluşturalım.
+</p>
 
-[code]
+<pre>
 play new kolay
-[/code]
+</pre>
 
 Uygulamamızın Eclipse'e özel dosyalarını oluşturabilmek için yine bir komut çalıştırıyoruz.
-[code]
+<pre>
 cd kolay
 play eclipsify
-[/code]
+</pre>
 
+<p>
 Projemiz Eclipse ile çalışmaya hazır hale geldi. Şimdi de Eclipse içerisinden projemizi çalışmakta olduğumuz workspace içine aktaralım. File-&gt;Import-&gt;General-&gt;Existing Projects Into Workspace bağlantısına tıkladıktan sonra projemizi seçiyoruz. Hepsi bu kadar. Böylece projemizi Eclipse ile geliştirebilir hale geldik.
+</p>
 
-<img class="aligncenter size-full wp-image-662" title="import" src="http://fehmicans.net/blog/wp-content/uploads/2011/05/import.png" alt="" width="535" height="555" />
+<img class="aligncenter size-full wp-image-662" title="import" src="/assets/images/import.png" alt="" width="535" height="555" />
 
+<p>
 Daha sonraki yazılarımda Play framework proje yapısının nasıl olduğundan bahsedeceğim ve Play ile uygulama geliştirmenin ayrıntılarına değineceğim. Ancak Play ile uygulama geliştirmenin ne kadar kolay olduğu konusunda şimdiden size bir fikir vermesi amacıyla projemize küçük özellikler ekleyelim.
+</p>
 
-Öncelikle bir User(kullanıcı) sınıfı oluşturacağız. Sonrasında bir web ekranında veritabanında kayıtlı olan kullanıcıları listeleyeceğiz.(Eğer veritabanında hiç kullanıcı yoksa veritabanına bir kullanıcı kaydedeceğiz.)
+<p>
+Öncelikle bir User(kullanıcı) sınıfı oluşturacağız. Sonrasında bir web ekranında veritabanında kayıtlı olan kullanıcıları listeleyeceğiz.(Eğer veritabanında hiç kullanıcı yoksa veritabanına bir kullanıcı kaydedeceğiz.)</p>
 
+<p>
 Önce User sınıfımızı oluşturalım. Bunun için Play plugini ile gelen düğmelerden faydalanabiliriz. Soldaki proje yapısında models paketi üzerine tıkladıktan sonra aşağıdaki görüntüde de görüldüğü gibi New Model düğmesine basalım.
+</p>
 
-<img class="size-full wp-image-612 aligncenter" title="New Model" src="http://fehmicans.net/blog/wp-content/uploads/2011/05/new-model.png" alt="New Model" width="600" height="226" />
+<img class="size-full wp-image-612 aligncenter" title="New Model" src="/assets/images/new-model.png" alt="New Model" width="600" height="226" />
 
+<p>
 Model ismini User olarak değiştirip Finish düğmesine bastığımızda models dizini altında User sınıfı oluşuyor.
+</p>
 
-<img class="alignnone size-full wp-image-616" title="User" src="http://fehmicans.net/blog/wp-content/uploads/2011/05/user.png" alt="User" width="535" height="438" />
-
+<img class="alignnone size-full wp-image-616" title="User" src="/assets/images/user.png" alt="User" width="535" height="438" />
+<p>
 Bu sınıfa username ve fullName isimli iki alan ve bu alanları parametre olarak alan bir constructor ekleyelim.
+</p>
 
-[cc lang="java"]
+{% highlight java %}
 package models;
 
 import play.*;
@@ -71,20 +77,22 @@ import java.util.*;
 @Entity
 public class User extends Model {
 
-public String username;
-public String fullName;
+  public String username;
+  public String fullName;
 
-public User(String username, String fullName) {
-super();
-this.username = username;
-this.fullName = fullName;
+  public User(String username, String fullName) {
+      super();
+      this.username = username;
+      this.fullName = fullName;
+  }
 }
-}
-[/cc]
+{% endhighlight %}
 
+<p>
 controllers paketinde bulunan Application.java dosyası içerisindeki index metodu uygulamanın kök(/) URL'i için istek yapıldığında çağrılan metoddur. Biz de kullanıcıları listeleme işi için bu metodu kullanacağız. Önce veritabanında kayıtlı kullanıcı olup olmadığını sorgulayalım. Eğer kayıtlı kullanıcı sayısı 0 ise bir kullanıcı oluşturup kaydedelim. Sonra veritabanındaki tüm kullanıcıları çekip view katmanına gönderelim. Bu işleri yapan Application.java kodu aşağıdaki gibi oluyor.
+</p>
 
-[cc lang="java"]
+{% highlight java %}
 package controllers;
 
 import play.*;
@@ -96,41 +104,50 @@ import models.*;
 
 public class Application extends Controller {
 
-public static void index() {
-if(User.count() == 0){
-new User("test", "Play Framework").save();
+  public static void index() {
+    if(User.count() == 0){
+      new User("test", "Play Framework").save();
+    }
+    List users = User.findAll();
+    render(users);
+  }
 }
-List users = User.findAll();
-render(users);
-}
-
-}
-[/cc]
+{% endhighlight %}
 
 views-&gt;Application dizininde bulunan index.html dosyasını da aşağıdaki gibi değiştiriyoruz.
 
-[cc lang="html"]
+{% highlight html %}
 #{extends 'main.html' /}
 #{set title:'Home' /}
-<ul> #{list users, as: 'user'}&nbsp;
-	<li>${user.username}: <strong>${user.fullName}</strong></li>
-#{/list}</ul>
-[/cc]
+<ul> 
+  #{list users, as: 'user'}
+    <li>${user.username}: <strong>${user.fullName}</strong></li>
+  #{/list}
+</ul>
+{% endhighlight %}
 
 Uygulamamızı çalıştırmadan önce conf dizininde bulunan application.conf dosyasındaki
-[code]
+<pre>
 # db=mem
-[/code]
+</pre>
 satırını
-[code]
+<pre>
 db=mem
-[/code]
+</pre>
 satırı ile değiştirelim. Böylece bellekte çalışan <a href="http://www.h2database.com">H2 veritabanı</a>mız aktif olacak.
 
+<p>
 Artık uygulamamızı çalıştırabiliriz. Aşağıdaki ekran görüntüsünde olduğu gibi Run Configurations bağlantısına tıklıyoruz.
+</p>
 
-<img class="alignnone size-full wp-image-631" title="Run" src="http://fehmicans.net/blog/wp-content/uploads/2011/05/index.png" alt="Run" width="600" height="269" />
+<img class="alignnone size-full wp-image-631" title="Run" src="/assets/images/index.png" alt="Run" width="600" height="269" />
 
+<p>
 Açılan pencerede Java Application altında bulunan kolay uygulamasını seçip Run düğmesine tıklıyoruz. Web tarayıcınız ile http://localhost:9000/ adresine bağlandığınızda test kullanıcısının listelendiğini göreceksiniz.
-<img class="alignnone size-full wp-image-638" title="output" src="http://fehmicans.net/blog/wp-content/uploads/2011/05/output.png" alt="output" width="325" height="149" />
+</p>
+
+<img class="alignnone size-full wp-image-638" title="output" src="/assets/images/output.png" alt="output" width="325" height="149" />
+
+<p>
 Kolay gelsin!
+</p>
