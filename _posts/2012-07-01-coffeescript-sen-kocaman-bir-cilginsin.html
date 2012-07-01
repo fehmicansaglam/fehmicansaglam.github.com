@@ -1,0 +1,246 @@
+--- 
+title: Coffeescript, sen kocaman bir çılgınsın
+layout: post
+---
+
+<p>
+	Yaklaşık üç haftadır <a href="http://www.playframework.org/documentation/1.2.4/home">Play! Framework 1.2.x</a> için <a href="http://joosy.ws/">Joosy</a> benzeri bir front-end framework geliştirmeye çalışıyorum. Joosy tamamen <a href="http://coffeescript.org/">CoffeeScript</a> ile geliştirilmiş ve bir süredir hayal ettiğim tüm özelliklere sahip bir framework. Bu sebeple bu projenin hem fikirlerinden hem de kodlarından faydalanmaya çalışıyorum. Dolayısıyla daha önce yalnızca göz gezdirmiş olduğum CoffeeScript ile bu kadar yakınlaşmamın sebebi Joosy oldu diyebilirim.
+</p>
+
+<p>
+	CoffeeScript, derlenerek JavaScript diline dönüştürülen küçük bir programlama dili. Bu sebeple JavaScript ile aynı projede birlikte yaşayabiliyor. Örnek olarak jQuery kütüphanesini CoffeeScript ile de rahatlıkla kullanabiliyoruz. Durum böyle iken ve JavaScript gibi güzel bir programlama dili varken CoffeeScript neden var sorusu ister istemez akla geliyor. Geliştiriciler arasında da bu konuda önemli tartışmalar dönmekte. CoffeeScript'in temel varlık nedeni geliştirici verimliliğidir diyebilirim. JavaScript'in görece karmaşık syntax'ına karşılık CoffeeScript çok daha temiz bir syntax sunuyor. JavaScript bilen biri için öğrenme süresi 4-5 saatten fazla değil.
+</p>
+
+<p>
+	Bir JavaScript Ninja olmasam da ortalamanın üzerinde JavaScript bilgisine sahibim. JavaScript'in geliştiriciyi zorladığı noktaları biliyor olmamın CoffeeScript ile aramızdaki sevgiyi artırdığını düşünüyorum. Bu sebeple CoffeeScript öğrenmek isteyen birinin öncelikle iyi derecede JavaScript biliyor olması gerektiğini savunuyorum. Örnek olarak CoffeeScript içinde gelen class keyword'ünün ne büyük nimet olduğunu anlamak için bence JavaScript ile prototyping işleri ile uğraşmış ve zorlanmış  olmak gerekiyor.
+</p>
+
+<p>
+	CoffeeScript hakkında önbilgi verdikten sonra CoffeeScript'in en sevdiğim özelliklerinden bahsetmek istiyorum. Her maddede önce CoffeeScript kodunu, sonra da karşılaştırma amacıyla derlendiği JavaScript kodunu vereceğim.
+</p>
+
+<ol>
+	<li>
+		CoffeeScript ile değişken tanımlaması için <b>var</b> keyword'üne ihtiyaç bulunmuyor.
+<br/>
+<br/>
+<b>CoffeeScript</b>
+{% highlight coffeescript %}
+degisken = yes
+sayi = 1
+{% endhighlight %}
+<b>JavaScript</b>
+{% highlight javascript %}
+var degisken, sayi;
+degisken = true;
+sayi = 1;
+{% endhighlight %}
+</p>
+	</li>
+	<li>
+		Fonksiyon tanımı çok yalın olduğundan özellikle jQuery callback'lerinde büyük kolaylık sağlıyor.
+<br/>
+<br/>
+<b>CoffeeScript</b>
+{% highlight coffeescript %}
+kare = (a) -> 
+ a * a
+{% endhighlight %}
+<b>JavaScript</b>
+{% highlight javascript %}
+var kare;
+
+kare = function(a) {
+  return a * a;
+};
+{% endhighlight %}
+</p>
+	</li>
+	<li>
+		Nesne tanımlamak için gereken kod daha kısa ve anlaşılır.
+<br/>
+<br/>
+<b>CoffeeScript</b>
+{% highlight coffeescript %}
+kids =
+  brother:
+    name: "Max"
+    age:  11
+  sister:
+    name: "Ida"
+    age:  9
+{% endhighlight %}
+<b>JavaScript</b>
+{% highlight javascript %}
+var kids;
+
+kids = {
+  brother: {
+    name: "Max",
+    age: 11
+  },
+  sister: {
+    name: "Ida",
+    age: 9
+  }
+};
+{% endhighlight %}
+</p>
+	</li>
+	<li>
+		ForEach ya da select/filter işlemleri tek satır ile gerçeklenebiliyor.
+<br/>
+<br/>
+<b>CoffeeScript</b>
+{% highlight coffeescript %}
+icecekler = ['bira', 'cola', 'rakı']
+alkolluler = (icecek for icecek in icecekler when icecek isnt 'cola')
+{% endhighlight %}
+<b>JavaScript</b>
+{% highlight javascript %}
+var alkolluler, icecek, icecekler;
+
+icecekler = ['bira', 'cola', 'rakı'];
+
+alkolluler = (function() {
+  var _i, _len, _results;
+  _results = [];
+  for (_i = 0, _len = icecekler.length; _i < _len; _i++) {
+    icecek = icecekler[_i];
+    if (icecek !== 'cola') {
+      _results.push(icecek);
+    }
+  }
+  return _results;
+})();
+{% endhighlight %}
+</p>
+	</li>
+	<li>
+		Bir değişkenin varlık kontrolü basit görünse de genelde çok baş ağrıtır. CoffeeScript bu sorunu da kolayca çözüyor.
+<br/>
+<br/>
+<b>CoffeeScript</b>
+{% highlight coffeescript %}
+keyif = true if raki? and meze?
+
+kadeh = 0
+kadeh ?= 4
+
+marka = yasuzum ? "yeni rakı"
+
+fasil?.beyhudeGectiOmrum()
+{% endhighlight %}
+<b>JavaScript</b>
+{% highlight javascript %}
+var kadeh, keyif, marka;
+
+if ((typeof raki !== "undefined" && raki !== null) 
+  && (typeof meze !== "undefined" && meze !== null)) {
+  keyif = true;
+}
+
+kadeh = 0;
+
+if (kadeh == null) {
+  kadeh = 4;
+}
+
+marka = typeof yasuzum !== "undefined" && yasuzum !== null ? yasuzum : "yeni rakı";
+
+if (typeof fasil !== "undefined" && fasil !== null) {
+  fasil.beyhudeGectiOmrum();
+}
+{% endhighlight %}
+</p>
+	</li>
+	<li>
+		Bir değişken ve string'in değerini birleştirmek CoffeeScript ile çok daha kolay.
+<br/>
+<br/>
+<b>CoffeeScript</b>
+{% highlight coffeescript %}
+yazar = "Fehmi Can Sağlam"
+yil = 2004
+kitap = "Bensiz ve Mutlu Kal. Yazar: #{yazar}. Yayın yılı: #{yil}"
+{% endhighlight %}
+<b>JavaScript</b>
+{% highlight javascript %}
+var kitap, yazar, yil;
+
+yazar = "Fehmi Can Sağlam";
+
+yil = 2004;
+
+kitap = "Bensiz ve Mutlu Kal. Yazar: " + yazar + ". Yayın yılı: " + yil;
+{% endhighlight %}
+</p>
+	</li>
+	<li>
+		Ve belki de CoffeeScript'in en güçlü olduğu nokta: Sınıflar ve miras alma.
+<br/>
+<br/>
+<b>CoffeeScript</b>
+{% highlight coffeescript %}
+class Animal
+  constructor: (@name) ->
+
+  move: (meters) ->
+    alert @name + " moved #{meters}m."
+
+class Snake extends Animal
+  move: ->
+    alert "Slithering..."
+    super 5
+
+sam = new Snake "Sammy the Python"
+sam.move()
+{% endhighlight %}
+<b>JavaScript</b>
+{% highlight javascript %}
+var Animal, Snake, sam,
+  __hasProp = {}.hasOwnProperty,
+  __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+Animal = (function() {
+
+  function Animal(name) {
+    this.name = name;
+  }
+
+  Animal.prototype.move = function(meters) {
+    return alert(this.name + (" moved " + meters + "m."));
+  };
+
+  return Animal;
+
+})();
+
+Snake = (function(_super) {
+
+  __extends(Snake, _super);
+
+  function Snake() {
+    return Snake.__super__.constructor.apply(this, arguments);
+  }
+
+  Snake.prototype.move = function() {
+    alert("Slithering...");
+    return Snake.__super__.move.call(this, 5);
+  };
+
+  return Snake;
+
+})(Animal);
+
+sam = new Snake("Sammy the Python");
+
+sam.move();
+{% endhighlight %}
+</p>
+	</li>
+</ol>
+
+<p>
+	Paylaştığım başlıklar CoffeeScript'in bana göre en önemli özelliklerini barındırıyor. Daha fazlası için <a href="http://coffeescript.org/">CoffeeScript</a> resmi sitesi oldukça güzel bir arayüz sunuyor. CoffeeScript konusundaki yorumlarınızı merakla bekliyorum.
+</p>
