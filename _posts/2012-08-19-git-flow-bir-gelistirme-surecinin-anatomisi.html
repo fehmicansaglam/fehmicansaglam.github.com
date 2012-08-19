@@ -1,0 +1,228 @@
+--- 
+title: "Git-flow: bir yazılım geliştirme sürecinin anatomisi"
+layout: post
+description: "Git-flow modelini kısaca açıkladıktan sonra modeli gerçeklemeyi sağlayan git komutlarını ve bu işleri çok daha kolay hale getiren Git-flow eklentilerini irdelemeye çalışacağım."
+keywords: git, git-flow, ci, jenkins
+---
+
+<h3>Başarılı bir Git dallanma modeli</h3>
+
+<p>
+  Her şey 5 Ocak 2010 tarihinde yazılan <a href="http://nvie.com/posts/a-successful-git-branching-model/">"A successful Git branching model"</a> (Başarılı bir Git dallanma modeli) başlıklı yazı ile başladı. Bu yazıda <a href=//twitter.com/nvie>@nvie</a>, git depolarını derli toplu tutmak adına bir model önderdi. Sonrasında bu modeli kullanmayı oldukça kolaylaştıran git eklentilerini içeren <a href=//github.com/nvie/gitflow>git-flow</a> isimli bir proje yayınladı.
+</p>
+<p>
+  Bu yazımda Git-flow modelini kısaca açıkladıktan sonra modeli gerçeklemeyi sağlayan git komutlarını ve bu işleri çok daha kolay hale getiren Git-flow eklentilerini irdelemeye çalışacağım. Son olarak ise <a href="http://blog.sourcetreeapp.com/2012/08/01/smart-branching-with-sourcetree-and-git-flow/">SourceTree 1.5</a> ile gelen Git-flow kolaylıklarına kısaca değineceğim. 
+</p>
+
+<h3>Model</h3>
+<p>Git-flow modelinin altında Git sürüm kontrol sistemi yer alıyor. Bir başka deyişle modelin tüm aşamalarını Git komutlarıyla gerçekleştirmek mümkün. Git'in sağladığı neredeyse sıfır maliyetli dallanma ve tekrar birleştirme özellikleri aşağıdaki resimde genel olarak anlatmaya çalıştığım modelin temelini oluşturuyor.</p>
+
+<div style="width:100%;text-align:center;margin:30px 0;">
+  <img src="/assets/images/git-flow.png">
+</div>
+
+<p>
+  Ana dallarımız olan <span style="color:#FFF353;background-color:#222;padding:3px">develop</span> ve <span style="color:#0092F7;background-color:#222;padding:3px">master</span> dalları hayatlarına sonsuza dek(en azından proje süresince) devam edecekler. master dalında <u>her zaman production-ready(yayına alınabilir)</u> kod bulunurken develop dalında bir sonraki sürüm için yapılan değişiklikler yer alıyor. master dalında her zaman yayınlanabilir kod olduğu için bu dala yapılan her commit bir betik ile otomatik olarak yayına alınabilir. develop dalı ise <a href="http://jenkins-ci.org/">Jenkins</a> gibi bir <a href="http://www.kodcu.com/2012/07/surekli-entegrasyon-yaklasimlari-ucretsiz-webiner/"></a>sürekli entegrasyon</a> aracına bağlanarak her gece inşa edilebilir.
+</p>
+
+<p>
+  Yukarıdaki resimde git-flow ile geliştirme süreci başladığında master dalı 0.1 etiketi ile yayınlamış olan son güncel sürümde bulunmakta. Bu noktadan itibaren master dalından dallanarak yeni bir develop dalı oluşturuluyor. Mevcut durumda develop ve master dalı aynı koda işaret ediyorlar. Tüm geliştiriciler artık geliştirme sürecine develop dalından devam ederek bu dala commit ediyorlar. 
+</p>
+
+<p>
+  Yeni özellik ekleneceği zaman bu özellik için <span style="color:#F33191;background-color:#222;padding:3px">feature</span>(özellik) dalı açılıyor. Burada özellikten kasıt birden fazla commit içerecek görece büyük değişikliktir diyebiliriz. Aynı anda birden fazla özellik dalı açılabilir. Özelliklerin ayrı dallarda geliştirilmesi hem develop dalının gereksiz commitler ile dolmasını engeller hem de bu yöntemle özellikten vazgeçilmesi durumunda yalnızca özellik dalının silinmesi yeterli olur. Özellik tamamlandığında bu dal develop dalı ile birleştirilir(merge) ve özellik dalı silinir. Yani özellik dalları yalnızca özelliğin geliştirilmesi süresince yaşamlarına devam ederler.
+</p>
+
+<p>
+  Yeni bir sürüm yayınlanacağı zaman develop dalından yeni bir <span style="color:#00E700;background-color:#222;padding:3px">release</span> dalı dallanır. Sürümdeki son değişiklikler(sürüm numarası değiştirmek gibi) bu dalda yapılır. Gerekli değişiklikler yapıldığında bu sürüm hem master hem de develop dallarına merge edilir ve master dalında sürüm numarası ile etiketlenir. Daha sonra release dalı silinir. Resimde 1.0 sürümü bu şekilde yayınlanmaktadır. 
+</p>
+
+<p>
+  Yayınlanan sürümde kritik bir hata keşfedilmesi durumunda ve bu hatanın acilen çözülüp yayına alınması gerektiğinde <span style="color:#FF2600;background-color:#222;padding:3px">hotfix</span> dalları kullanılır. Gerekli hata çözümü yeni açılan hotfix dalında yapıldıktan sonra bu dal hem develop hem de master dalı ile birleştirilir. Yeni sürüm yeni bir sürüm numarası ile etiketlenir. Son olarak hotfix dalı silinir. Resimde 0.2 sürümü bu şekilde yayınlanmaktadır. 
+</p>
+
+<h3>Kurulum</h3>
+<p>
+  Çoğu Linux dağıtımı için git-flow paketi depolarda bulunmakta. <a href="http://mxcl.github.com/homebrew/">Homebrew</a> kullanıcıları <pre>brew install git-flow</pre> komutu ile Mac OS X için kolaylıkla kurulumu gerçekleştirebilirler. Diğer sistemler için kurulum bilgilerine <a href="https://github.com/nvie/gitflow/wiki/Installation">buradan</a> ulaşabilirsiniz.
+</p>
+
+<h3>Model için gereken Git ve Git-flow komutları</h3>
+<ul>
+  <li>
+    <b>git flow init</b>
+    <p>
+      Bu komut bulunduğu dizinde Git-flow sürecini başlatır. Komut çalıştırıldığında eğer mevcut değilse önce bir git repository oluşturur. Daha sonra kullanıcıya süreç için kullanılacak dal(branch) isimlerini sorar. Anlaşılacağı üzere dal isimleri özelleştirilebilir. Fakat uyumluluk adına dal isimlerinin varsayılan değerlerde bırakılması önerilir.
+    </p>
+    <pre>
+    Initialized empty Git repository in /Users/fehmicansaglam/test/.git/
+    No branches exist yet. Base branches must be created now.
+    Branch name for production releases: [master] 
+    Branch name for "next release" development: [develop] 
+
+    How to name your supporting branch prefixes?
+    Feature branches? [feature/] 
+    Release branches? [release/] 
+    Hotfix branches? [hotfix/] 
+    Support branches? [support/] 
+    Version tag prefix? [] 
+    </pre>
+
+    <p>Böylece master ve develop dalları oluşmuş olur. Develop dalı seçili durumdadır.</p>
+    <pre>
+[16:45:53]fehmicansaglam[test]:) $ git branch -v
+* develop 5fc4ad6 Initial commit
+  master  5fc4ad6 Initial commit
+    </pre>
+  </li>
+
+  <li>
+    <b>git flow feature start performans</b>
+    <p>Bu komut ile yeni bir özellik dalı açılır. Özellik adı performans olduğundan varsayılan özellik dalı feature/performans olacaktır.</p>
+    <pre>
+[16:51:05]fehmicansaglam[test]:) $ git branch -v
+  develop            5fc4ad6 Initial commit
+* feature/performans 5fc4ad6 Initial commit
+  master             5fc4ad6 Initial commit
+    </pre>
+    Aynı işi mevcut git komutlarıyla yapmak isteseydik aşağıdaki komutu kullanabilirdik.
+    <pre>git checkout -b myfeature feature/performans</pre>
+  </li>
+
+  <li>
+    <b>git flow feature finish performans</b>
+    <p>Bu komut ile daha önce açılmış olan özellik dalı kapatılır. Kapatma işlemi önce özellik dalının develop dalına merge edilmesi ile başlar ardından da özellik dalının silinmesi ile sonlanır.</p>
+    <pre>
+[16:58:01]fehmicansaglam[test]:) $ git branch -v
+* develop 75415e5 performans
+  master  5fc4ad6 Initial commit
+    </pre>
+    Aynı işi mevcut git komutlarıyla yapmak isteseydik aşağıdaki komutları kullanabilirdik.
+    <pre>
+git checkout develop
+git merge --no-ff feature/performans
+git branch -d feature/performans
+    </pre>
+  </li>
+
+  <li>
+    <b>git flow release start 1.0.0</b>
+    <p>Bu komut ile yeni bir sürüm yayını hazırlanmaya başlanır. Komut çalıştırıldığında develop dalından dallanan yeni bir release/1.0.0 dalı oluşur.</p>
+    <pre>
+[17:02:18]fehmicansaglam[test]:) $ git branch -v
+  develop       75415e5 performans
+  master        5fc4ad6 Initial commit
+* release/1.0.0 75415e5 performans
+    </pre>
+    Aynı işi mevcut git komutlarıyla yapmak isteseydik aşağıdaki komutu kullanabilirdik.
+    <pre>
+git checkout -b release/1.0.0 develop
+    </pre>
+  </li>
+
+  <li>
+    <b>git flow release finish 1.0.0</b>
+    <p>Bu komut ile hazırlanması tamamlanan sürüm master dalına alınır. Yapılan değişiklikler hem master hem de develop dalı ile birleştirilir. master dalındaki son commit sürüm numarası ile etiketlenir. Ardından release dalı silinir.</p>
+    <pre>
+[17:04:57]fehmicansaglam[test]:) $ git branch -v
+* develop 61ae36c Merge branch 'release/1.0.0' into develop
+  master  68cc6e6 sürüm numarası güncellendi
+    </pre>
+    <pre>
+[17:07:47]fehmicansaglam[test]:) $ git tag
+1.0.0
+    </pre>
+    Aynı işi mevcut git komutlarıyla yapmak isteseydik aşağıdaki komutları kullanabilirdik.
+    <pre>
+git checkout master
+git merge --no-ff release/1.0.0
+git tag -a 1.0.0
+git checkout develop
+git merge --no-ff release/1.0.0
+git branch -d release/1.0.0
+    </pre>
+  </li>
+
+  <li>
+    <b>git flow hotfix start 1.0.1</b>
+    <p>Bu komut ile yeni bir hotfix başlatılıyor. Hotfixler acil güncellemelerde kullanılırlar ve master dalından dallanırlar. Komut çalıştırıldığında master dalından dallanan yeni bir release/1.0.0 dalı oluşur.</p>
+    <pre>
+[17:16:10]fehmicansaglam[test]:) $ git branch -v
+  develop      61ae36c Merge branch 'release/1.0.0' into develop
+* hotfix/1.0.1 e9f8075 kritik hata güncellemesi
+  master       68cc6e6 sürüm numarası güncellendi
+    </pre>
+    Aynı işi mevcut git komutlarıyla yapmak isteseydik aşağıdaki komutu kullanabilirdik.
+    <pre>
+git checkout -b hotfix/1.0.1 master
+    </pre>
+  </li>
+
+  <li>
+    <b>git flow hotfix finish 1.0.1</b>
+    <p>Bu komut ile hotfix tamamlanıyor. Değişiklikler hem develop hem de master dalına alınır. master dalı 1.0.1 ile etiketlenir ve hotfix dalı silinir.</p>
+    <pre>
+[17:18:26]fehmicansaglam[test]:) $ git branch -v
+* develop 4ebcb2c Merge branch 'hotfix/1.0.1' into develop
+  master  d668862 Merge branch 'hotfix/1.0.1'
+    </pre>
+    <pre>
+[17:18:28]fehmicansaglam[test]:) $ git tag -l
+1.0.0
+1.0.1
+</pre>
+    Aynı işi mevcut git komutlarıyla yapmak isteseydik aşağıdaki komutları kullanabilirdik.
+    <pre>
+git checkout master
+git merge --no-ff hotfix/1.0.1
+git tag -a 1.0.1
+git checkout develop
+git merge --no-ff hotfix/1.0.1
+git branch -d hotfix/1.0.1
+    </pre>
+  </li>
+
+</ul>
+
+<p>
+  Görüldüğü üzere model oldukça kolay olsa da Git-flow komutları olmadan ham Git komutları ile süreci yönetmek oldukça zor. Fakat Git-flow kurduktan sonra modelin avantajlarını göreceğinize ve kullanacağınıza inanıyorum.
+</p>
+
+<h3>SourceTree 1.5 ile gelen Git-flow entegrasyonu</h3>
+<p>
+  Genelde konsolda çalışan biri olarak GUI uygulamalarını nadiren severim. SourceTree bu istisnalardan biri oldu. Uygulamanın 1.5 sürümü ile git-flow entegrasyonunun gelmesi işleri daha da kolaylaştırdı. Çoğu zaman süreçteki bir sonraki adıma tek bir düğme ile gitmek mümkün oluyor. Farklı bir adım izlemek isterseniz elbette seçme şansınız var. Daha ayrıntılı bilgi için <a href="http://blog.sourcetreeapp.com/2012/08/01/smart-branching-with-sourcetree-and-git-flow/">şu blog yazısını</a> okuyabilirsiniz.
+</p>
+
+<h3>İlgili yazılar</h3>
+<ul>
+  <li>
+    <a href="http://www.kodcu.com/2012/07/video-surekli-entegrasyon-yaklasimlari/">Sürekli entegrasyon hakkında kodcu.com webineri</a>
+  </li>
+  <li>
+    <a href="http://jeffkreeftmeijer.com/2010/why-arent-you-using-git-flow/">Why aren't you using git-flow?</a>
+  </li>
+  <li>
+    <a href="http://yakiloo.com/getting-started-git-flow/">Getting Started – Git-Flow</a>
+  </li>
+</ul>
+
+<h3>Emeği geçenler</h3>
+<ul>
+  <li>
+    <a href="https://www.google.com/search?q=efe+ya%C5%9F+%C3%BCz%C3%BCm">Efe Yaş Üzüm</a>
+  </li>
+  <li>
+    <a href="http://bira.fm">BİRA.FM</a>
+  </li>
+  <li>
+    <a href="http://www.youtube.com/watch?v=wcLnJyCrnhY">Müzeyyen Senar</a>
+  </li>
+  <li>
+    <a href="http://www.youtube.com/watch?v=JSQatW_6Bjc">Müslüm Gürses</a>
+  </li>
+  <li>
+    <a href="http://www.youtube.com/watch?v=4K6jH-wWWEc">Metin Erksan, Müşfik Kenter, Sema Özcan</a>
+  </li>
+</ul>
+
+
+
