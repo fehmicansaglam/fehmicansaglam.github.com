@@ -1,40 +1,31 @@
 --- 
-meta: 
-  dsq_thread_id: "344982979"
-  _edit_last: "1"
-type: post
 title: "GNU/Linux sistemlerde \xC5\x9Fifre yazmadan ssh giri\xC5\x9Fi"
-status: publish
 layout: post
-published: true
-tags: 
-- canavARGE
 ---
 <ol>
 <li>
 localhostta public private key ikilisi oluşturulur.
-[code]
+<pre>
 ssh-keygen -t dsa
-[/code]
+</pre>
 </li>
 <li>
  remote hostta .ssh dizini yaratılır.
 <br />
-[code]
+<pre>
 mkdir .ssh
-[/code]
+</pre>
 <br />
 </li>
 <li>
 localhosttaki public key remote hosttaki authorized_keys dosyasına eklenir.
-[code]
+<pre>
 cat ~/.ssh/id_dsa.pub | ssh <user>@<remote_host> "cat >> ~/.ssh/authorized_keys"
-[/code]
+</pre>
 <br />
-</remote_host></user></li>
 <li>
 eğer çalışmıyorsa dosya izinleri kontrol edilir. gerekiyor ise chmod ile gerekli izinler verilir. olması gereken izinler:
-[code]
+<pre>
 (remotehost)
 .ssh                    700
 .ssh/authorized_keys    600
@@ -43,6 +34,6 @@ eğer çalışmıyorsa dosya izinleri kontrol edilir. gerekiyor ise chmod ile ge
 .ssh                    700
 .ssh/id_dsa             600
 .ssh/id_dsa.pub         644
-[/code]
+</pre>
 </li>
 </ol>
