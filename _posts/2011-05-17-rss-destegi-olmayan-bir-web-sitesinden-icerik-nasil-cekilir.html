@@ -1,108 +1,112 @@
 --- 
-meta: 
-  dsq_thread_id: "339326694"
-  _edit_last: "1"
-type: post
 title: "RSS deste\xC4\x9Fi olmayan bir web sitesinden i\xC3\xA7erik nas\xC4\xB1l \xC3\xA7ekilir?"
-status: publish
 layout: post
-published: true
-tags: 
-- canavARGE
-- crawler
 ---
-<div style="float:left; margin-top:20px"><img src="http://fehmicans.net/blog/wp-content/uploads/2011/05/black-widow-spider-1-150x150.jpg" alt="" title="black-widow-spider-1" width="150" height="150" class="aligncenter size-thumbnail wp-image-713" /></div>
+<p>
 <strong><span style="text-decoration: underline;">Bu yazıda anlatılanlar yalnızca bilgilendirme amaçlıdır. Örnekte kullanılan tubitak.gov.tr sitesinden çekilen içerik TÜBİTAK'a aittir. Bazı siteler bilgi verilmeden içerik çekilmesini yasaklamış olabilir. Burada anlatılan bilgileri kullanarak gerçekleştirilen uygulamalardan doğacak sonuçlar için sorumluluk kabul edilmez. </span></strong>
+</p>
 
+<p>
 RSS desteği web sitesi içeriğini XML gibi düzgün bir biçime dönüştürdüğünden, içeriği bir uygulama aracılığıyla çekerek anlamlandırmak oldukça kolaydır. Bu desteğin olmadığı durumlarda ise içeriğin çekilmesi güçleşir. Örnek olarak tubitak.gov.tr site içeriği için RSS desteği sağlasa da arama sonuçları için bu desteği vermemektedir. Bu yazımda istenilen kelimeyi tubitak.gov.tr sitesinde arayarak dönen sonuçları işleyen küçük bir uygulamanın nasıl yazılacağını anlatacağım.
-<!--more-->
+</p>
+
+<p>
 İşe önce tubitak.gov.tr sitesinde bir arama yaparak başlayalım. "burs" kelimesini aradığımızda dönen sonuç aşağıdaki görüntüdeki gibi oluyor.
+</p>
 
 <img class="aligncenter size-full wp-image-696" title="burs_ara" src="http://fehmicans.net/blog/wp-content/uploads/2011/05/burs_ara.jpg" alt="" width="496" height="367" />
 
+<p>
 Dönen sayfanın html koduna bakarsak arama sonuçları class özelliği <strong>divContentItem</strong> ya da <strong>divContentItemAlt</strong> olan alt alta divler şeklinde listeleniyor. En altta bulunan <strong>divShowAllItems</strong> içerisinde ise sayfalama bağlantıları bulunuyor.
+</p>
 
 <img src="http://fehmicans.net/blog/wp-content/uploads/2011/05/html-1.jpg" alt="" title="html-1" width="413" height="289" class="aligncenter size-full wp-image-698" />
 
+<p>
 Bir tane div seçip içinde kullanılan html koduna göz atalım.
+</p>
 
 <img src="http://fehmicans.net/blog/wp-content/uploads/2011/05/html-2.jpg" alt="" title="html-2" width="575" height="405" class="aligncenter size-full wp-image-700" />
 
+<p>
 Görüldüğü gibi içiçe iki tablo mevcut. İlk tablo tek bir satırdan oluşuyor ve <strong>tdContentText</strong> sınıfından olan td içerisindeki tablonun içinde ihtiyaç duyduğumuz başlık, açıklama ve tarih bilgileri yer alıyor. Şimdi bir de sayfalama bölümüne göz atalım.
+</p>
 
 <img src="http://fehmicans.net/blog/wp-content/uploads/2011/05/html-3.jpg" alt="" title="html-3" width="416" height="254" class="aligncenter size-full wp-image-703" />
 
+<p>
 En altta bulunan ve texti "Sonraki Sayfa" olan bağlantı ile bir sonraki arama sonucu sayfasına ulaşılabiliyor. Bu bilgiler ışığında arama sonuçlarını işleyecek bir uygulama yazalım. HTML parse işlemleri için küçük fakat çok kullanışlı olan <a href="http://jsoup.org/">jsoup</a> kütüphanesini kullanacağız. 
+</p>
 
-[cc lang="java"]
+{% highlight java linenos %}
 public class Bocuk {
+  private static final String domain = "http://tubitak.gov.tr/";
+  private static final String searchPath = "detailedsearch.do?query=";
+  private static int index = 1;
 
-    private static final String domain = "http://tubitak.gov.tr/";
-    private static final String searchPath = "detailedsearch.do?query=";
-    private static int index = 1;
+  public static void main(String[] args) throws IOException, ParseException {
+    String path = searchPath + "burs";
+    do {
+      path = parseSearchResults(path.replaceFirst("\\.\\.", ""));
+    } while (path != null);
+  }
 
-    public static void main(String[] args) throws IOException, ParseException {
-        String path = searchPath + "burs";
-        do {
-            path = parseSearchResults(path.replaceFirst("\\.\\.", ""));
-        } while (path != null);
+  public static Document parseURL(final URL url, final int timeOut, int retryAttempts) {
+    Document doc = null;
+    do {
+      try {
+        doc = Jsoup.parse(url, timeOut);
+      } catch (Exception ex) {
+        doc = null;
+      }
+    } while (doc == null && (retryAttempts-- > 0));
+
+    return doc;
+  }
+
+  public static String parseSearchResults(String path) throws IOException, ParseException {
+    URL url = new URL(domain + path);
+    Document doc = parseURL(url, 15000, 4);
+    if (doc == null) {
+      return null;
+    }
+   
+    Elements icerikDivler = doc.getElementsByClass("divContentItem");
+    icerikDivler.addAll(doc.getElementsByClass("divContentItemAlt"));
+
+    for (Element icerikDiv : icerikDivler) {
+      System.out.println("******************************************");
+      Elements satirlar = icerikDiv.getElementsByClass("tdContentText").first().getElementsByTag("tr");
+      Element baslik = satirlar.get(0).getElementsByTag("a").first();
+      System.out.println("baslik: " + baslik.ownText());
+      Element aciklama = satirlar.get(1).getElementsByTag("a").first();
+      System.out.println("aciklama: " + aciklama.ownText());
+      Element tarih = satirlar.get(2).getElementsByTag("td").first();
+      System.out.println("tarih: " + tarih.ownText());
+      System.out.println("******************************************\n");
     }
 
-    public static Document parseURL(final URL url, final int timeOut, int retryAttempts) {
-        Document doc = null;
-        do {
-            try {
-                doc = Jsoup.parse(url, timeOut);
-            } catch (Exception ex) {
-                doc = null;
-            }
-        } while (doc == null && (retryAttempts-- > 0));
-
-        return doc;
+    Elements navigation = doc.getElementsByClass("divShowAllItems");
+    if (navigation == null || navigation.isEmpty()) {
+      return null;
+    }
+    Element next = navigation.first().getElementsContainingOwnText("Sonraki Sayfa").first();
+    if (next == null) {
+      return null;
     }
 
-    public static String parseSearchResults(String path) throws IOException, ParseException {
-        URL url = new URL(domain + path);
-        Document doc = parseURL(url, 15000, 4);
-        if (doc == null) {
-            return null;
-        }
-       
-        Elements icerikDivler = doc.getElementsByClass("divContentItem");
-        icerikDivler.addAll(doc.getElementsByClass("divContentItemAlt"));
-
-        for (Element icerikDiv : icerikDivler) {
-            System.out.println("******************************************");
-
-            Elements satirlar = icerikDiv.getElementsByClass("tdContentText").first().getElementsByTag("tr");
-            Element baslik = satirlar.get(0).getElementsByTag("a").first();
-            System.out.println("baslik: " + baslik.ownText());
-            Element aciklama = satirlar.get(1).getElementsByTag("a").first();
-            System.out.println("aciklama: " + aciklama.ownText());
-            Element tarih = satirlar.get(2).getElementsByTag("td").first();
-            System.out.println("tarih: " + tarih.ownText());
-            System.out.println("******************************************\n");
-        }
-
-        Elements navigation = doc.getElementsByClass("divShowAllItems");
-        if (navigation == null || navigation.isEmpty()) {
-            return null;
-        }
-        Element next = navigation.first().getElementsContainingOwnText("Sonraki Sayfa").first();
-        if (next == null) {
-            return null;
-        }
-
-        String nextURL = next.attr("href");
-        System.out.println("nextURL: " + nextURL);
-        return nextURL;
-    }
+    String nextURL = next.attr("href");
+    System.out.println("nextURL: " + nextURL);
+    return nextURL;
+  }
 }
-[/cc]
+{% endhighlight %}
 
+<p>
 Uygulamayı çalıştırdığımızda aşağıdaki çıktıyı elde ediyoruz. "burs" anahtar kelimesini değiştirerek farklı aramalar da yapılabilir.
+</p>
 
-[code]
+<pre>
 ******************************************
 baslik: ESA Burs Programı
 aciklama: TÜBİTAK ve ESA arasında imzalanan "Türkiye Hükümeti ve Avrupa Uzay Ajansı Arasında Dış Uzayın Barışçıl Amaçlarla İncelenmesi ve Kullanılması Konusunda İşbirliği Anlaşması" çerçevesinde burs verilecektir.
@@ -164,6 +168,8 @@ tarih: 04.04.2011
 ******************************************
 
 nextURL: /ara/burs/0/1/index.htm;jsessionid=F053F7EEB69D10FA5E4DDD6E409EE33B
-[/code]
+</pre>
 
+<p>
 Umarım verdiğim örnek faydalı olmuştur.
+</p>
