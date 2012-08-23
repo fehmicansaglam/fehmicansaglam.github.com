@@ -1,0 +1,93 @@
+--- 
+title: "Play Framework JPA loglarını farklı bir çıktıya yönlendirin"
+layout: post
+description: 
+keywords: 
+---
+<h3>Play Framework 1.x ilişkisel veriyi yönetmek için <a href="http://en.wikipedia.org/wiki/Java_Persistence_API">JPA</a> kullanır.</h3>
+
+<p>
+  Debug ya da analiz amacıyla, uygulama tarafından yapılan tüm SQL sorgularını loglamak istediğinizde <em>application.conf</em> içerisinde aşağıdaki ayarı yapmanız yeterli olur.
+</p>
+
+<pre>
+# Debug SQL statements (logged using DEBUG level):
+jpa.debugSQL=true
+</pre>
+
+<p>
+  Bu ayarı yaptıktan sonra çıktıda aşağıdakine benzer SQL loglarını görebilirsiniz.
+</p>
+
+<pre>
+23:48:07,200 DEBUG ~ insert into tbl_user (id, adres, age, name) values (null, ?, ?, ?)
+23:48:24,580 DEBUG ~ select user0_.id as id2_, user0_.adres as adres2_, user0_.age as age2_, user0_.name as name2_ from tbl_user user0_ where user0_.name=? limit ?
+</pre>
+
+<h3>Play Framework logları yönetmek için <a href="http://en.wikipedia.org/wiki/Log4j">log4j</a> kütüphanesini kullanır.</h3>
+
+<p>
+  log4j ayarları için uygulamanızın <em>conf/</em> dizini içerisinde <em>log4j.properties</em> dosyası oluşturmanız yeterlidir. Farklı kurulumlar için farklı ayarlara ihtiyacınız olursa <em>application.conf</em> içerisinde aşağıdaki gibi farklı dosyalar belirtebilirsiniz.
+</p>
+
+<pre>
+application.log.path=/log4j-dev.properties
+%prod.application.log.path=/log4j-prod.properties
+</pre>
+
+<p>Logları standart çıktıya yönlendiren örnek bir log4j.properties dosyasının içeriği aşağıdaki gibidir.</p>
+
+<pre>
+log4j.rootLogger=DEBUG, Console
+
+# Console
+log4j.appender.Console=org.apache.log4j.ConsoleAppender
+log4j.appender.Console.layout=org.apache.log4j.PatternLayout
+log4j.appender.Console.layout.ConversionPattern=%d %-5p - %m%n
+</pre>
+
+<p>
+  Burada <em>layout.ConversionPattern</em> ayarına %c parametresini eklersek her bir logun hangi <a href="http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/Logger.html">Logger</a> aracılığıyla yazıldığını görebiliriz. Play Framework varsayılan olarak <em>play</em> Logger'ını kullanır. Eğer SQL logları farklı bir Logger ile yazılıyorsa gerekli ayarları yaparak bu logları <a href="http://www.allapplabs.com/log4j/log4j_appenders.htm">istediğimiz çıktıya</a> yönlendirebiliriz.
+</p>
+
+<pre>
+log4j.appender.Console.layout.ConversionPattern=%d %-5p - [%c] %m%n
+</pre>
+
+<pre>
+2012-08-24 00:17:47,611 INFO  - [play] Automatically applying evolutions in in-memory database
+2012-08-24 00:17:47,916 DEBUG - [org.hibernate.SQL] select user0_.id as id0_, user0_.adres as adres0_, user0_.age as age0_, user0_.name as name0_ from tbl_user user0_ where user0_.name=? limit ?
+</pre>
+
+<p>
+  Loglardan anlaşıldığı üzere SQL logları için <em>org.hibernate.SQL</em> Logger'ı kullanılıyor. SQL loglarını <em>logs/sql.log</em> isimli bir dosyaya kaydetmek için aşağıdaki ayarlar yeterli olur.
+</p>
+
+<pre>
+log4j.rootLogger=ERROR, Console
+
+log4j.logger.play=INFO
+
+log4j.logger.org.hibernate.SQL=DEBUG, SQL
+log4j.additivity.org.hibernate.SQL=false
+
+# Console
+log4j.appender.Console=org.apache.log4j.ConsoleAppender
+log4j.appender.Console.layout=org.apache.log4j.PatternLayout
+log4j.appender.Console.layout.ConversionPattern=%d %-5p - [%c] %m%n
+
+# SQL
+log4j.appender.SQL=org.apache.log4j.FileAppender
+log4j.appender.SQL.File=logs/sql.log
+log4j.appender.SQL.layout=org.apache.log4j.PatternLayout
+log4j.appender.SQL.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} - %m%n
+</pre>
+
+<p>
+  <em>log4j.additivity.org.hibernate.SQL=false</em> ayarı ile bu Logger'ın üst seviye Logger ayarlarını miras <u>almamasını</u> sağlıyoruz. Böylece SQL logları konsola yazılmayacak, yalnızca <em>logs/sql.log</em> dosyasına kaydedilecektir.
+</p>
+
+<p>
+  log4j ayarları konusunda daha ayrıntılı bilgi için <a href="http://logging.apache.org/log4j/1.2/manual.html">manual</a> sayfasını ziyaret edebilirsiniz. <b>Ayrıca production ortamında tüm SQL loglarının kaydediliyor olmasının az da olsa bir performans kaybına sebep olacağını unutmayınız.</b>
+</p>
+
