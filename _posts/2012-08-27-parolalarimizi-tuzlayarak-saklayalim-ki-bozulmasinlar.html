@@ -1,0 +1,105 @@
+--- 
+title: Parolalarımızı tuzlayarak saklayalım ki bozulmasınlar
+layout: post
+description: "Verilen parolaya rastgele üretilecek tuz adını verdiğimiz bir karakter dizisi ekleyip elde ettiğimiz sonucun özetini hesaplarsak parolamızın önceden hesaplanma olasılığını çok aza indirebiliriz."
+keywords: hash, salt, özet, şifre, parola, sha1, md5
+---
+
+<blockquote>
+  6 Haziran 2012 günü 6.46 milyon LinkedIn parolasının ele geçirildiği <a href="http://www.zdnet.com/blog/btl/6-46-million-linkedin-passwords-leaked-online/79290">haberi</a> teknoloji kulislerine bomba gibi düştüğünde bir LinkedIn kullanıcı olarak aslında çok fazla endişelenmemiştim.
+</blockquote>
+
+<p>
+  Çünkü her düzgün teknoloji/bilişim şirketi gibi LinkedIn'in de parolaların tuz(salt) kullanarak hesapladığı özetlerini sakladığından emindim. Parolalara göz gezdirdiğimde açık olarak değil özet olarak saklandıklarını fark ettiğimde daha da rahatlamıştım.
+</p>
+
+<p>
+  Kısa süre sonra parolalardan zayıf olanlarının kırıldığı haberleri dolaşmaya başladı. Tuz kullanmadan hesaplanan özetlerin kırılması kolaydı. Bu uzun zamandan beri bilinen bir durumdu. Yoksa LinkedIn parolaların özetlerini tuz kullanmadan mı hesaplamıştı? Kara haber tez duyuldu. Benim parolam da kırılan parolalar arasındaydı ve parolamı değiştirmem gerekti.
+</p>
+
+<h3>Parola özeti nedir?</h3>
+
+<div style="width:100%;text-align:center;margin:30px 0;">
+  <img src="/assets/images/sha1.png" />
+</div>
+
+<p>
+  <a href="http://en.wikipedia.org/wiki/SHA-1">SHA-1</a> gibi özet fonksiyonları bir kümeden başka bir kümeye tek yönlü izdüşüm sağlarlar. Daha açık anlatmak gerekirse yukarıdaki resimde olduğu gibi SHA-1 fonksiyonu her bir parola için farklı bir özet değeri hesaplar. Bu fonksiyon tek yönlü olduğu için özet değerinden parola değeri geri elde edilemez. Böylece parolanın güvenliği sağlanmış olur.
+</p>
+
+<p>
+  Aşağıda istenen input için SHA-1 özetini döndüren Java dilinde kodlanmış bir fonksiyon yer alıyor.
+</p>
+
+{% highlight java %}
+public String sha1Hash(final String input) throws NoSuchAlgorithmException {
+  MessageDigest m = MessageDigest.getInstance("SHA-1");
+  byte[] out = m.digest(input.getBytes());
+  final StringBuilder sb = new StringBuilder();
+  for (final byte mdbyte : out) {
+    sb.append(Integer.toString((mdbyte & 0xff) + 0x100, 16).substring(1));
+  }
+  return sb.toString();
+}
+{% endhighlight %}
+
+
+<h3>Tuz kullanmadan özet hesaplarsak ne olur?</h3>
+
+<p>
+  SHA-1 özeti ile parolamızın güvenliği sağlanmış olur dedik ancak yeterli işlem gücü ve zamanı verilirse parola kümesindeki tüm elemanlar için özet değeri hesaplanarak bir tabloda saklanabilir demeyi unuttuk. Bu tablo oluşturulduğunda verilen özet değerine karşılık gelen parola doğrudan elde edilebilir. <a href="http://www.sha1-lookup.com/">SHA-1 lookup</a> sitesi bu hizmeti ücretsiz olarak sağlamaktadır. Aşağıdaki bağlantılara tıklarsanız test, test1 ve test2 parolalarına özet değerlerinden ulaşabileceğinizi göreceksiniz.
+</p>
+
+<ul>
+  <li><a href="http://www.sha1-lookup.com/index.php?q=a94a8fe5ccb19ba61c4c0873d391e987982fbbd3">test</a></li>
+  <li><a href="http://www.sha1-lookup.com/index.php?q=b444ac06613fc8d63795be9ad0beaf55011936ac">test1</a></li>
+  <li><a href="http://www.sha1-lookup.com/index.php?q=109f4b3c50d7b0df729d299bc6f8e9ef9066971f">test2</a></li>
+</ul>
+
+<h3>Sorunu aşmak için tuzlama yöntemini kullanacağız.</h3>
+<p>
+  Verilen parolaya rastgele üretilecek tuz adını verdiğimiz bir karakter dizisi ekleyip elde ettiğimiz sonucun özetini hesaplarsak parolamızın önceden hesaplanma olasılığını çok aza indirebiliriz.
+</p>
+
+<p>
+  Aşağıdaki Java fonksiyonu rastgele tuz üretmektedir.
+</p>
+
+{% highlight java %}
+public static String generateSalt() {
+  StringBuilder salt = new StringBuilder();
+  java.util.Random randgen = new SecureRandom();
+  while (salt.length() < 8) {
+    int index = (int) (randgen.nextFloat() * SALTCHARS.length());
+    salt.append(SALTCHARS.substring(index, index + 1));
+  }
+  return salt.toString();
+}
+{% endhighlight %}
+
+<p>
+  Yukarıdaki SHA-1 fonksiyonunun bir tuz değerini parametre olarak alan hali aşağıda yer alıyor.
+</p>
+
+{% highlight java %}
+public String sha1Hash(final String input, final String salt) throws NoSuchAlgorithmException {
+  MessageDigest m = MessageDigest.getInstance("SHA-1");
+  byte[] out = m.digest((input + salt).getBytes());
+  final StringBuilder sb = new StringBuilder();
+  for (final byte mdbyte : out) {
+    sb.append(Integer.toString((mdbyte & 0xff) + 0x100, 16).substring(1));
+  }
+  return sb.toString();
+}
+{% endhighlight %}
+
+<p>
+  <b>test</b> parolasının <b>a1235kl7</b> tuz değeri ile hesaplanan özeti <b>6c60701153162e4ef26298ee6de2ca5f1f3460ce</b> olur. Bu değer için SHA-1 lookup sitesinin çaresiz kaldığını <a href="http://www.sha1-lookup.com/index.php?q=6c60701153162e4ef26298ee6de2ca5f1f3460ce">buradan</a> görebilirsiniz.
+</p>
+
+<h3>Tuz değeri nasıl saklanmalı?</h3>
+
+<p>
+  Her bir parola için kullanılan tuz değerini veritabanında ya da bir dosyada açık halde rahatça saklayabilirsiniz. Daha sonra gerçekleştirilecek parola doğrulamalarında girdiye tuz değerini ekleyerek özet değerini hesapladıktan sonra bu değeri daha önce hesaplanan özet ile karşılaştırarak doğrulamayı gerçekleştirebilirsiniz.
+</p>
+
