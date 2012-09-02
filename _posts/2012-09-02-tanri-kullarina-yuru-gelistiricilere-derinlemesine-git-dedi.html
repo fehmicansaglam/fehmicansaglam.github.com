@@ -1,0 +1,212 @@
+--- 
+title: Tanrı kullarına yürü, geliştiricilere "Derinlemesine Git" dedi
+layout: post
+description: "Bu yazıda Git sürüm kontrol sisteminin altında yatan bileşenlere ve veri yapılarına değinerek gündelik Git komutlarının çalışma şeklinin daha iyi anlaşılabilmesini sağlamayı umuyorum."
+keywords: git,tree,commit,blob
+---
+
+<h3>
+  "Bir aptal içerik takip sistemi"<small><a href="http://git-scm.com/docs/git.html">[1]</a></small>
+</h3>
+
+<blockquote>
+  Linus Torvalds ilk Git sürümünü Nisan 2005 tarihinde duyursa da Git'in biz fani kulların kullanabileceği duruma gelmesi 2005 yılı sonunu buldu.
+</blockquote>
+
+<p>
+  Bu yazıda Git sürüm kontrol sisteminin altında yatan bileşenlere ve veri yapılarına değinerek gündelik Git komutlarının çalışma şeklinin daha iyi anlaşılabilmesini sağlamayı umuyorum. 
+</p>
+
+<div style="width:100%;text-align:center;margin:20px 0;">
+  <img src="/assets/images/git-1.png">
+</div>
+
+<p>
+  Yukarıdaki resim temel Git çalışma mantığını gösteriyor:
+  <ul>
+    <li><b>git-add</b> komutu ile <b>working tree</b>'deki değişiklikler index'e gönderilir.</li>
+    <li><b>git-commit</b> ile <b>index</b>'teki değişiklikler <b>repository</b>'ye gönderilir.</li>
+    <li><b>git-checkout</b> komutu ile <b>working tree</b>'nin geçmiş hallerine dönülebilir.</li>
+  </ul>
+</p>
+
+<h3>Git'in temeli bloblardır</h3>
+
+<p>
+  Bir blob bir dosyanın içeriğine karşılık gelir ve dosyanın içeriği ve boyutunun SHA-1 özeti ile adlandırılır. Böylece aynı içeriğe sahip dosyalar evrensel olarak aynı blob içinde yer alırlar. Bu yapı veri tekrarını engelleyerek daha sıkışık bir mimari sunar.
+</p>
+
+<p>
+  Aşağıdaki örnekte bir dosya oluşturup henüz commit dahi etmeden o dosyaya ait blobun adına ulaşıyoruz.
+</p>
+
+<pre>
+mkdir ornek
+cd ornek/
+echo "<a href="http://www.eksisozluk.com/show.asp?id=12819609">alp er tuna öldi mu</a>" > dosya
+git hash-object dosya
+<strong>156a151425ae09350295b6c2eb0ad786e99fabf2</strong>
+</pre>
+
+<p>
+  Buradan <strong>dosya</strong> isimli dosyanın commit edildiğinde <strong>156a151425ae09350295b6c2eb0ad786e99fabf2</strong> isimli blob içinde tutulacağı sonucuna ulaşabiliriz. Bu değer evrensel olduğundan aynı komutları çalıştırdığınızda siz de aynı sonucu alıyor olmalısınız.
+</p>
+
+<h3>Tree yapısı blobları bir arada tutar ve onlara anlam kazandırır</h3>
+
+<p>
+  Bloblar yalnızca dosyanın içeriğini tutarlar. Bloba anlam kazandıran, dosya adı gibi meta verileri tutan tree yapısıdır. Bir tree başka treeler ve bloblardan oluşur. 
+</p>
+
+<pre>
+echo "ıssız ajun kaldı mu " > dosya2
+mkdir dizin
+echo "ödlek öçin aldı mu" > dizin/dosya3
+echo "emdi yürek yırtılur" > dizin/dosya4
+git init
+git add .
+git commit -m "ilk commit"
+</pre>
+
+<p>
+  Yaptığımız ilk commit ile 4 adet dosyaya karşılık gelen 4 adet blob oluşturmuş olmalıyız. Bunlardan biri olan <strong>dosya</strong> isimli dosyanın özetinin yukarıda hesapladığımız gibi olması gerekir. Aşağıdaki komutlar ile bu özete karşılık gelen içeriği yazdıralım. Genellikle özetin yalnızca ilk 6-7 karakteri bu işlem için yeterlidir.
+</p>
+
+<pre>
+git cat-file -t 156a151
+<strong>blob</strong>
+git cat-file blob 156a151
+<strong>alp er tuna öldi mu</strong>
+</pre>
+
+<p>
+  Görüldüğü üzere dosya içine yazdığımız dizeye ulaşmayı başardık. Şimdi de yaptığımız commitin ayrıntılarına bakalım.
+</p>
+
+<pre>
+git cat-file -t HEAD
+<strong>commit</strong>
+git cat-file commit HEAD
+<strong>tree 1b56480e27ff94b550ced3366aad7fba1981a0d3
+author Fehmi Can Saglam &lt;fehmican.saglam at 4primes.com&gt; 1346615998 +0300
+committer Fehmi Can Saglam &lt;fehmican.saglam at 4primes.com&gt; 1346615998 +0300
+
+ilk commit</strong>
+</pre>
+
+<p>
+  Yaptığımız commitin içinde bir tree nesnesinin yer aldığını görüyoruz. Bu treenin ayrıntılarına bakmak için <strong>git ls-tree</strong> komutunu kullanacağız.
+</p>
+
+<pre>
+git ls-tree 1b56480
+<strong>040000 tree d0a385dda584ee1025257ae1e0f4fbb737033213    dizin
+100644 blob 156a151425ae09350295b6c2eb0ad786e99fabf2    dosya
+100644 blob 4e946f019da51f5d7bc141ceb8232de0576c08ef    dosya2</strong>
+</pre>
+
+<p>
+  Yaptığımız ilk commitin içinde yer alan tree içinde 2 adet blob ve 1 adet tree olduğu bilgisine ulaştık.
+</p>
+
+<h3>Git dosyalar için blob, dizinler için tree nesneleri oluşturur</h3>
+
+<p>
+  <b>dizin</b> dizini için oluşturulan tree nesnesinin ayrıntılarına bakarak bu dizin içindeki dosyalara ulaşabiliriz. 
+</p>
+
+<pre>
+git ls-tree d0a385d
+<strong>100644 blob 6b0532062d62ed344a09f78066824a77e146ca97    dosya3
+100644 blob f02d9aad67017c15990c128fdde28e2fa3a22643    dosya4</strong>
+</pre>
+
+<p>git ls-tree komutunu özyinelemeli olarak çalıştırarak tüm dosyalara aşağıdaki gibi tek bir komutla da ulaşabilirdik.</p>
+
+<pre>
+git ls-tree -r 1b56480
+<strong>100644 blob 6b0532062d62ed344a09f78066824a77e146ca97    dizin/dosya3
+100644 blob f02d9aad67017c15990c128fdde28e2fa3a22643    dizin/dosya4
+100644 blob 156a151425ae09350295b6c2eb0ad786e99fabf2    dosya
+100644 blob 4e946f019da51f5d7bc141ceb8232de0576c08ef    dosya2</strong>
+</pre>
+
+<p>Aşağıdaki resim yaptığımız ilk commit için tree ve blob veri yapıları arasındaki ilişkiyi görselleştirmeyi amaçlıyor.</p>
+
+<div style="width:100%;text-align:center;margin:20px 0;">
+  <img src="/assets/images/git-2.png">
+</div>
+
+<p>Tüm bu nesneler .git/objects dizini altında özet değerlerinin ilk 2 karakterine göre ayrılmış dizinler içinde yer alıyorlar.</p>
+
+<pre>
+find .git/objects -type f | sort
+<strong>.git/objects/15/6a151425ae09350295b6c2eb0ad786e99fabf2
+.git/objects/1b/56480e27ff94b550ced3366aad7fba1981a0d3
+.git/objects/4e/946f019da51f5d7bc141ceb8232de0576c08ef
+.git/objects/6b/0532062d62ed344a09f78066824a77e146ca97
+.git/objects/71/a67537cfe2319ef454b39a88811027e1007969
+.git/objects/d0/a385dda584ee1025257ae1e0f4fbb737033213
+.git/objects/f0/2d9aad67017c15990c128fdde28e2fa3a22643</strong>
+</pre>
+
+<h3>İlk commit hariç tüm commit nesnelerinin en az 1 ebeveyn commit nesnesi bulunur</h3>
+
+<p><strong>dosya</strong> isimli dosyayı değiştirerek yeni bir commit yapalım.</p>
+
+<pre>
+echo 2 >> dosya
+git commit -am "ikinci commit"
+git cat-file commit HEAD
+<strong>tree 488d7e45747ec5d0f949d6ccecec73e2b37f2830
+parent 71a67537cfe2319ef454b39a88811027e1007969
+author Fehmi Can Saglam &lt;fehmican.saglam at 4primes.com&gt; 1346619408 +0300
+committer Fehmi Can Saglam &lt;fehmican.saglam at 4primes.com&gt; 1346619408 +0300
+
+ikinci commit</strong>
+</pre>
+
+<p>
+  Çıktıdan anlayacağımız üzere yaptığımız ikinci commitin bir ebeveyni bulunuyor ki bu commit daha önce yaptığımız ilk commite karşılık geliyor. <strong>git ls-tree</strong> komutunu yeniden çalıştırdığımızda özet değerlerine bakarak yalnızca tek bir dosyanın değiştiğini görebiliyoruz.
+</p>
+
+<pre>
+git ls-tree -r 488d7e4
+<strong>100644 blob 6b0532062d62ed344a09f78066824a77e146ca97    dizin/dosya3
+100644 blob f02d9aad67017c15990c128fdde28e2fa3a22643    dizin/dosya4
+100644 blob 14e6771239af30fa3751600333792e5c318d54ff    dosya
+100644 blob 4e946f019da51f5d7bc141ceb8232de0576c08ef    dosya2</strong>
+</pre>
+
+<h3>Git blob içeriğini zlib ile sıkıştırır</h3>
+
+<p>
+  En son güncellediğimiz, özeti <strong>14e6771239af30fa3751600333792e5c318d54ff</strong> olan blobun içeriğini görmeye çalışalım. Bu blob nesnesi <strong>.git/objects/14/e6771239af30fa3751600333792e5c318d54ff</strong> isimli dosyada bulunur. Ruby konsolunun yardımı ile bu dosyanın içeriğini açabiliriz.
+</p>
+
+<pre>
+irb
+>> require 'zlib'
+>> cf = File.open(".git/objects/14/e6771239af30fa3751600333792e5c318d54ff")
+>> zi = Zlib::Inflate.new(Zlib::MAX_WBITS)
+>> zi.inflate(cf.read)
+<strong>=> "blob 23\000alp er tuna \303\266ldi mu\n2\n"</strong>
+</pre>
+
+<p>
+  Nesne içerisinde önce nesnenin türü ve içeriğin boyutundan oluşan bir başlık ve ardından içerik yer alıyor. Aynı komutları bu kez bir tree nesnesi için çalıştıralım.
+</p>
+
+<pre>
+irb
+>> require 'zlib'
+>> cf = File.open(".git/objects/48/8d7e45747ec5d0f949d6ccecec73e2b37f2830")
+>> zi = Zlib::Inflate.new(Zlib::MAX_WBITS)
+>> zi.inflate(cf.read)
+<strong>=> "tree 99\00040000 dizin\000\320\243\205\335\245\204\356\020%%z\341\340\364\373\2677\0032\023100644 dosya\000\024\346w\0229\2570\3727Q`\0033y.\\1\215T\377100644 dosya2\000N\224o\001\235\245\037]{\301A\316\270#-\340Wl\b\357"</strong>
+</pre>
+
+<p>
+  Tree nesnesi içinde dosya ve dizin bilgilerinin yer aldığını görüyoruz. Böylece Git'in kullandığı veri yapıları hakkındaki yazımın sonuna gelmiş olduk. Umarım faydalı olmuştur. 
+</p>
+
