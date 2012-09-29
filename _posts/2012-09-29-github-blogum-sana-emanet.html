@@ -1,0 +1,45 @@
+--- 
+title: Sevgili Github, blogum sana emanet
+layout: post
+description: "Hostinge ücret ödemeden cok hızlı bir blogum olsun mu diyorsunuz? Yalnızca bir git push ile blogunuz güncellensin mi istiyorsunuz? Sorunlarınızın çözümünün Github'da olduğunu biliyor musunuz?"
+keywords: github, blog, jekyll
+---
+
+<blockquote>
+  Hostinge ücret ödemeden cok hızlı bir blogum olsun mu diyorsunuz? Yalnızca bir git push ile blogunuz güncellensin mi istiyorsunuz? Sorunlarınızın çözümünün Github'da olduğunu biliyor musunuz?
+</blockquote>
+
+<p>
+  Github son birkaç yıl boyunca pek çok alanda öncü ve yaptığı her işte başarılı bir servis oldu. Github kullanıcılarının Github üzerinde bir web sitesine sahip olabildiklerini doğrusu başlarda fark edememiştim. Karl Seguin'in <a href="http://openmymind.net/">blogunu</a> gördüğümde ise bu durum değişti. Performansına ve okunurluğuna hayran kaldığım blogun Github üzerinden sunulduğunu gördüğümde kendi blogumu taşımanın zamanının geldiğini anlamıştım.
+</p>
+
+<p>
+  Github üzerinde bir bloga sahip olmak için öncelikle <b>&lt;kullanıcı_adınız&gt;.github.com</b> isimli bir depo oluşturmalısınız. Benim bloguma ait depo <a href="https://github.com/canavar/canavar.github.com">canavar.github.com</a> adıyla Github'da yer alıyor. Bu depo Karl Seguin'in blogundan forklanmış durumda. Dilerseniz siz de, <em>içeriği silmek kaydıyla</em>, benim blogumu forklayabilirsiniz.
+</p>
+
+<p>
+  Github, sayfalarınızı üretmek için <a href="https://github.com/mojombo/jekyll">Jekyll</a> kullanıyor. Template sistemi için ise <a href="https://github.com/mojombo/jekyll/wiki/Liquid-Extensions">Liquid</a> kullanılıyor. Yeni bir template oluşturup depoya push ettiğiniz anda template çalıştırılarak statik bir HTML sayfa üretiliyor. Sayfalar statik olduğundan çok hızlı sunuluyorlar.
+</p>
+
+<h3>Domain yönlendirme</h3>
+<p>
+  Blogunuza farklı bir domain tanımlamak isterseniz depo içerisinde <b>CNAME</b> isimli bir dosya oluşturup içerisine domain adınızı yazıyorsunuz. Daha sonra domain hizmeti aldığınız yerden bir DNS A kaydı girerek domaininizi 204.232.175.78 IP adresine yönlendiriyorsunuz.
+</p>
+
+<h3>Yerel makinede görüntüleme</h3>
+<p>
+  Kendi makinenize Jekyll <a href="https://github.com/mojombo/jekyll/wiki/install">kurarak</a> sayfanızı yerelde de görebilirsiniz. Kurulumdan sonra 
+  <pre>jekyll --server --pygments --auto</pre>
+  komutu yardımıyla blogunuza http://localhost:4000 adresinden erişebilirsiniz.
+</p>
+
+<h3>Eski blogunuzu taşıma</h3>
+<p>
+  Bir önceki blogum Wordpress üzerinden hizmet veriyordu. Blog içeriğimi <a href="https://github.com/mojombo/jekyll/wiki/blog-migrations">burada</a> anlatıldığı şekilde başarıyla taşıdım. Söz konusu sayfada diğer popüler blog yazılımları için de göç araçları düzgün şekilde açıklanmış durumda.
+</p>
+
+<h3>Sonuç</h3>
+<p>
+  Blogumun sürüm geçmişini görebilmek, bir <em>git push</em> komutu ile güncelleme yapabilmek ve yüksek performans blogumu Github'a taşıma kararını vermemde en önemli etkenler oldular. Düşünceleriniz ile eğer varsa tecrübelerinizi ve başarı öykülerinizi yorum olarak bekliyorum.
+</p>
+
