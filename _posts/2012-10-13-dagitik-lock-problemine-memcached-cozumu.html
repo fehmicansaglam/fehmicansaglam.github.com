@@ -1,0 +1,170 @@
+--- 
+title: Dağıtık kilit (lock) problemini Memcached ya da Veritabanı ile çözelim
+layout: post
+description: "Heroku gibi bir cloud servisi aracılığıyla aynı uygulamadan bir küme oluşturduğunuzda zamanlanmış işlerin senkronizasyonu başınızı ağrıtabilir."
+keywords: heroku, memcached, database, lock, senkronizasyon
+---
+
+<blockquote>
+  <a href="http://heroku.com">Heroku</a> gibi bir cloud servisi aracılığıyla aynı uygulamadan bir küme oluşturduğunuzda zamanlanmış işlerin senkronizasyonu başınızı ağrıtabilir.
+</blockquote>
+
+<p>
+  Zamanlanmış işler günümüz web uygulamalarının ayrılmaz bir parçası. Bu işler aracılığıyla yeri geliyor istatistiki bilgiler oluşturuyor, yeri geliyor <a href="http://en.wikipedia.org/wiki/Operational_data_store">operational data store</a> güncelliyoruz. Şu an benim aklıma gelen kullanım amaçları bunlar olsa da soracağınız her geliştiriciden farklı yanıtlar alacağınıza eminim.
+</p>
+
+<p>
+  Zamanlanmış işleri gerçekleştiren ayrı bir uygulama kullanıldığında elbette senkronizasyon sorunu ortaya çıkmayacaktır. Fakat sırf bu amaçla ayrı bir uygulama geliştirmenin ek bir maliyet getireceği de açıktır. Play Framework gibi web uygulama çatıları zamanlanmış işleri çocuk oyuncağı haline getirdiğinden bu işleri gerçekleyen kodun web uygulaması içinde yer alması oldukça avantajlı görünmektedir.
+</p>
+
+<h3>Ya aynı uygulamayı birbirlerinden izole olan birden fazla süreç olarak çalıştırıyorsanız?</h3>
+
+<p>
+  Herokuda uygulamanızı birden fazla dyno üzerinde çalıştırabilirsiniz. Böylece yükü birden fazla process ile dengelemiş olursunuz. Zamanlanmış işler açısından bakıldığında aynı iş kodu tüm uygulamalar üzerinde olduğundan aynı iş birden fazla kez çalışacaktır. Bu durum ise büyük ihtimalle istenmeyen sonuçlara sebebiyet verecektir.
+</p>
+
+<h3>Farklı dynolar üzerindeki zamanlanmış işleri nasıl senkronize edebiliriz?</h3>
+
+<p>
+  Zamanlanmış iş kodu tüm uygulamalarda olduğu halde aynı anda yalnızca birinin çalışmasını sağlayabilirsek sorunumuzu çözmüş olacağız. Sorunun çözümü için ortak bir <a href="http://en.wikipedia.org/wiki/Lock_(computer_science)">lock</a> olarak kullanabileceğimiz bir araç bulmamız gerekiyor. Heroku bu sorun için standart bir çözüm tanımlamıyor. Bu sebeple elimizdeki olanaklara bir göz atalım. 
+</p>
+
+<h4>Memcached</h4>
+<p>
+  <a href="https://addons.heroku.com/">Heroku eklentileri</a> arasında oldukça başarılı Memcached eklentileri yer alıyor. Memcached sunucusu uygulamalarımız dışında bir yerde çalıştığından ve tüm uygulamalar aynı Memcached sunucusuna eriştiğinden senkronizasyon amacıyla kullanılması mümkün görünüyor.
+</p>
+
+<h4>Veritabanı</h4>
+<p>
+  Tüm uygulamalarımız aynı PostgreSQL veritabanına eriştiğinden veritabanı da senkronizasyon amacıyla kullanılabilir gibi duruyor.
+</p>
+
+
+<h3>Memcached ile senkronizasyon çözümü</h3>
+
+<p>
+  Memcached içinde yer alan <code>boolean add(key, value)</code> metodu tam istediğimiz işi yapıyor. Bu metod ancak bu anahtara karşılık bir değer yoksa değeri setliyor. Setleme başarılı ise true, değilse false dönüyor. Memcached'in bu özelliğini kullanarak senkronize olan bir Play Job kodu aşağıda yer alıyor. Bu iş parçası her saniyede bir çalışıyor.
+</p>
+
+{% highlight java %}
+@Every("1s")
+public class LockTestJob extends Job {
+    @Override
+    public void doJob() throws Exception {
+        final String key = "lock";
+        Logger.info("** Lock alacağım.");
+        if (Cache.safeAdd(key, new Date(), "1min")) {
+            Logger.info("++ Lock bende. 3 saniye bekliyorum.");
+            Thread.sleep(3000); // 3 saniye bekle
+            Logger.info("-- Lockı bırakıyorum.");
+            Cache.delete(key);
+        } else {
+            Logger.info("!! Lock alamadım.");
+        }
+    }
+}
+{% endhighlight %}
+
+<p>Play Framework Memcached sunucusuna da Cache arayüzü üzerinden erişir. Bunun için yalnızca application.conf dosyasında Memcached ayarlarının yapılması yeterlidir.</p>
+
+<pre>
+# Memcached configuration
+# ~~~~~ 
+# Enable memcached if needed. Otherwise a local cache is used.
+memcached=enabled
+#
+# Specify memcached host (default to 127.0.0.1:11211)
+memcached.host=127.0.0.1:11211
+</pre>
+
+<p>
+  Aynı uygulamadan faklı portlarda 2 adet çalıştırdığımda oluşan ekran görüntüsü aşağıda yer alıyor.
+</p>
+
+<div style="width:100%;text-align:center;margin:30px 0;">
+  <img src="/assets/images/memcached-1.png" />
+</div>
+
+<p>
+  Göreceğiniz üzere bir uygulamadaki iş çalışırken diğeri lock alamıyor ve çıkıyor. Aynı uygulamadan 4 adet çalışırsa durum ne olur diye merak edenler için yanıt aşağıda yer alıyor.
+</p>
+
+<div style="width:100%;text-align:center;margin:30px 0;">
+  <img src="/assets/images/memcached-2.png" />
+</div>
+
+<p>
+  Görünüşe göre Memcached çözümü oldukça başarılı. Ama gerçekten öyle mi? Memcached son tahlilde bir önbellek sunucusudur ve <u>hiçbir uygulama önbelleğe yazılan verinin bir sonraki okumada orada olacağına güvenmemelidir</u>. O halde <b>kritik uygulamalar için Memcached çözümü gerçek bir çözüm değildir</b>. Fakat <b>düşük olasılıkla çıkacak sorunları kaldırabilecek durumda iseniz Memcached ile yola devam edebilirsiniz</b>.
+</p>
+
+<h3>Veritabanı ile senkronizasyon çözümü</h3>
+
+<p>
+  Veritabanı ile senkronizasyon için JPA tarafından sağlanan <a href="http://en.wikibooks.org/wiki/Java_Persistence/Locking#Optimistic_Locking">Optimistic Locking</a> yönteminden faydalanacağız. Bir tabloda id'si 1 olan bir kayıt tutalım. Böylece aynı tabloda farklı id'lere sahip farklı locklar da saklayabiliriz. Lock'ı alan Job bu kaydın tarih alanını o anki zamana setleyecek, lockı bırakırken ise bu alanı null yapacak. Kaydı tarih alanı null iken okuduğumuz halde kayıt üzerinde değişiklik olmuşsa(yani biz tarih alanını setleyene kadar başka bir Job bu alanı setlemişse) OptimisticLockException alacağız.
+</p>
+
+<p>
+  JPA modelini aşağıdaki şekilde oluşturdum.
+</p>
+
+{% highlight java %}
+@Entity
+public class LockModel extends GenericModel {
+
+    @Id
+    public Long id = 1L;
+
+    @Version
+    public long surum;
+
+    public Date tarih;
+
+}
+{% endhighlight %}
+
+<p>
+  Buna göre Job kodu ise aşağıdaki gibi oldu.
+</p>
+
+{% highlight java %}
+@Every("1s")
+public class LockTestJob extends Job {
+    @Override
+    public void doJob() throws Exception {
+        LockModel lock = LockModel.findById(1L);
+        if (lock.tarih == null) {
+            try {
+                lock.tarih = new Date();
+                lock.save();
+            } catch (OptimisticLockException ole) {
+                return;
+            }
+
+            Logger.info("++ Lock bende. 3 saniye bekliyorum.");
+            Thread.sleep(3000);
+            Logger.info("-- Lockı bırakıyorum.");
+            lock.tarih = null;
+            lock.save();
+        }
+    }
+}
+{% endhighlight %}
+
+<p>
+  Aynı uygulamadan yine 4 kez çalıştırdığımızda aynı anda yalnızca birinin lockı alabildiğini aşağıdaki ekran görüntüsünden anlayabiliyoruz.
+</p>
+
+<div style="width:100%;text-align:center;margin:30px 0;">
+  <img src="/assets/images/dblock.png" />
+</div>
+
+<h3>Sonuç</h3>
+
+<p>
+  Veritabanı yöntemi Memcached yöntemine göre çok daha kararlı çünkü lock kaydının her zaman ilgili tabloda olacağına güvenebiliyoruz. Fakat aynı durum Memcached için ne yazık ki geçerli değil. Diğer yandan veritabanı yönteminde lock contention Memcached yöntemine göre çok daha fazla. Artılarını ve eksilerini değerlendirerek iki yöntemden birini seçmek gerekiyor.
+</p>
+
+<p>
+  Varsa önerdiğim yöntemlerdeki hataları ya da farklı çözüm önerilerini yorum olarak bekliyorum.
+</p>
+
