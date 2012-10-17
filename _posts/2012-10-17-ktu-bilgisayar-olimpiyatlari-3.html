@@ -147,3 +147,92 @@ int main()
    }
 }
 {% endhighlight %}
+
+<br/>
+<br/>
+<h4>Doğru yanıt veren takımın çözümü</h4>
+
+{% highlight c %}
+#include <iostream>
+#include <fstream>
+using namespace std;
+
+//----------------------------------
+  struct list
+  {
+   int sayi;
+   int sonuc;
+   list *next;
+  };
+  list *first,*current;
+  
+  ifstream oku("giris.txt");
+  ofstream yaz("cikis.txt");
+  int toplam;
+//----------------------------------
+
+void okur()
+{   
+       oku>>current->sayi;
+
+       current->next=new list;
+       current->next->next=NULL;
+       current=current->next;
+     
+      if(!oku.eof())
+        okur();
+      else
+        return;
+}
+
+void hesapla()   //girisler her zaman asal sayi oldugundan aralarinda asal sayi miktari her zaman 1 eksigidir.
+{
+     current->sonuc=current->sayi-1;
+     
+     toplam+=current->sonuc;
+     current=current->next;
+     
+     if(current->next!=NULL)
+       hesapla();  
+}
+
+void yazar()
+{   
+     yaz<<current->sonuc<<" ";
+     current=current->next;
+     
+     if(current->next!=NULL)
+       yazar();
+     else
+       return;
+}
+
+void basla()            
+{
+     first=new list;
+     first->next=NULL;
+     current=first;
+           
+     okur(); 
+     
+     current=first;
+     toplam=0;
+     
+     hesapla();
+     
+     current=first;
+     
+     yazar();
+     
+     yaz<<toplam;
+     
+     oku.close();
+     yaz.close();            
+}
+//-------------------------------------------
+main()
+{         
+  basla();  
+  return 0;    
+}
+{% endhighlight %}
