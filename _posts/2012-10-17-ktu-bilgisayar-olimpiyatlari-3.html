@@ -1,0 +1,149 @@
+--- 
+title: KTÜ Bilgisayar Mühendisliği 3. Bilgisayar Olimpiyatları için hazırladığım soru
+layout: post
+description: "Son 2 yıldır KTÜ Bilgisayar Mühendisliği Bölüm Başkanı Prof.Dr.Vasıf Nabiyev öncülüğünde düzenlenen bilgisayar olimpiyatlarına kurucularından olduğum 4Primes büyük bir gururla sponsor oluyor."
+keywords: bilgisayar, olimpiyat, soru
+---
+<p>
+  Son 2 yıldır KTÜ Bilgisayar Mühendisliği Bölüm Başkanı Prof.Dr.Vasıf Nabiyev öncülüğünde düzenlenen bilgisayar olimpiyatlarına kurucularından olduğum <a href="http://4primes.com">4Primes</a> büyük bir gururla sponsor oluyor. Sponsorluğun dışında final yarışması için bir de ödüllü özel soru hazırlıyoruz. 2012 baharında düzenlenen <a href="http://ceng.ktu.edu.tr/index.php?l=tr&pid=24&p=olimpiyat">3. olimpiyatlar</a> için hazırladığım soruyu geç de olsa paylaşmak istedim. Yazının sonunda bir de örnek çözüm yer alıyor. 
+</p>
+
+<p>
+  Olimpiyatlarda bir yarışmacı takım ödüllü sorumuza doğru yanıt vermeyi başardı. Aşağıda verdiğim örnek çözüm gerekenden çok daha fazlasını içeriyor. Doğru yanıt veren takım oldukça sade ve güzel bir çözümle geldi. Bu güzel çözümün karşılığında da ödüllerini aldılar. M. Esat YAŞAYAN, Yasin YILMAZ ve Hakan SÖNMEZ'den oluşan takımı bir kez de buradan tebrik etmek isterim.
+</p>
+
+<h3>Soru</h3>
+
+<p>
+  Uzun yıllar önce paralel bir evrende, for ve while döngülerinin yanı sıra dizi(array) kullanımının yasak olduğu, STL kütüphanesinin henüz icat edilmediği günlerde tren yolculukları için gerekli olan kömür miktarını hesaplama görevi bilgisayar bilimcilerine verilmişti. Her yolculuktan önce seyahat edecek yolcu sayısına göre kaç kg kömüre ihtiyaç olduğu hesaplanıyor ve gereken kömür trene yükleniyordu. Hesaplama yapılırken vagon başına gereken kömür miktarları toplanarak trenin toplam kömür ihtiyacı elde ediliyordu. Bir vagon için gereken kömür miktarı, o vagonda seyahat edecek yolcu sayısına eşit ya da küçük ve yolcu sayısı ile aralarında asal olan pozitif tamsayıların sayısına eşitti. Örnek olarak vagonda 9 yolcu var ise 9 ile aralarında asal olan pozitif tamsayılar 1, 2, 4, 5, 7 ve 8 olduğundan bu vagon için 6kg kömür gerekli oluyordu.
+</p>
+
+<p>
+  Sizden sıradaki tren için girdi.gir dosyasından vagonlardaki yolcu sayılarını okuyarak sırasıyla her bir vagon için gereken kömür miktarı ile tren için gereken toplam kömür miktarını cikti.cik dosyasına kaydeden bir uygulamayı C dilinde yazmanızı istiyoruz.
+</p>
+
+<h4>Kısıtlar</h4>
+<ul>
+<li>Döngülerin(for, while, do while, goto) yanı sıra dizi(array) kullanımı yasaktır.</li>
+<li>STL kütüphanesi henüz icat edilmemiş olduğundan kullanılamaz.</li>
+<li>girdi.gir dosyasından okunan değerler üzerinde okuma anında herhangi bir işlem yapılamaz. Hesaplamalar ve çıktı işlemleri(dosyaya yazma) ancak tüm değerler okunup vagonlar doldurulduktan sonra yapılabilir.</li>
+</ul>
+
+<h4>İpuçları</h4>
+
+Dosyadan okunacak olan tüm yolcu sayıları asaldır.<br/>
+<br/>
+Örnek bir girdi.gir dosyası aşağıda verilmiştir.<br/>
+<br/>
+17 31 37 97 59 107 131 157 113 173<br/>
+<br/>
+Bu girdiye göre trenin toplam 10 vagonu bulunmakta ve bu vagonlarda sırasıyla 17, 31, 37, 97, 59, 107, 131, 157, 113 ve 173 yolcu oturmaktadır. Bu trenin hareket etmesi için 912kg kömür gerekir. Bu verilere göre cikti.cik dosyası aşağıdaki gibi olur.<br/>
+<br/>
+16 30 36 96 58 106 130 156 112 172<br/>
+912<br/>
+<br/>
+
+<h4>Örnek kod</h4>
+
+{% highlight c %}
+#include <stdio.h>
+#include <stdlib.h>
+
+struct list
+{
+   int head;
+   struct list *tail;
+};
+
+struct list *map(struct list *l, int (*func)(int))
+{
+   struct list *n = (struct list *) malloc(sizeof *n);
+   n->head = func(l->head);
+   if(l->tail == NULL)
+   {
+       n->tail = NULL;
+   }
+   else
+   {
+       n->tail = map(l->tail, func);
+   }  
+   return n;
+}
+
+struct list *filter(struct list *l, int (*func)(int))
+{
+   if(l == NULL)
+   {
+       return NULL;
+   }
+   struct list *n = (struct list *) malloc(sizeof *n);
+   if(func(l->head)){
+       n->head = l->head;
+       n->tail = filter(l->tail, func);
+   }
+   else
+   {
+       return filter(l->tail, func);
+   }
+   return n;
+}
+
+int fold(struct list *l, int (*func)(int, int))
+{
+   if(l->tail != NULL)
+   {
+       return func(l->head, fold(l->tail, func));
+   }
+   else
+   {
+       return func(l->head, 0);
+   }
+}
+
+void print(struct list *l, FILE *file)
+{
+   if(l != NULL)
+   {
+       print(l->tail, file);
+       fprintf(file, "%d ", l->head);
+   }
+}
+
+int phi_func(int element){
+   return element - 1;
+}
+
+int sum_func(int head, int tail)
+{
+   return head + tail;
+}
+
+struct list *read_file(FILE *file, struct list *l)
+{
+   int num;
+   if(fscanf(file, "%d", &num) > 0)
+   {
+       struct list *n = (struct list *) malloc(sizeof *n);
+       n->head = num;
+       n->tail = l;
+       return read_file(file, n);
+   }
+   return l;
+}
+
+int main()
+{
+   FILE *input = fopen ("girdi.gir", "r");
+   if ( input != NULL )
+   {
+       struct list *l = read_file(input, NULL);
+       fclose(input);
+       l = map(l, phi_func);
+       int sum = fold(l, sum_func);
+       FILE *output = fopen ("cikti.cik", "w");
+       print(l, output);     
+       fprintf(output, "\n%d\n", sum);   
+       fclose(output);
+   }
+}
+{% endhighlight %}
