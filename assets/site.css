@@ -9,6 +9,10 @@ a:hover{color:#c35617}
 li{margin:10px 0 10px 50px}
 ul{margin-bottom:20px}
 h3{margin-top:20px}
+dl{margin-bottom:20px;}
+dt,dd{line-height:20px;}
+dt{font-weight:bold;}
+dd{margin:0 0 20px 10px;}
 
 #title{margin:20px 0;padding:10px 0 10px 10px;background:#eee;border:solid #ddd;border-width:1px 0;position:relative;}
 #title h1{font-size:28px;color:#444;}
