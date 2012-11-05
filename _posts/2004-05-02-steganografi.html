@@ -1,19 +1,11 @@
 --- 
-meta: 
-  dsq_thread_id: "339326517"
-  _edit_last: "1"
-type: post
-title: steganografi
-status: publish
+title: Steganografi
 layout: post
-published: true
-tags: 
-- canavARGE
 ---
 <p>
-elimizde her bir karakteri 1 bayt ile ifade edilen n karakterlik bir yazı olduğunu kabul edelim. bu yazıyı bir resmin içerisine saklamak istiyoruz. bu durumda gözün renklerde meydana gelecek küçük değişimleri fark edememesinden faydalanabiliriz. elimizdeki resimde her bir baytın en anlamsız bitinde yapacağımız değişikliği insan gözü fark  edemeyecektir. başka bir deyişle resimdeki her bir baytın içine 1 bitlik bilgi saklayabiliriz. bu durumda elimizdeki 1 baytı (1 bayt = 8 bit) resimdeki 8 baytın içine bit bit yerleştirmeliyiz. buradan da anlaşıldığı gibi n baytlık bir yazıyı en az 8*n baytlık bir resme yerleştirebiliriz. diğer türlü ifade edersek m baytlık bir resmin içine &#9553;m/8&#9553; karakter (1 karakter = 1 bayt) saklayabiliriz. bu işlemi gerçekleştiren algoritma aşağıda verilmiştir.
+  elimizde her bir karakteri 1 bayt ile ifade edilen n karakterlik bir yazı olduğunu kabul edelim. bu yazıyı bir resmin içerisine saklamak istiyoruz. bu durumda gözün renklerde meydana gelecek küçük değişimleri fark edememesinden faydalanabiliriz. elimizdeki resimde her bir baytın en anlamsız bitinde yapacağımız değişikliği insan gözü fark  edemeyecektir. başka bir deyişle resimdeki her bir baytın içine 1 bitlik bilgi saklayabiliriz. bu durumda elimizdeki 1 baytı (1 bayt = 8 bit) resimdeki 8 baytın içine bit bit yerleştirmeliyiz. buradan da anlaşıldığı gibi n baytlık bir yazıyı en az 8*n baytlık bir resme yerleştirebiliriz. diğer türlü ifade edersek m baytlık bir resmin içine &#9553;m/8&#9553; karakter (1 karakter = 1 bayt) saklayabiliriz. bu işlemi gerçekleştiren algoritma aşağıda verilmiştir.
 </p>
-<!--more-->
+
 <ol type="1">
 <li> i = 0 </li>
 <li> p = 0 </li>
@@ -32,23 +24,25 @@ elimizde her bir karakteri 1 bayt ile ifade edilen n karakterlik bir yazı oldu�
 <p>
 bu algoritmayı gerçekleyen c kodu ise şu şekildedir:
 </p>
-[cc lang="c"]
+
+{% highlight c linenos %}
 p = 0;
-for(i=0; i<n ; ++i)
+for(i=0; i<n; ++i)
+{
+  for(j=7; j>=0; --j)
   {
-    for(j=7; j>=0; --j)
-    {
-     oku = yazi[i];
-     oku >>= j;
-     oku &= 0x01;
-     if(oku == 0x01)
+    oku = yazi[i];
+    oku >>= j;
+    oku &= 0x01;
+    if(oku == 0x01)
       resim[p] |= 0x01;
-     else
+    else
       resim[p] &= 0xfe;
-     p++;
-    }
+    p++;
   }
-[/cc]
+}
+{% endhighlight %}
+
 <p>
 resme gizlenmiş yazıyı okumak için gerekli algoritma ise şu şekildedir:
 </p>
@@ -71,18 +65,20 @@ resme gizlenmiş yazıyı okumak için gerekli algoritma ise şu şekildedir:
 <p>
 bu algoritmayı gerçekleyen c kodu ise şu şekildedir:
 </p>
-[cc lang="c"]
+
+{% highlight c linenos %}
 p = 0;
-for(i=0; i</n><n ; ++i)
+for(i=0; i<n; ++i)
+{
+  yazi[i] = 0;
+  for(j=7; j>=0; --j)
   {
-   yazi[i] = 0;
-    for(j=7; j>=0; --j)
-    {
-     oku = resim[p];
-     oku &= 0x01;
-     oku < <= j;
-     yazi[i] |= oku;
-     p++;
-    }
- }
-[/cc]</n></n>
+    oku = resim[p];
+    oku &= 0x01;
+    oku <<= j;
+    yazi[i] |= oku;
+    p++;
+  }
+}
+{% endhighlight %}
+
