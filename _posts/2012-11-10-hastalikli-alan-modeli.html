@@ -1,0 +1,59 @@
+--- 
+title: "Martin Fowler'ın çok sevdiğim Hastalıklı Alan Modeli (AnemicDomainModel) yazısını Türkçe'ye çevirdim"
+layout: post
+description: "Genel olarak servislerde ne kadar fazla davranış bulursanız alan modelinin avantajlarından o kadar uzaklaşmış olursunuz. Eğer tüm iş mantığınız servislerde ise kendinizi körlüğe mahkum etmişsiniz demektir."
+keywords: domain,model,anemic,hastalıklı
+---
+<p>
+Hastalıklı alan modeli uzun zamandır ortalarda olan bir anti-pattern olsa da son zamanlarda sağdan soldan fışkırmaya başlamış gibi görünüyor. Eric Evans ile konu hakkında konuşurken bu yaklaşımın giderek popüler hale geliyor oluşu ikimizin de dikkatini çekti. Düzgün alan modelinin savunucuları olarak bu durum bize göre iyi bir şey değil.
+</p>
+
+<p>
+Hastalıklı alan modelinin en temel belirtisi ilk bakışta gerçek bir şeymiş gibi görünmesidir. Alan içerisindeki isimler ile adlandırılmış nesneler vardır ve bu nesneler gerçek alan modellerinin içerdiği gibi zengin ilişkiler ve yapılar ile bağlıdırlar. Tuhaflık davranışa baktığınızda ortaya çıkar. Nesneler içinde hiç bir davranış yer almadığını fark edersiniz ki bu durum nesneleri yalnızca getter ve setter torbaları haline getirir. Aslında bu modeller çoğunlukla alan nesneleri içine iş mantığı/davranış koymamanız gerektiğini vurgulayan tasarım kuralları ile gelirler. Bunun yerine tüm iş mantığını sarmallayan servis nesneleri bulunur. Bu servisler alan modelinin üstünde yaşarlar ve veri için alan modelini kullanırlar.
+</p>
+
+<p>
+Bu anti-patternin en korkunç yanı nesne yönelimli tasarımın veri ve işlemi/süreci bir araya getiren en temel ilkesine tamamen karşı olmasıdır. Hastalıklı alan modeli aslında ben ve Eric gibi nesne fanatiklerinin Smalltalk'taki erken zamanlarımızdan beri savaştığımız prosedürel tasarımın tıpatıp aynısıdır. Bundan daha vahimi çoğu insanın hastalıklı nesnelerin gerçek nesneler olduğunu düşünmesi ve nesne yönelimli tasarımın çıkış noktasını kaçırmasıdır.
+</p>
+
+<p>
+Nesne yönelimli safçılık iyi hoş ama bu hastalık karşısında daha fazla argümana ihtiyaç duyduğumun farkındayım. Hastalıklı alan modelleriyle ile ilgili sorunun özünde alan modelinin tüm masraflarına maruz kaldıkları halde hiçbir kazancını ortaya koymamaları yatar. Birincil masraf veritabanına eşlemenin acayipliğidir ki bu durum tamamen ayrı bir O/R(nesne/ilişkisel) eşleme katmanı olarak kendini gösterir. Eğer karmaşık iş mantığınızı organize etmek için güçlü nesne yönelimli yöntemleri kullanıyorsanız bu zahmete değer. Fakat tüm davranışı servislere taşıdığınızda transaction betikleri ile baş başa kalırsınız ve alan modelinin getirebileceği tüm avantajlardan mahrum kalırsınız. Patterns of Enterprise Application Architecture (Kurumsal Uygulama Mimarisi Desenleri) kitabımda bahsettiğim üzere Alan Modelleri her zaman en iyi araç değildir.
+</p>
+
+<p>
+Şunu da özellikle vurgulamak gerekir ki davranışı alan nesneleri içine koymak; iş mantığını, saklama ve gösterme/sunum gibi işlerden ayırmak için katmanlar kullanma yaklaşımı ile çelişmemelidir. Alan nesnesi içinde alan mantığı yer almalıdır - doğrulamalar, hesaplamalar, iş kuralları- adına her ne derseniz deyin. (Bazı durumlarda alan nesnesi içine veri kaynağı ya da görünüm/sunum mantığı koyma yönünde bir argüman üretebilirsiniz fakat bu benim hastalık konusundaki görüşümden bağımsızdır.)
+</p>
+
+<p>
+Bu konudaki kafa karışıklığının kaynaklarından biri de pek çok nesne yönelim(OO) uzmanının alan modelinin üzerine prosedürel servislerden oluşan bir servis katmanı koyulmasını önermesidir. Fakat bu argüman alan modelini tamamen davranıştan soyutlamak üzerine değil, aslında servis katmanının davranışsal olarak zengin bir alan modeli ile beraber kullanılması üzerinedir.
+</p>
+
+<p>
+Eric Evans, Domain Driven Design(Alan ile yürüyen tasarım) adlı harika kitabında bu katmanlar hakkında şunları söyler.
+</p>
+
+<blockquote>
+Uygulama Katmanı [kendisinin Servis Katmanına koyduğu isim]: Yazılımın yapması beklenen işleri tanımlar ve anlam açısından zengin alan nesnelerini işleri yapmak üzere yönlendirir. Bu katmanın sorumlu olduğu işlemler kullanıcılar için anlamlıdır ya da başka sistemlerin uygulama katmanları ile etkileşim için gereklidir. Bu katman ince tutulur. İş kuralları ve bilgi barındırmaz, yalnızca işlemleri koordine eder ve bir alt katmandaki alan nesnelerine iş parçalarını dağıtır. --- Son cümleyi ne yazık ki Türkçe'ye çeviremedim. Cümle içinde state ve situation ile business, progress, task gibi Türkçe karşılıkları hemen hemen aynı sözcükler yer alıyor ve çevrildiğinde anlamını yitiriyor. Orijinal cümle şöyle: It does not have state reflecting the business situation, but it can have state that reflects the progress of a task for the user or the program. ---
+</blockquote>
+
+<blockquote>
+Alan Katmanı (ya da Model Katmanı): İş konseptini ve kurallarını ifade etmek ve iş durumu hakkında bilgi vermekle yükümlüdür. İşin vaziyetini yansıtan durum burada kontrol edilir ve kullanılır fakat bunu saklamanın teknik ayrıntıları altyapıya devredilmiştir. Bu katman iş yazılımının kalbidir.
+</blockquote>
+
+Buradaki kilit nokta servis katmanının ince olmasıdır. İş mantığı alan katmanında yer alır. Bu durumu servis deseninde tekrar vurguluyor:
+
+<blockquote>
+Sık yapılan bir hata davranışı uygun bir nesne içerisine koymak yerine erkenden pes edip prosedürel programlamaya kaymaktır.
+</blockquote>
+
+<p>
+Bu anti-patternin neden bu kadar yaygın olduğunu bilmiyorum. Bu durumu çoğu insanın, özellikle veri geçmişinden gelenlerin, düzgün bir alan modeli ile gerçekten çalışmamış olmalarına bağlıyorum. POJO alan modellerini tercih etmemdeki nedenlerden biri olan J2EE'nin Entity Beanleri gibi bazı teknolojiler de bu deseni öneriyorlar.
+</p>
+
+<p>
+Genel olarak servislerde ne kadar fazla davranış bulursanız alan modelinin avantajlarından o kadar uzaklaşmış olursunuz. Eğer tüm iş mantığınız servislerde ise kendinizi körlüğe mahkum etmişsiniz demektir.
+</p>
+
+<p>
+	<small>Bu yazının orijinali Martin Fowler tarafından yazılmıştır. <a href="http://martinfowler.com/bliki/AnemicDomainModel.html">http://martinfowler.com/bliki/AnemicDomainModel.html</a> </small>
+</p>
