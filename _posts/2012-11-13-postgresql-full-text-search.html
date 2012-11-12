@@ -1,0 +1,130 @@
+--- 
+title: "Denormalize bir veri modeli ve PostgreSQL full text search ile yüksek performanslı arama"
+layout: post
+description: "Bu makalede herhangi bir uygulama içinde tam metin aramaya (full text search) maruz bırakılacak tüm varlıkların yüksek performanslı olarak aranabilmesi için bir yöntem önermeye çalışacağım."
+keywords: tam metin arama, postgresql, denormalize veri
+---
+
+<blockquote>
+  Bu makalede herhangi bir uygulama içinde tam metin aramaya (full text search) maruz bırakılacak tüm varlıkların yüksek performanslı olarak aranabilmesi için bir yöntem önermeye çalışacağım.
+</blockquote>
+
+<p>
+  Tam metin arama için pek çok yöntem/teknoloji bulunmakta. Özellikle son zamanlarda oldukça popüler hale gelen ElasticSearch bu teknolojilerden biri. Benim önereceğim yöntem bu teknolojilerin kullanılması mümkün olmayan ya da istenmeyen durumlarda yalnızca PostgreSQL kullanarak çok yüksek performansla arama yapabilmeyi sağlamak üzerine olacak. Birincil odak noktam web uygulamaları olsa da her tür uygulama içinde aynı yöntemin işlemesi teorik olarak mümkündür.
+</p>
+
+<p>
+  Yöntem esasen iki aşamadan oluşmakta:
+  <ul>
+    <li>Varlıkların denormalize bir model ile ifade edilmesi</li>
+    <li>PostgreSQL tam metin arama fonksiyonları ile bu model üzerinde arama yapılması</li>
+  </ul>
+</p>
+
+<p>
+  Birinci aşama her durumda mümkün olmadığından bu aşamanın uygulanması zorunlu değil. Fakat eğer bu adımı da başarıyla uygulayabilirseniz çok daha az kod ile çok daha yüksek performans elde edeceğinizi savunuyorum.
+</p>
+
+<p>
+  İşe varlık tanımı yaparak başlayalım. Sorunu oldukça basit olarak ele alıp Üye ve Ürün isimli iki varlık türümüzün olduğunu varsayıyorum. İlişkisel bir veritabanı olan PostgreSQL kullanarak bu varlıkları <em>UYE</em> ve <em>URUN</em> tablolarında saklıyor olalım. Üye varlığının ad alanında ve Ürün varlığının hem ad hem de açıklama alanlarında tam metin arama yapmak istediğimiz durumu ele alıyorum.
+</p>
+
+<p>
+  Aranabilecek tüm varlıkların aranabilecek tüm alanlarını denormalize olarak tutan DenormalizeVeri isimli yeni bir varlık tanımlıyorum. Bu varlıklar DENORMALIZE_VERI isimli bir tabloda yer alacaklar. Tanımladığım bu yeni model içinde veri türü, ad, açıklama ve hedef(denormalize olarak tekrar edilen) varlığın id bilgisini saklayacak alanlar oluşturuyorum. Ayrıca seçimli olmak üzere her varlığın html görünümünü tutacak bir html görünüm alanı da ekleyeceğim. Bu alan içine varlığın bir html şablon kullanılarak oluşturulmuş html görünümünü kaydedeceğim. Böylece arama sonucunda bulduğum varlığı bir html sayfada göstermek için tekrar bir html şablon çalıştırmak zorunda kalmayacağım. Daha sonra sayacağım dezavantajlarıyla birlikte bu yöntem de oldukça yüksek perfomans kazancı elde etmemizi sağlayacak.
+</p>
+
+<p>
+  Aşağıdaki SQL create betiği tablonun son halini betimliyor.
+</p>
+
+{% highlight sql %}
+CREATE TABLE DENORMALIZE_VERI
+(
+  id bigint NOT NULL,
+  veri_tur character varying(16) NOT NULL,
+  ad character varying(255) NOT NULL,
+  aciklama character varying(255),
+  hedef_id bigint NOT NULL,
+  html_liste text NOT NULL,
+  guncelleme_tarihi timestamp without time zone,
+  son_okuma_tarihi timestamp without time zone,
+  goruntuleme_sayisi integer NOT NULL DEFAULT 0,
+  CONSTRAINT denormalize_veri_pkey PRIMARY KEY (id)
+);
+{% endhighlight %}
+
+<p>
+  Yukarıda saydığım alanlara ek olarak tabloya <em>guncelleme_tarihi</em>, <em>son_okuma_tarihi</em>, <em>goruntuleme_sayisi</em> alanlarını da ekledim. Bu bilgiler de seçime bağlı olsa bile özellikle <em>goruntuleme_sayisi</em> alanından arama sonuçlarını sıralarken faydalanacağım.
+</p>
+
+<blockquote>
+  <em>hedef_id</em> alanı bir tür foreign key olarak görünse de gerçek bir foreign key olarak tanımlamadığıma dikkat edin. Referanslanan tablolar birden çok olduğu için böyle bir tanım zaten mümkün değil ancak mümkün olsaydı bile performans nedeniyle foreign key tanımı yapmayacaktık.
+</blockquote>
+
+<p>
+  İkinci aşamaya geçmeden önce tanımladığımız denormalize tablonun dezavantajlarından bahsetmek istiyorum. Bu tabloyu tutarlı ve güncel tutmak oldukça zor. Bunu başarmak için öncelikle çok iyi bir uygulama teknoloji alt yapısına sahip olmanız sonra da kodu çok iyi belgelendirmeniz gerekiyor. Bunları yaparsanız yöntemimiz başarıyla çalışır. Elimde başarılmışı var:)
+</p>
+
+<p>
+  İkinci aşama da PostgreSQL sayesinde oldukça kolay. <em>canavar</em> terimi ile tüm varlıklar(üye ve ürün) için tam metin arama yapan SQL sorgusu aşağıdaki şekilde olacak. Bu sorgu sonucunda hangi veri türünden arama kriterine uyan kaç varlık olduğunu elde edeceğiz. Bu bilgi tüm sonuçların sayısını bir anda elde edip sonuçları sekmeler halinde gösterdiğiniz durumlarda işinize yarayabilir. Görünmeyen sekmenin başlığında sonuç sayısını gösterip sekmeye tıklandığı anda gerçek sonuçları yükleyebilirsiniz.
+</p>
+
+
+{% highlight sql %}
+select veri_tur, count(veri_tur)
+from denormalize_veri, plainto_tsquery('turkish', 'canavar') s
+where s @@ to_tsvector('turkish', ad) or s @@ to_tsvector('turkish', aciklama)
+group by veri_tur
+{% endhighlight %}
+
+<p>
+  Şimdi de <em>canavar</em> terimini içeren yalnızca ürünleri arayalım. Bu varlık türü için veri_tur alanına URUN yazdığımızı varsayıyorum.
+</p>
+
+{% highlight sql %}
+select dv.html_liste, ts_rank_cd(to_tsvector('turkish', dv.ad), s, 8) as rank
+from denormalize_veri dv, plainto_tsquery('turkish', 'canavar') s
+where veri_tur='URUN' 
+and (s @@ to_tsvector('turkish', dv.ad) or s @@ to_tsvector('turkish', dv.aciklama))
+order by rank desc, dv.goruntuleme_sayisi desc
+{% endhighlight %}
+
+<p>
+  Sorgu sonuçlarını sıralamak için önceliği rank fonksiyonunun sonucuna verdik. Eğer iki ürünün rank bilgisi eşit ise bu kez görüntüleme sayılarına göre azalan sıralanıyorlar. Rank fonksiyonunun nasıl çalıştığı ve aldığı parametreler için PostgreSQL dokümantasyonuna bakabilirsiniz. 
+</p>
+
+<p>
+  Şimdi de <em>canavar</em> terimini içeren üyeleri arayalım.
+</p>
+
+{% highlight sql %}
+select dv.html_liste, ts_rank_cd(to_tsvector('turkish', dv.ad), s, 8) as rank
+from denormalize_veri dv, plainto_tsquery('turkish', 'canavar') s
+where veri_tur='UYE' 
+and (s @@ to_tsvector('turkish', dv.ad) or s @@ to_tsvector('turkish', dv.aciklama))
+order by rank desc, dv.goruntuleme_sayisi desc
+{% endhighlight %}
+
+<p>
+  Fark edeceğiniz üzere son iki sorgu aslında hemen hemen aynı. Bu sebeple veri türünü parametrik hale getirip aramayı tek bir fonksiyon haline getirebilirsiniz. Sorgu sonucunda yalnızca html_liste döndürdüğümü ve sonuç varlığın diğer bilgilerine ulaşmak için ayrı bir join yapmaya ihtiyaç duymadığımı görebildiğinizi umuyorum.
+</p>
+
+<p>
+  Bu aşamaya kadar deneyerek geldi iseniz aramanın henüz aslında çok da hızlı olmadığını görmüşsünüzdür. Bunun sebebi arama için index tanımı yapmamış olmamız. <em>ad</em> ve <em>aciklama</em> alanlarında tam metin aramanın kullanabileceği indexleri oluşturan SQL sorgularını aşağıya ekliyorum.
+</p>
+
+{% highlight sql %}
+CREATE INDEX denormalize_veri_ad_ts_idx
+ON denormalize_veri
+USING gin(to_tsvector('turkish', ad));
+{% endhighlight %}
+
+{% highlight sql %}
+CREATE INDEX denormalize_veri_aciklama_ts_idx
+ON denormalize_veri
+USING gin(to_tsvector('turkish', aciklama));
+{% endhighlight %}
+
+<p>
+  Bunların üstüne bir de arama sonuçlarını Memcached ya da benzeri bir önbellek sunucusunda saklarsanız kıskandırıcı bir arama performansına sahip olabilirsiniz. Daha da fazlasına ihtiyaç duyarsanız başta söylediğim gibi bir ElasticSearch kümesine yatırım yapmanız gerekebilir.
+</p>
