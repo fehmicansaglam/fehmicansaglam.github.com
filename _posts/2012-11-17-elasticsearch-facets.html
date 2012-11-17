@@ -1,0 +1,228 @@
+--- 
+title: "ElasticSearch facets ile kolay veri gruplama (aggregation)"
+layout: post
+description: "Bu yazıda ElasticSearch facets kullanarak verinin nasıl kolayca gruplanabileceğini özetlemeye çalıştım."
+keywords: elasticsearch,facet,aggregation
+---
+
+<blockquote>
+	<a href="http://www.elasticsearch.org/">ElasticSearch</a>, geliştiricilerinin deyimiyle <a href="http://lucene.apache.org/">Apache Lucene</a> üzerine kurulmuş açık kaynak(Apache 2), dağıtık ve RESTful bir arama motorudur. 
+</blockquote>
+
+<p>
+	Bu yazıda <a href="http://www.elasticsearch.org/guide/reference/api/search/facets/index.html">ElasticSearch facets</a> kullanarak verinin nasıl kolayca gruplanabileceğini özetlemeye çalıştım. Aynı işi daha önce MongoDB ile yapmaya çalıştığımda oldukça güçlük çekmiştim. Ancak bu deneyimi <a href="http://docs.mongodb.org/manual/applications/aggregation/">MongoDB Aggregation Framework</a> yayınlanmadan önce yaşamıştım. Şimdi durum MongoDB için çok daha iyi olabilir. Bu konuda bilginiz var ise yazının altına yorum yazarsanız memnun olurum.
+</p>
+
+<p>
+	ElasticSearch konusunda biraz fikriniz olması amacıyla facets için vereceğim ilk örnek kendi dokümantasyonundan olacak. Eğer bu konuda zaten bilgi sahibi iseniz bir sonraki aşamada anlatmaya çalıştığım <a href="#kullanici-sanaryosu">kullanıcı senaryosuna</a> geçebilirsiniz.
+</p>
+
+<h3>Temel veri gruplama</h3>
+<p>
+	Örneğimizde bir başlığa ve bir ya da daha fazla sayıda etikete sahip makalelerimiz olacak. Yazacağımız sorgu verdiğimiz koşullara uyan makaleler için en çok kullanılan etiketleri döndürecek. İşe önce birkaç makale yaratarak başlayalım. ElasticSearch ile tamamen RESTful bir arayüz üzerinden iletişim kuruyorsunuz. Bunun için oldukça işlevsel olan <a href="http://en.wikipedia.org/wiki/CURL">curl</a> aracını kullanacağız.
+</p>
+
+{% highlight js %}
+curl -X DELETE "http://localhost:9200/articles"
+curl -X POST "http://localhost:9200/articles/article" -d '{"title" : "One",   "tags" : ["foo"]}'
+curl -X POST "http://localhost:9200/articles/article" -d '{"title" : "Two",   "tags" : ["foo", "bar"]}'
+curl -X POST "http://localhost:9200/articles/article" -d '{"title" : "Three", "tags" : ["foo", "bar", "baz"]}'
+{% endhighlight %}
+
+<p>
+	Yazacağımız sorgu ile başlığı T ile başlayan makaleleri sorgulayalım ve bu makaleler için en çok kullanılan etiketleri döndürelim. Sorguda da görüleceği üzere istediğimiz facet'in adını <em>tags</em> olarak koyduk ve tags alanına göre gruplama yapılacağını belirttik.
+</p>
+
+{% highlight js %}
+curl -X POST "http://localhost:9200/articles/_search?pretty=true" -d '
+  {
+    "query" : { "query_string" : {"query" : "T*"} },
+    "facets" : {
+      "tags" : { "terms" : {"field" : "tags"} }
+    }
+  }
+'
+{% endhighlight %}
+
+<p>
+	ElasticSearch, yaptığımız sorgu için T ile başlayan makalelerin yanı sıra tags adını verdiğimiz facet sonucunu döndürüyor. <em>foo</em> 2 kez, <em>bar</em> 2 kez ve <em>baz</em> 1 kez kullanılmış. Tüm makalelerde <em>foo</em> etiketi aslında 3 kez kullanılmış olduğu halde yazdığımız "başlığı T ile başlayan makaleler için" kısıtı sebebiyle <em>foo</em> etiketinin 2 kez kullanıldığı sonucunu elde ettik.
+</p>
+
+{% highlight js %}
+"facets" : {
+  "tags" : {
+    "_type" : "terms",
+    "missing" : 0,
+    "total": 5,
+    "other": 0,
+    "terms" : [ {
+      "term" : "foo",
+      "count" : 2
+    }, {
+      "term" : "bar",
+      "count" : 2
+    }, {
+      "term" : "baz",
+      "count" : 1
+    } ]
+  }
+}
+{% endhighlight %}
+
+<h3>Kullanıcı senaryosu</h3>
+<p id="kullanici-sanaryosu">
+	Kullanıcı senaryom tüm HTTP isteklerinin kayıt altına alındığı bir durum olacak. Tüm kayıtlar yüksek performans gereksinimi dolayısıyla ElasticSearch kümesine yazılıyor olsunlar. Her kayıtta istek URL'i(<b>url</b>), istek zamanı(<b>tarih</b>) ve yanıtın ne kadar sürede tamamlandığı(<b>sure</b>) bilgileri yer alacak. Daha sonra bu bilgileri kullanarak herhangi bir istek için yanıt süreleri hakkında bilgi sahibi olmaya çalışacağız. Böylece isteklerle ilgili bir tür profiling yapmış olacağız.
+</p>
+
+<p>
+	Buradaki gruplama yukarıda verdiğim örnekten biraz daha farklı olacak. Çünkü bu kez bir tarih alanı için belirteceğimiz aralıklarda gruplama yapacağız. Bu işlem için ElasticSearch, <a href="http://www.elasticsearch.org/guide/reference/api/search/facets/date-histogram-facet.html">Date Histogram Facet</a> isimli harika bir facet sağlıyor. Böylece isteğimize göre saatlik, günlük gibi değişken aralıklarda gruplama yapabileceğiz. Yine işe üç adet kayıt ekleyerek başlayalım. İlk istek <em>2012-11-17T12:15:30</em> tarihinde, ikinci istek <em>2012-11-17T13:17:20</em> tarihinde ve üçüncü istek <em>2012-11-17T13:29:10</em> tarihinde yapılmış olsun.
+</p>
+
+{% highlight js %}
+curl -X DELETE "http://localhost:9200/istekler"
+curl -X POST "http://localhost:9200/istekler/istek/1" -d '{"url" : "/index.html", "tarih" : "2012-11-17T12:15:30Z", "sure": 100 }'
+curl -X POST "http://localhost:9200/istekler/istek/2" -d '{"url" : "/index.html", "tarih" : "2012-11-17T13:17:20Z", "sure": 150 }'
+curl -X POST "http://localhost:9200/istekler/istek/3" -d '{"url" : "/index.html", "tarih" : "2012-11-17T13:29:10Z", "sure": 200 }'
+{% endhighlight %}
+
+<p>
+	Şimdi de tarih alanına göre tüm /index.html isteklerini saatlik bazda gruplayalım.
+</p>
+
+{% highlight js %}
+curl -X POST "http://localhost:9200/istekler/_search?pretty=true" -d '
+{
+    "query" : { 
+    	"field" : {
+    		"url" : "/index.html"
+    	} 
+    },
+    "facets" : {
+        "istekler" : {
+            "date_histogram" : {
+                "field" : "tarih",
+                "interval" : "hour"
+            }
+        }
+    }
+}'
+{% endhighlight %}
+
+<p>
+	Yanıtı yine JSON formatında alıyoruz. 17 Kasım 2012 günü Saat 12:00 için 1 kayıt, saat 13:00 için 2 kayıt bulduğunu görebiliyoruz (Zaman bilgisini timestamp olarak aldık. <a href="http://www.epochconverter.com/">Buradan</a> timestamp bilgisini okunur bir tarihe çevirebilirsiniz). Bu arada took alanı işlem süresini belirtiyor. Sorgu sonucunu yalnızca 2 milisaniyede elde ettiğimize dikkatinizi çekmek isterim.
+</p>
+
+{% highlight js %}
+{
+  "took" : 2,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 5,
+    "successful" : 5,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 3,
+    "max_score" : 1.0,
+    "hits" : [ {
+      "_index" : "istekler",
+      "_type" : "istek",
+      "_id" : "1",
+      "_score" : 1.0, "_source" : {"url" : "/index.html", "tarih" : "2012-11-17T12:15:30Z", "sure": 100 }
+    }, {
+      "_index" : "istekler",
+      "_type" : "istek",
+      "_id" : "2",
+      "_score" : 1.0, "_source" : {"url" : "/index.html", "tarih" : "2012-11-17T13:17:20Z", "sure": 150 }
+    }, {
+      "_index" : "istekler",
+      "_type" : "istek",
+      "_id" : "3",
+      "_score" : 1.0, "_source" : {"url" : "/index.html", "tarih" : "2012-11-17T13:29:10Z", "sure": 200 }
+    } ]
+  },
+  "facets" : {
+    "istekler" : {
+      "_type" : "date_histogram",
+      "entries" : [ {
+        "time" : 1353153600000,
+        "count" : 1
+      }, {
+        "time" : 1353157200000,
+        "count" : 2
+      } ]
+    }
+  }
+}
+{% endhighlight %}
+
+<p>
+	Saatlik bazda kaç kez istek yapıldığı bilgisini elde ettik ama bizim asıl gereksinim duyduğumuz bilgi saatlik bazda yanıt sürelerinin ne şekilde olduğu idi. Bunun için gruplamayı <em>tarih</em> alanına göre yaparken bilgilerin <em>sure</em> alanına göre dönüşünü sağlamamız gerekmekte. Bu doğrultuda <em>key_field</em> ve <em>value_field</em> alanlarını kullanacağız.
+</p>
+
+{% highlight js %}
+curl -X POST "http://localhost:9200/istekler/_search?pretty=true" -d '
+{
+    "query" : { 
+    	"field" : {
+    		"url" : "/index.html"
+    	} 
+    },
+    "facets" : {
+        "istekler" : {
+            "date_histogram" : {
+                "key_field" : "tarih",
+                "value_field" : "sure",
+                "interval" : "hour"
+            }
+        }
+    }
+}'
+{% endhighlight %}
+
+<p>
+	Yukarıdaki sorgunun yanıtı olarak aşağıdaki harika bilgileri elde ediyoruz.
+</p>
+
+{% highlight js %}
+{
+  "took" : 19,
+  "timed_out" : false,
+  "_shards" : {
+    ...
+  },
+  "hits" : {
+    ...
+  },
+  "facets" : {
+    "istekler" : {
+      "_type" : "date_histogram",
+      "entries" : [ {
+        "time" : 1353153600000,
+        "count" : 1,
+        "min" : 100.0,
+        "max" : 100.0,
+        "total" : 100.0,
+        "total_count" : 1,
+        "mean" : 100.0
+      }, {
+        "time" : 1353157200000,
+        "count" : 2,
+        "min" : 150.0,
+        "max" : 200.0,
+        "total" : 350.0,
+        "total_count" : 2,
+        "mean" : 175.0
+      } ]
+    }
+  }
+}
+{% endhighlight %}
+
+<p>
+	Gelen yanıta göre saat 12:00-12:59 aralığında 1 istek yapılmış ve yanıt süresi ortalaması 100 ms olmuş. Saat 13:00-13:59 aralığında 2 istek yapılmış ve istek süresi ortalaması 175 ms olarak gerçekleşmiş.
+</p>
+
+<p>
+	ElasticSearch facets hakkında daha fazla bilgi için <a href="http://www.elasticsearch.org/guide/reference/api/search/facets/index.html">proje dokümantasyonunu</a> okumanızı tavsiye ederim.
+</p>
