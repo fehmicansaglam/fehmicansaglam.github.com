@@ -19,6 +19,8 @@ dd{margin:0 0 20px 10px;}
 #title h1, #a, #comments{width:85%;margin:0 auto}
 #comments{margin-top:40px}
 #home{position:absolute;left:25px;top:15px;background:#e3e3e3;border:1px solid #ddd;padding:4px;border-radius:4px;text-decoration:none;font-size:80%}
+#share{position:relative;float:right;margin-right:-30px;margin-top:-40px;}
+h5#date{margin-bottom:20px;}
 
 table{background:#fff;border:1px solid #ccc;border-width:2px;border-collapse:collapse;margin:5px 0 10px;}
 th,td{border:1px solid #ccc;padding:3px 10px;text-align:left;vertical-align:top;}
