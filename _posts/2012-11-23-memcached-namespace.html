@@ -1,0 +1,63 @@
+--- 
+title: "Memcached namespace simülasyonu ile birden fazla anahtarı bir kerede geçersiz hale getirelim"
+layout: post
+description: "Meselemizi 1 id'li üyenin tüm önbellek anahtarlarını aynı anda silmek ya da geçersiz hale getirmek olarak tanımlayabiliriz."
+keywords: memcached,namespace
+---
+
+<p>
+	Yazıma önce meseleyi tanımlayarak başlamak istiyorum. Memcached aracılığıyla uygulamanızın üyelerine ait çeşitli bilgileri önbelleğe aldığınızı düşünelim. Bu bilgiler isim, özet, etkinlikler ve istatistikler olsunlar. Bunlara karşılık gelen Memcached anahtarlarını ise <span class="tek">uye:&lt;id&gt;:&lt;bilgi&gt;</span> şeklinde oluşturalım. Buna göre ID'si 1 olan üye için anahtarlar <span class="tek">uye:1:isim</span>, <span class="tek">uye:1:ozet</span>, <span class="tek">uye:1:etkinlikler</span> ve <span class="tek">uye:1:istatistikler</span> şeklinde olacaktır. Meselemizi 1 id'li üyenin tüm önbellek anahtarlarını aynı anda silmek ya da geçersiz hale getirmek olarak tanımlayabiliriz.
+</p>
+
+<p>
+	Memcached ne yazık ki namespace desteği ile gelmiyor. Namespace simülasyonu için aşağıda gireceğimiz onca zahmete katlanmak istemiyorsanız Redis kullanın. Ancak Redis kullanma imkanınız yoksa ya da kullanmak istemiyorsanız az bir performans kaybıyla bunu Memcached ile de gerçeklemek mümkün.
+</p>
+
+<p>
+	Namespace simülasyonu temelde her anahtarın önüne bir önek getirmekten ibaret. 1 id'li üyenin tüm anahtarlarının önüne aynı öneki getirirsek ve istenildiğinde bu öneki değiştirirsek önceki anahtarlar geçeriz hale gelecektir. Daha kolay anlaşılması için çözümü örnekleyelim. 1 id'li üyenin anahtar öneki 1 olsun. İlgili Memcached anahtarları <span class="tek">1:uye:1:isim</span>, <span class="tek">1:uye:1:ozet</span>, <span class="tek">1:uye:1:etkinlikler</span> ve <span class="tek">1:uye:1:istatistikler</span> şeklinde olacaktır. Bu anahtarlara karşılık gelen değerlerin Memcached sunucusuna yazılmış olduğunu düşünelim. Tüm değerleri geçersiz hale getirmek için öneki 2 olarak değiştirmemiz yeterli. Yeni anahtarlarımız <span class="tek">2:uye:1:isim</span>, <span class="tek">2:uye:1:ozet</span>, <span class="tek">2:uye:1:etkinlikler</span> ve <span class="tek">2:uye:1:istatistikler</span> şeklinde olacağından eski anahtarlara karşılık gelen değerlere erişmemiz mümkün olmayacaktır. Erişilmesi mümkün olmayan bu değerler zamanla LRU algoritmasına göre Memcached tarafından silineceklerdir.
+</p>
+
+<p>
+	Her namespace için önek bilgisini Memcached üzerinde saklayalım. Bu bilgiye ulaşmak için fazladan bir Memcached erişimine ihtiyacımız olacak. Yukarıda sözünün ettiğim performans kaybının sebebi bu. Temel kullanım aşağıdaki gibi olacak.
+</p>
+
+{% highlight java %}
+String onek = Cache.get("namespace:uye:" + uyeId, String.class);
+String isim = Cache.get(onek + ":uye:" + uyeId + ":isim", String.class);
+String ozet = Cache.get(onek + ":uye:" + uyeId + ":ozet", String.class);
+{% endhighlight %}
+
+<p>
+	Yukarıdaki kod parçası namespace için bir önekin mevcut olduğunu varsayıyor. Gerçek kullanımda bu mümkün olmayacaktır. Gerekli kontrolleri yapan ve eğer önek yok ise oluşturan kod parçası aşağıda. Önek oluşturmak için o anki zaman bilgisini kullanacağım. Verdiğim örnek Java dilinde olsa da istediğiniz dile kolayca çevirebilirsiniz.
+</p>
+
+{% highlight java %}
+final String namespaceAnahtar = "namespace:uye:" + uyeId;
+Long onek = Cache.get(namespaceAnahtar, Long.class);
+if (onek == null) { // Önek henüz oluşturulmamış
+    onek = System.currentTimeMillis();
+    if (!Cache.safeAdd(namespaceAnahtar, onek, null)) { // Eğer önek setlenmemişse ekle.
+        onek = Cache.get(namespaceAnahtar, Long.class); // Başka biri bizden daha erken davranmış.
+    }
+}
+return onek;
+{% endhighlight %}
+
+<p>
+	İstenen üye için tüm anahtarları değiştirmek istediğimizde namespace önekini 1 artırmamız yeterli.
+</p>
+
+{% highlight java %}
+final String namespaceAnahtar = "namespace:uye:" + uyeId;
+Cache.incr(namespaceAnahtar); // Eğer önek henüz oluşturulmamışsa -1 döner
+{% endhighlight %}
+
+<p>
+	Önek değiştirme işleminde önek oluşturulmuş mu kontrolü yapmamıza pratikte gerek yok. Çünkü önek oluşturulmadığına göre erişimi istenmeyen anahtarlar da oluşturulmamıştır. Erişilecek anahtarlara ilk erişimde önek de oluşturulacaktır.
+</p>
+
+<p>
+	Bu yöntemin getireceği performans kaybı Memcached sunucunuza erişim performansınızla doğru ortantılıdır. Eğer bir değere ortalama 2 ms'de erişiyorsanız 2ms'lik bir performans kaybı yaşarsınız ki bu durum ihmal edilebilir. Fakat erişiminiz 100ms sürüyorsa toplam erişim süresi 200ms olacaktır ki bu süre artık hissedilir seviyeye ulaşmıştır. Kendi koşullarınıza göre yöntemi uygulama kararını vermek durumundasınız. Umarım yeterince açıklayıcı olabilmişimdir.
+</p>
+
+
