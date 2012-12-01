@@ -1,0 +1,112 @@
+--- 
+title: "PostgreSQL pg_trgm modülü ile metin benzerliğini sorgulayalım ve LIKE sorgularımızı hızlandıralım"
+layout: post
+description: "pg_trgm modülü, metinlerin benzerliğini sorgulamak için fonksiyonlar ve operatörler sunmasının yanı sıra benzer stringlerin hızlıca aranabilmesi için index operatör sınıfları da sunar"
+keywords: pg_trm, postgresql
+---
+
+<h3>pg_trgm modülü nedir?</h3>
+<p>
+	<a href="http://www.postgresql.org/docs/9.1/static/pgtrgm.html">pg_trgm</a> modülü, geliştiricilerinin deyimiyle, metinlerin benzerliğini sorgulamak için fonksiyonlar ve operatörler sunmasının yanı sıra benzer stringlerin hızlıca aranabilmesi için index operatör sınıfları da sunar.
+</p>
+<p>
+	pg_trgm modülü contrib paketinde yer alır. Modülü etkin hale getirmek için aşağıdaki SQL sorgusunu çalıştırmanız yeterlidir.
+</p>
+
+{% highlight sql %}
+CREATE EXTENSION pg_trgm;
+{% endhighlight %}
+
+<h3>Nasıl çalışır?</h3>
+<p>
+	pg_trgm modülünün çalışma ilkesi trigramlara dayanır. <em>Trigram, bir string içerisindeki ardışık 3 karaktere verilen addır.</em> Modül, iki stringin benzerliğini içerdikleri ortak trigramların sayısına göre hesaplar. Bu yöntem doğal diller için oldukça başarılıdır ki buna Türkçe de dahildir. Trigramlar hesaplanmadan önce stringin önünde iki boşluk, sonunda da bir boşluk olduğu kabul edilir. Böylece <b>fehmi</b> stringinin trigramları <b>'&nbsp;&nbsp;f'</b>, <b>'&nbsp;fe'</b>, <b>'feh'</b>, <b>'ehm'</b>, <b>'hmi'</b>, <b>'mi&nbsp;'</b> olur. 
+</p>
+
+<h3>Fonksiyonlar ve Operatörler</h3>
+<p>
+	Yukarıda pg_trgm modülünün bazı fonksiyonlar ve operatörler sunduğundan bahsetmiştim. Şimdi bu fonksiyonlara ve operatörlere göz atalım.
+</p>
+
+<h4><u>Fonksiyonlar</u></h4>
+<dl>
+	<dt>similarity(text, text)</dt>
+	<dd>
+		Verilen iki stringin benzerliğini belirten 0 ile 1 arasında bir sayı döndürür. Benzerlik arttıkça bu sayı 1'e yaklaşır.
+	</dd>
+
+	<dt>show_trgm(text)</dt>
+	<dd>
+		Verilen string içindeki tüm trigramları döndürür.
+		<b>select show_trgm('fehmi');</b> => <b>{"  f"," fe",ehm,feh,hmi,"mi "}</b>
+	</dd>
+
+	<dt>show_limit()</dt>
+	<dd>
+		Aşağıda açıklayacağım % operatörü tarafından kullanılmakta olan benzerlik limitini gösterir. Bu limitin üzerinde benzerlik puanına sahip stringler, % operatörü tarafından benzer kabul edilir.
+	</dd>
+
+	<dt>set_limit(real)</dt>
+	<dd>
+		Benzerlik limitini setler. Bu değer 0 ile 1 arasında olmalıdır. Varsayılan değer 0.3'tür.
+	</dd>
+</dl>
+
+<h4><u>Operatörler</u></h4>
+<dl>
+	<dt>text % text</dt>
+	<dd>
+		Verilen iki string arasındaki benzerlik puanı benzerlik limitinin üzerinde ise true aksi halde false döner.
+	</dd>
+
+	<dt>text &lt;-&gt; text</dt>
+	<dd>
+		Verilen iki string arasındaki uzaklık puanını döner. Bu puan (1 - benzerlik puanı) olarak hesaplanır.
+	</dd>
+</dl>
+
+<h3>Index desteği</h3>
+<p>
+	pg_trgm modülü yüksek hızlı benzerlik araması için text alanlar üzerinde GIN ve GIST türünden index operatör sınıfları sağlıyor. Modülün sağladığı bu index desteği ile PostgreSQL 9.1 sürümünden itibaren LIKE sorgularımızı da hızlandırabiliyoruz. Aşağıda hem GIN hem de GIST türünden pg_trgm index oluşturma örneği yer alıyor.
+</p>
+
+{% highlight sql %}
+CREATE TABLE test_trgm (t text);
+CREATE INDEX trgm_idx ON test_trgm USING gist (t gist_trgm_ops);
+CREATE INDEX trgm_idx ON test_trgm USING gin (t gin_trgm_ops);
+{% endhighlight %}
+
+<p>
+	Bir yanlış anlaşılmaya mahal vermeden belirtmek isterim ki <em>bu indexler varchar türünden alanlar üzerinde de oluşturulabilirler.</em> Oluşturduğumuz indexi kullanarak benzerlik araması yapmak için aşağıdaki gibi bir sorgu yazabiliriz.
+</p>
+
+{% highlight sql %}
+SELECT t, similarity(t, 'fehmi') AS sml
+  FROM test_trgm
+  WHERE t % 'fehmi'
+  ORDER BY sml DESC, t;
+{% endhighlight %}
+
+<p>
+	Yukarıdaki sorgu fehmi stringine benzer olan stringleri ve benzerlik puanlarını, benzerlik puanına göre azalan olarak getirir. Böylece 'fehmi' stringine en benzer olan stringler en üstte yer alırlar. Aynı sorguyu uzaklık puanı operatürünü(&lt;-&gt;) kullanarak aşağıdaki gibi de yazabilirdik.
+</p>
+
+{% highlight sql %}
+SELECT t, t <-> 'fehmi' AS uzaklik
+  FROM test_trgm
+  ORDER BY uzaklik LIMIT 10;
+{% endhighlight %}
+
+<p>
+	LIKE sorgularında oluşturduğumuz indexin kullanılması için ayrıca bir işlem yapmamız gerekmiyor. Aşağıdaki gibi bir sorgu yazdığımızda pg_trgm indexi devreye giriyor ve sorgunun daha hızlı çalışmasını sağlıyor.
+</p>
+
+{% highlight sql %}
+SELECT * FROM test_trgm WHERE t LIKE '%foo%bar';
+{% endhighlight %}
+
+<p>
+	Bir dip not da GIN ve GIST index türleri için vereyim. GIN indexler GIST indexlere göre daha hızlı aranabilirler ancak oluşturulma ve güncelleme maliyetleri daha yüksektir. Bu sebeple çok sık güncellenen tablolarda GIST indexler daha avantajlı olabilir. Ancak statik ya da çok sık değişmeyen tablolar için GIN indexlerin arama performansından faydanılmalıdır.
+</p>
+
+
+
