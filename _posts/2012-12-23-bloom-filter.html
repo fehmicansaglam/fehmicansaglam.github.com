@@ -1,0 +1,62 @@
+--- 
+title: "Bugün yemekte Bloom Filtresi yapıyoruz"
+layout: post
+description: "Bloom Filtresi Burton Howard Bloom tarafından 1970 yılında bulunmuş olan olasılıksal bir veri yapısı. Bu veri yapısı ile bir elemanın bir küme içinde yer alıp almadığını düşük maliyetle sorgulayabiliyoruz."
+keywords: bloom filter, olasılıksal veri yapıları
+---
+
+<h3>Olasılıksal veri yapıları</h3>
+<p>
+	Çok büyük miktarda veri(<em>[Big Data | Dev Veri]</em>) üzerinde istatistiksel analiz ve veri madenciliği günümüzde büyük bir önem kazanmış durumda. Bu işlemleri gerçeklemek için oldukça maliyetli sistemlere(Hadoop, MapReduce) ihtiyaç duyuyoruz. <a href="http://en.wikipedia.org/wiki/Category:Probabilistic_data_structures">Olasılıksal veri yapıları</a> bu noktada öne çıkıyorlar çünkü ham veri hakkında yaklaşık/tahmini bilgiye sahip olmamızı görece çok düşük maliyetle karşılayabiliyorlar. Olasılıksal veri yapılarını kullanarak ham veri için aşağıdaki sorulara yaklaşık yanıtlar verebiliyoruz.
+</p>
+
+<p>
+	<ul>
+		<li>Veri kümesinde kaç farklı eleman var?</li>
+		<li>En sık rastlanan elemanlar hangileri?</li>
+		<li>En sık rastlanan elemanların sıklığı/frekansı nedir?</li>
+		<li>Belli bir aralıkta kaç eleman var? (Örneğin tarih aralığı)</li>
+		<li>Belli bir eleman veri kümesinde yer alıyor mu? (Üyelik sorgusu)</li>
+	</ul>
+</p>
+
+<p>
+	Olasılıksal veri yapıları hakkında daha fazla bilgiye sahip olmak için bu veri yapılarını oldukça güzel özetleyen <a href="http://highlyscalable.wordpress.com/2012/05/01/probabilistic-structures-web-analytics-data-mining/">şu yazıyı</a> okumanızı tavsiye ederim. Ben ise bu yazıda yalnızca üyelik sorgusuna yanıt verebilen Bloom Filtresinden bahsedeceğim.
+</p>
+
+<h3>Bloom Filtresi</h3>
+<p>
+	Bloom Filtresi Burton Howard Bloom tarafından 1970 yılında bulunmuş olan olasılıksal bir veri yapısı. Bu veri yapısı ile bir elemanın bir küme içinde yer alıp almadığını düşük maliyetle sorgulayabiliyoruz. Bu veri yapısına olasılıksal adı veri verilmesinin nedeni verdiği yanıtlar arasında <em>false positive</em> sonuçların olabilmesi. Yani filtre <em>"Evet, eleman bu kümede bulunuyor."</em> yanıtını verirse eleman bu kümede olabilir de olmayabilir de... Fakat bunun tam tersi, yani <em>false negative</em> yanıtlar bu filtre için geçerli değil. Başka bir deyişle eğer Bloom Filtresi <em>"Hayır, eleman bu kümede bulunmuyor."</em> derse mutlaka doğru söylüyordur. Düzgün yapılandırma ile false positive oranını %1'in altında tutabiliyoruz. Böylece Bloom Filtresi özellikle veritabanı sorgularından önce kullanıldığında gereksiz disk erişiminin önüne geçebiliyor. BigTable ve Cassandra içerisinde bu şekilde bir kullanım mevcut.
+</p>
+
+<h4>Kimler Kullanıyor?</h4>
+<p>
+	<ul>
+		<li><a href="http://en.wikipedia.org/wiki/BigTable">Google BigTable</a></li>
+		<li><a href="http://cassandra.apache.org/">Apache Cassandra</a></li>
+		<li><a href="http://en.wikipedia.org/wiki/Squid_(software)">Squid</a></li>
+	</ul>	
+</p>
+
+<h4>Nasıl Çalışıyor?</h4>
+<p>
+	Boş bir Bloom Filtresi tüm elemanları 0 olan m bitten oluşan bir bit dizisidir. Tanımlanmış olan k farklı hash(özet) fonksiyonunun her biri verilen elemanı m dizi indisinden birine rastgele olarak yerleştirir.
+</p>
+
+<p>
+	Filtreye yeni bir eleman eklemek için elemanı k farklı özet fonksiyonundan geçirerek k farklı indis elde edin ve bit dizisinin bu indislerdeki değerlerini 1 olarak setleyin.
+</p>
+
+<p>
+	Bir elemanın üyeliğini sorgulamak için elemanı k farklı özet fonksiyonundan geçirerek k farklı indis elde edin. İndislerdeki değerlerden en az biri 0 ise bu eleman veri kümesinde bulunmamaktadır. Değerlerin tümü 1 ise elemanın üyeliği konusunda kesin bir yargıya varılamaz. Çünkü elde edilen indisler farklı elemanların eklenmesi sırasında setlenmiş olabilirler. Önceden de bahsettiğim gibi bu duruma false positive diyoruz. 
+</p>
+
+<p>
+	<a href="http://pages.cs.wisc.edu/~cao/papers/summary-cache/node8.html">Şu bağlantıda</a> false positive oranının(p) nasıl hesaplanacağına dair matematiksel formüller ve çeşitli m(bit dizisinin boyu), n(eleman sayısı) ve k(özet fonksiyonu sayısı) değerleri için p değerinin ne olacağına dair tablolar var. Göreceğiniz üzere bu değerler düzgün şekilde seçildiğinde p değeri oldukça küçülüyor.
+</p>
+
+<h4>Nasıl gerçeklenir?</h4>
+<p>
+	<a href="https://github.com/clearspring/stream-lib">stream-lib</a> isimli Github deposu olasılıksal veri yapılarının pek çoğunun Java ile gerçeklemesini içeriyor. <a href="https://github.com/clearspring/stream-lib/blob/master/src/main/java/com/clearspring/analytics/stream/membership/BloomFilter.java">Bloom Filter da bu gerçeklemelerden biri</a> ve README dosyasında bu kod için Apache Cassandra projesinden faydalanıldığı belirtilmiş. Ayrıca özet fonksiyonu için <a href="http://en.wikipedia.org/wiki/MurmurHash">MurmurHash</a> kullanıldığını da <a href="https://github.com/clearspring/stream-lib/blob/master/src/main/java/com/clearspring/analytics/stream/membership/Filter.java#L89">buradan görebilirsiniz.</a>
+</p>
+
