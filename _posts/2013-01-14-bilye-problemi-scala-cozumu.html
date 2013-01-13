@@ -1,0 +1,72 @@
+--- 
+title: "Sokakta bilye oynamış olanlar için Scala çocuk oyuncağıdır"
+layout: post
+description: "Bilye sorusunun Scala dili ile gerçeklediğim çözümünü paylaşmak istedim. Hem anılarımı tazeledim hem de kod yazdım, eğlendim."
+keywords: scala, bilye
+---
+
+<p>
+    2004 yılında ODTÜ Bilgisayar Topluluğu'nun düzenlediği <a href="http://arsiv.ntvmsnbc.com/news/261098.asp">Üniversite Öğrencileri Arası Programlama Yarışması</a>'nda finale kalmıştım. Eleme sorularından biri olan Bilye sorusunun çözümü hakkında yıllar önce <a href="http://fehmicansaglam.net/bilye/">bir yazı</a> yazmıştım. Zaman su gibi akıp geçmiş. O zamanki çözümüm C dilindeydi. Bugün ise Scala dili ile gerçeklediğim çözümü paylaşmak istedim. Hem anılarımı tazeledim hem de kod yazdım, eğlendim.
+</p>
+
+<p>
+    Sorunun tanımı şöyle:
+</p>
+
+<div style="font-style:italic; background-color:#fbfbfb; border: 1px solid #eeeeee; border-radius: 4px; padding: 10px">
+    <p>
+        Eski çağlarda Zekado ülkesinde şöyle bir oyun oynanırmış:
+    </p>
+    <ul>
+        <li>Ortaya belli sayıda (n) bilye konur.</li>
+        <li>İki kişi sıra ile hamleler yapar.</li>
+        <li>Birinci oyuncu ilk hamlesinde ortadan 2 ya da 3 bilye alır.</li>
+        <li>Sırası gelen oyuncu, bir önceki oyuncunun aldığı bilye sayısı k ise, k+1≤m≤2k olacak şekilde m tane bilye alır. Son hamlede geriye kalan bilyelerin sayısı ≤k ise bu bilyelerin hepsini alabilir.</li>
+        <li>Son bilye grubunu alan oyunu kazanır.</li>
+    </ul>
+</div>
+
+<br/>
+
+<p>
+    Çözümün ayrıntısı daha önce yazdığım yazıda mevcut olduğu için bu yazıda pek fazla ayrıntıya girmeyeceğim. Genel anlamda çözüm için yıllar evvel olduğu gibi Sprague-Grundy teoreminden faydalandım. Her bir durum için bir SG(p,q) = t değeri tanımladım. Kazanan durumda t=1, aksi halde t=0 olduğunu kabul edelim. SG(p,q) durumu ortadan q tane bilye aldım, p tane bilye kaldı anlamına gelsin. Bu durumda ben kazanıyorsam SG(p,q) = 1, aksi halde SG(p,q) = 0 olsun. Kod aşamasını kolaylaştırmak amacıyla 0 ve 1 değerleri yerine sırasıyla false ve true değerlerini kullandım.
+</p>
+
+<p>
+    İşe verilen p ve q değerleri için Grundy sayısını hesaplayan fonksiyonu yazarak başlayalım. p=0 olan durumlar her zaman kazanan durumdur çünkü ortada bilye kalmamıştır. p &le; 2 * q olan durumlar kaybeden durumdur çünkü q tane bilye alıp p tane bilye bıraktığımızda rakip 2*q kadar bilye alma hakkına sahip olacaktır. Kalan bilye sayısı yani p değeri 2*q değerine küçük ya da eşit ise rakip tüm bilyeleri alarak oyunu kazanacaktır. Kalan durumlar için ise şu kural geçerli olacak: herhangi bir durum için, o durumdan sonra rakip mümkün tüm hamleler için kaybediyorsa, o durum kazanan durumdur. Aksi halde, yani rakip mümkün hamlelerin yalnızca birinde bile kazanıyor olsa, o durum kaybeden durumdur.
+</p>
+
+{% highlight scala linenos%}
+def spragueGrundy(p: Int, q: Int) = {
+  if (p == 0) true
+  else if (2 * q < p) {
+    (q + 1 to 2 * q).foldLeft(true)((a, b) => a & !spragueGrundy(p - b, b))
+  } else false
+}
+{% endhighlight %}
+
+<p>
+  Yukarıdaki kod belki biraz karışık görünebilir ama daha önce bahsettiğimiz kuralları işletmekten başka bir şey yapmıyor. 4. satırda p değeri 2*q değerinden büyük ise rakip q+1 ile 2*q kapalı aralığındaki muhtemel hamlelerinin tümünde kaybediyorsa true dönüyor. Özyinelemeli bu fonksiyonun aynı değerleri tekrar hesaplamasını engellemek için bir önbellek kullandım. Fonksiyonun önbellekli hali ise şöyle oldu.
+</p>
+
+{% highlight scala%}
+val onbellek = collection.mutable.Map[(Int, Int), Boolean]()
+
+def onbellekliSpragueGrundy(p: Int, q: Int): Boolean = {
+  onbellek.getOrElseUpdate((p, q), spragueGrundy(p, q))
+}
+
+def spragueGrundy(p: Int, q: Int) = {
+  if (p == 0) true
+  else if (2 * q < p) {
+    (q + 1 to 2 * q).foldLeft(true)((a, b) => a & !onbellekliSpragueGrundy(p - b, b))
+  } else false
+}
+{% endhighlight %}
+
+<p>
+  Kodun tümü için bir gist hazırladım. Böylece paylaşılması ve iyileştirilmesi çok daha kolay olacaktır. Çözüm için önerileriniz var ise dinlemekten memnun olurum.
+</p>
+
+<script src="https://gist.github.com/4526579.js"></script>
+
