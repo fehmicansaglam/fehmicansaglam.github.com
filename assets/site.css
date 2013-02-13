@@ -16,7 +16,7 @@ dd{margin:0 0 20px 10px;}
 
 #title{margin:20px 0;padding:10px 0 10px 10px;background:#eee;border:solid #ddd;border-width:1px 0;position:relative;}
 #title h1{font-size:28px;color:#444;}
-#title h1, #a, #comments{width:85%;margin:0 auto}
+#title h1, #a, #comments{width:79%;margin:0 auto}
 #comments{margin-top:40px}
 #home{position:absolute;left:25px;top:15px;background:#e3e3e3;border:1px solid #ddd;padding:4px;border-radius:4px;text-decoration:none;font-size:80%}
 #share{position:relative;float:right;margin-right:-30px;margin-top:-40px;}
