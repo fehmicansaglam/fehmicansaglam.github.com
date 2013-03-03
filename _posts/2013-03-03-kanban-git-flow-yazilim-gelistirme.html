@@ -1,0 +1,43 @@
+--- 
+title: "Kanban ve git flow ile bir yazılım geliştirme süreci örneği"
+layout: post
+description: ""
+keywords: kanban,git flow
+---
+
+<blockquote>
+	<a href="http://www.kaynakca.info" target="_blank">Türkiye Kaynakçası</a>'nın geliştirme sürecinde Scrum uygulamıştık. Ancak uygulama yayına alındıktan sonra Scrum'ın temel yapısı sprintler işimizi görmemeye başladı. Bu sebeple Kanban uygulamaya başladık. Bu yazıda Kanban, git flow ve code review gibi konulardan bahsetmeye çalışacağım.
+</blockquote>
+
+<p>
+	Bir web uygulamasının geliştirme aşamasında 2 haftalık sprintler agile development için epeyce kullanışlı oluyor. Her bir sprintin sonunda yeni bir sürüm yayınlayarak müşteriye sunabiliyorsunuz. Ancak uygulama productiona geçtiğinde yeri geliyor günde 2-3 deploy yapmaya başlıyorsunuz. Bu durumda sprintler artık iş görmez oluyor. Her bir issue için standart bir akış tanımlayıp, bu akışı yönetebileceğiniz araçlara gereksinim duyduğunuzu fark ediyorsunuz.
+</p>
+
+<p>
+	Verdiğim örnek özelinde uygulamanın productiona alınmasının yanı sıra projeye bir de junior geliştiricinin katılması sürecimizi gözden geçirmemizde etkili oldu. Söz konusu junior geliştirici Scala geliştiricilerinin iyi tanıdığı Mehmet Ali Gözaydın idi. Mehmet Ali -alınmasın- refactor edeyim derken bazı karmaşık modüllerin çalışmasını bozduğunda productiona deploy edilecek her satır kodun review edilmesinin zorunlu olduğunda hemfikir olduk.
+</p>
+
+<p>
+	Kanban için Jira'nın Greenhopper eklentisini kullanıyoruz. Aşağıda Kanban tahtamızdan bir görüntü yer alıyor. Akışın aşamalarını görüldüğü üzere <em>Backlog, Selected for Development, In Progress, In Review, Awaiting Deploy ve Done</em> olarak belirledik. Her bir issue tahtaya sol taraftan başlıyor ve sağ taraftan çıkıyor.
+</p>
+
+<a href="/assets/images/kanban.png" target="_blank">
+	<img src="/assets/images/kanban.png" style="width:95%;margin:30px 0 30px 20px" />
+</a>
+
+<p>
+	Aşamalar arası olası geçişler yine ekran görüntüsü üzerinde yer alıyor. Review edilecek issueların durumu In Review olarak setleniyor. Bu aşamada <a href="/git-flow-bir-gelistirme-surecinin-anatomisi" target="_blank">git flow</a> sürecin gerçeklenmesinde önemli bir rol oynuyor. Öncelikle her bir issue için mutlaka ilgili issue adıyla bir feature branch açılıyor. Review edilecek feature branchi diğer geliştiricilerin de koda ulaşabilmesi adına publish ediliyor. Code review aracı olarak FishEye + Crucible ikilisini kullanıyoruz. Bu araç üzerinden yorumlar aracılığıyla code review gerçekleştiriliyor. Review aşamasından başarıyla geçen feature branch, develop branchine merge ediliyor ve Awaiting Deploy aşamasına geçiyor. Aşağıda code review aşamasını gösteren bir ekran görüntüsü yer alıyor.
+</p>
+
+<a href="/assets/images/code-review.png" target="_blank">
+	<img src="/assets/images/code-review.png" style="width:95%;margin:30px 0 30px 20px" />
+</a>
+
+<p>
+	Code review hem kaliteli yazılım geliştirme açısından hem de junior geliştiricilerin öğrenme sürecini hızlandırmak adına gerçekten çok faydalı oluyor. Hele ki uygulamanız için test coverage yeterli oranda değilse code review hayat kurtarıcı olabiliyor. Code review dışında bir de refactoring için ayrılmış özel zaman dilimlerimiz bulunuyor. Refactoringe başlamadan önce yine bir feature branch açılıyor ve refactor edilen kod mutlaka review ediliyor.
+</p>
+
+<p>
+	Uyguladığımız sürecin sonuçlarından oldukça memnunum. Varsa benzer başarı öykülerinizi yorum olarak dinlemekten mutluluk duyarım.
+</p>
+
