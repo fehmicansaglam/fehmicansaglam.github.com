@@ -33,7 +33,7 @@ Günün anlam ve önemine dair teknik konulara girmeden evvel hayatımdaki geli�
 </p>
 
 <p>
-	Şimdi yukarıdaki konuları nonblocking kavramı birleştirmeye çalışayım. Blocking bir veritabanı driver'ı(hemen hemen tüm jdbc driver'larda olduğu gibi) kullandığınızda veritabanına yaptığınız istek mevcut threadi bloklar. Cevabı beklerken CPU kullanmadığınız halde threadiniz hiçbir iş yapmadan oturmaktadır. CPU kaynağınızı daha verimli kullanmak için thread sayısını artırmaktan başka çareniz kalmaz. Bu kez de yukarıda anlattığım maliyetlere takılırsınız.
+	Şimdi yukarıdaki konuları nonblocking kavramı ile birleştirmeye çalışayım. Blocking bir veritabanı driver'ı(hemen hemen tüm jdbc driver'larda olduğu gibi) kullandığınızda veritabanına yaptığınız istek mevcut threadi bloklar. Cevabı beklerken CPU kullanmadığınız halde threadiniz hiçbir iş yapmadan oturmaktadır. CPU kaynağınızı daha verimli kullanmak için thread sayısını artırmaktan başka çareniz kalmaz. Bu kez de yukarıda anlattığım maliyetlere takılırsınız.
 </p>
 
 <p>
@@ -44,7 +44,7 @@ Günün anlam ve önemine dair teknik konulara girmeden evvel hayatımdaki geli�
 	Görüldüğü üzere konu tek bir yazıda anlatılamayacak kadar geniş ve derin. ReactiveMongo ile bir kod örneği vererek konuyu biraz daha anlaşılabilir kılmayı umuyorum.
 </p>
 
-%{highlight scala}
+{% highlight scala %}
 object Reactive {
   lazy val driver = new MongoDriver
   lazy val connection = driver.connection(List("127.0.0.1"))
@@ -53,9 +53,9 @@ object Reactive {
 
   def main(args: Array[String]) {
 
-  // Üyeleri sakladığımız uyeler isimli bir collection var. Her üyenin adı, soyadı ve email adres bilgisi olsun.
-  // Tüm üyelerin email adreslerini alarak bir Set içerisinde saklamak istediğimizi düşünelim.
-  // Tahmin edersiniz ki eğer çok sayıda üye varsa bu işlem saniyeler sürebilir.
+  // Üyeleri sakladığımız uyeler isimli bir collection var. Her üyenin adı, soyadı ve email adres
+  // bilgisi olsun. Tüm üyelerin email adreslerini alarak bir Set içerisinde saklamak istediğimizi
+  // düşünelim. Tahmin edersiniz ki eğer çok sayıda üye varsa bu işlem saniyeler sürebilir.
   // Bu da saniyeler boyunca bu threadin bloklanacak olması anlamına gelir.
   // Fakat ReactiveMongo kullanan aşağıdaki kod tamamen asenkron ve nonblocking çalışır.
   val futureUyeler: Future[Set[String]] = collection.find(BSONDocument(), BSONDocument("email" -> 1)).cursor.toList.map { list =>
@@ -64,13 +64,14 @@ object Reactive {
       }
     }
   }
-  // Yukarıda kod bir Future dönmektedir. Aslında bakılırsa hemen hemen tüm ReactiveMongo API çağrıları bir Future döner.
+  // Yukarıdaki kod bir Future dönmektedir. Aslına bakılırsa hemen hemen tüm ReactiveMongo API
+  // çağrıları bir Future döner.
 
   // Dikkatli gözler yukarıdaki kodun bir dezavantajı olduğunu farketmiş olabilirler.
-  // Aslında kullanmayacağımız halde tüm üyelerin emaillerini içeren bir List oluşturularak bellekte saklanır.
-  // List hazır olduktan sonra bu liste bir Set yapısına dönüştürülür.
-  // Tüm veriyi bellekte saklamaya gerek olmaksızın veritabanından veri geldikçe Set yapısına ekleyen,
-  // nonblocking ve asenkron çalışan bir kod parçası ReactiveMongo ile hayal değil.
+  // Kullanmayacağımız halde tüm üyelerin emaillerini içeren bir List oluşturularak
+  // bellekte saklanır. List hazır olduktan sonra bu liste bir Set yapısına dönüştürülür.
+  // Tüm veriyi bellekte saklamaya gerek olmaksızın veritabanından veri geldikçe Set yapısına
+  // ekleyen, nonblocking ve asenkron çalışan bir kod parçası ReactiveMongo ile hayal değil.
 
   // Önce sorgu sonucumuza ait bir cursor oluşturuyoruz.
   val cursor = collection.find(BSONDocument(), BSONDocument("email" -> 1)).cursor
@@ -79,9 +80,10 @@ object Reactive {
   cursor.enumerate.apply(Iteratee.fold(Set[String]()) { (accu, doc) =>
     accu ++ doc.getAs[String]("email")
   }).flatMap(i => i.run)
-  // İsterseniz milyonlarca üyeniz olsun yukarıdaki kod parçasında bloklanmayacağını düşünmek bile zor belki ama gerçek.
+  // İsterseniz milyonlarca üyeniz olsun, yukarıdaki kod parçasında bloklanmayacağınızı düşünmek
+  // zor belki ama gerçek.
 }
-%{endhighlight}
+{% endhighlight %}
 
 <p>
 	Kodun nasıl çalıştığını yorum satırları ile açıklamaya çalıştım. Iteratee kütüphanesi bir zamanlar Play projesinin bir parçasıydı ancak artık bağımsız olarak kullanabiliyorsunuz. ReactiveMongo da aslında Play'in asıl geliştiricisi olan Zenexity'den Stephane Godbillon tarafından geliştiriliyor.
