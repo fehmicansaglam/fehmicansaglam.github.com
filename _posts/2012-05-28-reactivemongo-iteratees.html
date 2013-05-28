@@ -1,0 +1,94 @@
+---
+title: "ReactiveMongo ve Iteratees ile MongoDB işlemlerinde bloklanmaya bir son verin"
+layout: post
+description: "Bu yazıda Scala için non-blocking MongoDB driver olan ReactiveMongo'dan bahsetmeye çalışacağım"
+keywords: scala,nonblocking,reactivemongo,mongodb
+---
+
+<blockquote>Yazmayı özlemişim...</blockquote>
+
+<p>
+Bir süredir ortalarda değildim. <a href="http://twitter.com/fehmicansaglam">Twitter hesabımı</a> takip edenler neler olup bittiğinden, hayatımda ne çok şeyin değiştiğinden haberdar olmalılar. Onca koşuşturmaca içinde bugün şöyle bir baktım da yazmayalı iki aydan fazla olmuş. Özlemişim...
+</p>
+
+<p>
+Günün anlam ve önemine dair teknik konulara girmeden evvel hayatımdaki gelişmelerden kısaca bahsedeyim. Bir aydan biraz daha uzun zaman önce Ankara'dan İstanbul'a taşındım. Tam zamanlı olarak <a href="http://vngrs.com">VNGRS</a>(vencırs şeklinde okunuyor) ile çalışmaktayım. <a href="http://bookish.com">Bookish</a> projesinin görevi Scala ile backend uygulamaları geliştirmek olan UNIMOG isimli takımında takım lideri olarak görev aldım. Kalan zamanımda <a href="http://4primes.com">4Primes</a>'taki görevime devam ediyorum. Her ne kadar şu aralar pek zamanım kalmasa da 4Primes benim eksikliğimi pek hissetmiyor.
+</p>
+
+<p>Kendimle ilgili konuları böylece özetledikten sonra asıl konumuza dönebiliriz sanırım. Bu yazıda Scala için non-blocking MongoDB driver olan  <a href="http://reactivemongo.org/">ReactiveMongo</a>'dan bahsetmeye çalışacağım. Son zamanlarda paralel, concurrent, asenkron, blocking, nonblocking kavramlarını sıkça duyduğunuza eminim. Bu konuları bir iki etkinlikte verdiğim <a href="https://github.com/fehmicansaglam/sunumlar/tree/master/reactive-web-programlama">Reactive Web Programlama</a> isimli seminerimde anlatmaya çalışmıştım. Burada da çok kısaca özetlemek istiyorum. Günümüz ihtiyaçları ve donanımları sebebiyle uygulamalarımızın paralel donanımlar(örneğin çok çekirdekli işlemciler) üzerinde çalışabilir olmaları gerekiyor. Paralel yazılımlar ile elimizdeki donanımdan en yüksek verimi alabiliyoruz. Paralel işlemler için threadleri kullanıyoruz. Ancak sınırsız thread oluşturmanın bize bazı maliyetleri var. Bu maliyetleri seminer notlarımdan alıntı yaparak açıklayayım:</p>
+
+<h5>Thread yaşamdöngüsü maliyeti</h5>
+<p>
+	Thread oluşturma ve öldürme maliyetsiz değildir. Çoğu sunucu uygulamasında olduğu gibi istekler sık ve küçük ise her bir istek için yeni bir thread oluşturmak oldukça yüksek kaynak tüketimine sebep olur.
+</p>
+
+<h5>Kaynak tüketimi</h5>
+<p>
+	Aktif threadler sistem kaynaklarını(özellikle bellek) kullanırlar. Kullanılabilir işlemci sayısından daha fazla thread var ise threadler boş dururlar. Boş duran threadler gereksiz yere bellek kullanırlar. İşlemciler için yarışan çok sayıda thread var ise bu durum ayrıca performans kaybına sebep olabilir.
+</p>
+
+<h5>Kararlılık</h5>
+<p>
+	Oluşturulabilecek thread sayısı sınırlıdır. Bu sınır stack size gibi parametrelere ve işletim sisteminin sınırlarına bağlıdır. Bu sınıra ulaştığınızda OOM gibi bir yanıt alırsınız. Bu durumu düzeltmeye çalışmak risklidir. Bunun yerine uygulamanızı bu sınıra ulaşmayacak şekilde tasarlamanız daha kolaydır.
+</p>
+
+<p>
+	Şimdi yukarıdaki konuları nonblocking kavramı birleştirmeye çalışayım. Blocking bir veritabanı driver'ı(hemen hemen tüm jdbc driver'larda olduğu gibi) kullandığınızda veritabanına yaptığınız istek mevcut threadi bloklar. Cevabı beklerken CPU kullanmadığınız halde threadiniz hiçbir iş yapmadan oturmaktadır. CPU kaynağınızı daha verimli kullanmak için thread sayısını artırmaktan başka çareniz kalmaz. Bu kez de yukarıda anlattığım maliyetlere takılırsınız.
+</p>
+
+<p>
+	Nonblocking driverlar veritabanı isteklerinde threadi bloklamazlar. Böylece isteği yapan thread başka işler için kullanılabilir. Veritabanından yanıt geldiğinde gelen yanıt boş bir thread ile işlenir. Dolayısıyla hem CPU verimli kullanılır hem de az sayıda thread ile çok sayıda isteğe hizmet verilebilir. Bu tür driverlar ExecutionContext adı verilen belli sayıda thread içeren bir tür thread havuzu üzerinde çalışırlar.  Böylece söz konusu thread maliyetlerinden de sakınmış oluruz. (ReactiveMongo Akka üzerine kurulmuştur. Her ActorSystem bir ExecutionContext'e ihtiyaç duyar ancak konuyu daha fazla dağıtmak istemediğimden bu kadar bilgi ile bitirmek istiyorum.)
+</p>
+
+<p>
+	Görüldüğü üzere konu tek bir yazıda anlatılamayacak kadar geniş ve derin. ReactiveMongo ile bir kod örneği vererek konuyu biraz daha anlaşılabilir kılmayı umuyorum.
+</p>
+
+%{highlight scala}
+object Reactive {
+  lazy val driver = new MongoDriver
+  lazy val connection = driver.connection(List("127.0.0.1"))
+  lazy val db = connection("db")
+  lazy val collection = dbDomain("uyeler")
+
+  def main(args: Array[String]) {
+
+  // Üyeleri sakladığımız uyeler isimli bir collection var. Her üyenin adı, soyadı ve email adres bilgisi olsun.
+  // Tüm üyelerin email adreslerini alarak bir Set içerisinde saklamak istediğimizi düşünelim.
+  // Tahmin edersiniz ki eğer çok sayıda üye varsa bu işlem saniyeler sürebilir.
+  // Bu da saniyeler boyunca bu threadin bloklanacak olması anlamına gelir.
+  // Fakat ReactiveMongo kullanan aşağıdaki kod tamamen asenkron ve nonblocking çalışır.
+  val futureUyeler: Future[Set[String]] = collection.find(BSONDocument(), BSONDocument("email" -> 1)).cursor.toList.map { list =>
+      list.foldLeft(Set[String]()) { (accu, doc) =>
+        accu ++ doc.getAs[String]("email")
+      }
+    }
+  }
+  // Yukarıda kod bir Future dönmektedir. Aslında bakılırsa hemen hemen tüm ReactiveMongo API çağrıları bir Future döner.
+
+  // Dikkatli gözler yukarıdaki kodun bir dezavantajı olduğunu farketmiş olabilirler.
+  // Aslında kullanmayacağımız halde tüm üyelerin emaillerini içeren bir List oluşturularak bellekte saklanır.
+  // List hazır olduktan sonra bu liste bir Set yapısına dönüştürülür.
+  // Tüm veriyi bellekte saklamaya gerek olmaksızın veritabanından veri geldikçe Set yapısına ekleyen,
+  // nonblocking ve asenkron çalışan bir kod parçası ReactiveMongo ile hayal değil.
+
+  // Önce sorgu sonucumuza ait bir cursor oluşturuyoruz.
+  val cursor = collection.find(BSONDocument(), BSONDocument("email" -> 1)).cursor
+
+  // Iteratee yardımıyla cursor'dan veri geldikçe fold işlemini gerçekleştiriyoruz.
+  cursor.enumerate.apply(Iteratee.fold(Set[String]()) { (accu, doc) =>
+    accu ++ doc.getAs[String]("email")
+  }).flatMap(i => i.run)
+  // İsterseniz milyonlarca üyeniz olsun yukarıdaki kod parçasında bloklanmayacağını düşünmek bile zor belki ama gerçek.
+}
+%{endhighlight}
+
+<p>
+	Kodun nasıl çalıştığını yorum satırları ile açıklamaya çalıştım. Iteratee kütüphanesi bir zamanlar Play projesinin bir parçasıydı ancak artık bağımsız olarak kullanabiliyorsunuz. ReactiveMongo da aslında Play'in asıl geliştiricisi olan Zenexity'den Stephane Godbillon tarafından geliştiriliyor.
+</p>
+
+<p>
+	Bu konuda daha fazla yazarak biraz daha anlaşılır olmasını sağlamayı umuyorum. Yorumlarınızla beni yönlendirebilirseniz memnun olurum.
+</p>
+
+
