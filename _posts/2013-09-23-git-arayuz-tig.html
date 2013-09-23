@@ -1,0 +1,67 @@
+---
+title: "Kalp dostu, stresten uzak tutan bir Git arayüzü: Tig"
+layout: post
+description: "Bir süredir severek kullanmakta olduğum git arayüzü Tig'den bahsedeceğim"
+keywords: tig,git
+---
+
+<p>
+Her yazıma, yazmayalı uzun zaman olmuş diyerek başlamak zorunda kalıyorum artık ne yazık ki. Son dört aydır neler yaptığımı ayrıntılarıyla anlatmayı çok istiyorum aslında (ne kadar merak ettiğiniz konusunda hiçbir fikrim yok) ama bunu ne zaman yapabileceğimi bilemiyorum. Önümüzdeki birkaç hafta, şehir değişimi de dahil olmak üzere, benim için yine büyük değişiklikleri barındırıyor. Bunun dışında efsanevi 4Primes'ı neden kapattık, neler kötü gitti, neler iyi gitti dürüstçe anlatacağım bir yazıyı da kaleme almak (lafın gelişi, klavye kullanıyorum) istiyorum. Tüm bu yazıların ne zaman yazılacağı sorusunun yanıtı ise henüz yok.
+</p>
+
+<p>
+Bugünün derin mevzusuna dönecek olursak, bir süredir severek kullanmakta olduğum git arayüzü <a href="http://jonas.nitro.dk/tig/">Tig</a>'den bahsetmek istiyorum. Yaratıcı ismine aldanmayın; adı kısa, işlevi uzun bir araç kendileri. Daha önceki <a href="/git-flow-bir-gelistirme-surecinin-anatomisi/">yazılarımı</a> okuyanlar git arayüzü olarak SourceTree'yi severek kullandığımı hatırlayacaklardır. Benim gibi hemen tüm işlerini terminal üzerinden halleden biri için bu sıradışı bir durum. Çünkü elimin mouse'a her gidişini zaman kaybı kabul edenlerdenim ben de. İstanbul maceram sırasında VNGRS ekibinde pek çok geliştiricinin 10 parmak yazabildiğini(touch typing) ve hatta Das Keyboard kullandığını görünce aslında kod yazarken yavaş kaldığımı fark ettim. 3 ay kadar bir sürede 10 parmak yazmayı <a href="http://typingstudy.com/">öğrendim</a> (ama bu yazıyı Türkçe karakterler ile yazarken canım acıyor resmen). Yazma hızım dakikada 40 kelimenin üzerine çıkınca mouse'la yapılan işler bana iyice zulüm olmaya başladı. Terminalde kullanabileceğim güzel bir git arayüzü aradım ve Tig ile yollarımız kesişti.
+</p>
+
+<p>
+Terminalden <code>tig</code> komutu ile başlattığımızda uygulama main view ile açılıyor. Aşağıda main view'dan bir ekran görüntüsü yer almakta. Göreceğiniz üzere her commit için birer satırlık özet bilgi veriliyor. En alttaki status satırında görünümün(view) adı, toplam kaç commit olduğu gibi bilgiler de mevcut.
+</p>
+
+<img src="/assets/images/tig/main.png" style="display:block; margin:40px auto">
+
+<p>
+Satırlar arasında j/k ya da yukarı ok/aşağı ok tuşları ile ilerleyebilirsiniz. Herhangi bir satırda enter tuşuna bastığınızda ekran ikiye bölünür ve main view altında diff view görünür duruma gelir. Aşağıda main view ve hemen altında diff view yer alan bir ekran görüntüsü mevcut. Diff görünümünde seçilen commit'e ait diff çok tatlı bir şekilde gösteriliyor. j/k tuşları ile diff görümünde yukarı aşağı hareket edebilir, tab tuşu ile görünümler arasında geçiş yapabilir (seçili olan görünümün sağ köşesinde beyaz bir bar vardır), yukarı ok/aşağı ok ile seçili commit'i kolayca değiştirerek diff'leri hızlıca görebilirsiniz.
+</p>
+
+<img src="/assets/images/tig/diff.png" style="display:block; margin:40px auto">
+
+<p>
+<code>t</code> tuşuna bastığınızda deponuzun seçili commit anındaki halini gösteren bir tree view açılır. Bu görünümde enter tuşu ile dizinlerin içine girebilir ya da dosyaların içeriğini görüntüleyebilirsiniz. Bir üst dizine dönmek için <code>,</code> tuşunu kullanabilirsiniz. Dosya içeriğinde satır numalarını açıp kapatmak için <code>.</code> tuşu kullanılıyor. Main view'a dönmek için ise <code>m</code> tuşuna basmak yeterli.
+</p>
+
+<img src="/assets/images/tig/tree.png" style="display:block; margin:40px auto">
+
+<p>
+<code>B</code> tuşu ile blame görünümüne geçiş yapabiliyorsunuz. Bu görünüme pek çok noktadan gitmek mümkün. Tek şart Tig'in dosya adı elde edebileceği bir durumda olmak. Aşağıda suçlu tespiti için ekran görüntüsü paylaşıyorum:)
+</p>
+
+<img src="/assets/images/tig/blame.png" style="display:block; margin:40px auto">
+
+<p>
+<code>l</code> tuşuna basılarak açılan log view, main view'a kıyasla commit hakkında daha fazla bilgi veriyor. 
+</p>
+
+<img src="/assets/images/tig/log.png" style="display:block; margin:40px auto">
+
+<p>
+Main view'da olduğa gibi yine <code>enter</code> tuşu ile içinde bulunulan commit için diff view açılabiliyor.
+</p>
+
+<img src="/assets/images/tig/log-diff.png" style="display:block; margin:40px auto">
+
+<p>
+Belki en sık kullanılan view olan status görünümünü en sona bıraktım. <code>S</code> tuşu ile ulaşılan bu görünümde çalışma dizinindeki dosyaların durumunu görebilir; <code>u</code> tuşu ile bu dosyaları staging area'ya ekleyebilir, staging area'dan çıkartabilirsiniz.
+</p>
+
+<img src="/assets/images/tig/status.png" style="display:block; margin:40px auto">
+
+<p>
+Status görünümünde <code>C</code> tuşuna bastığınızda commit mesajı yazmanızı sağlamak üzere varsayılan editörününüz (benimki vim) açılır ve mesajı kaydettiğinizde staging area'daki değişiklikler commit edilir.
+</p>
+
+<p>
+Uygulama kısayollarını bir anda öğrenmenin çok kolay olmadığının farkındayım. Ayrıca bahsetmediğim kısayollar ne yazık ki bahsedebildiklerimden daha fazla. Bu sebeple <code>h</code> tuşu ile açılan help view en büyük yardımcınız olacaktır. <a href="http://jonas.nitro.dk/tig/manual.html">Tig kullanım kılavuzunu</a> da en az bir kere okumanızı tavsiye ederim. <code>y</code> tuşu ile stash görünümüne ulaşabileceğinizi de hatırlatarak Tig kullanımında başarılar diliyorum. Yorumlarınızı her zaman ilgi ile beklemekteyim.
+</p>
+
+<p>Bu yazıyı beğendiyseniz beni <a href="http://twitter.com/fehmicansaglam">Twitter üzerinden takip edebilirsiniz.</a></p>
+
