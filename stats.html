@@ -121,6 +121,16 @@ monthData = _.sortBy(monthData, function(item){
 dayData = _.sortBy(dayData, function(item){
     return item.dayInt;
 });
+var monthStd = 0,
+    monthAvgPostCount = postCount / 12,
+    monthMedian = d3.median(monthData, function(item){ 
+        return item.postCount; 
+    });
+for(var i=0; i<12; i++){
+  var diff = monthData[i].postCount - monthAvgPostCount;
+  monthStd += diff*diff;
+}
+monthStd = Math.sqrt(monthStd / 12);
 </script>
 
 
@@ -142,6 +152,11 @@ dayData = _.sortBy(dayData, function(item){
 
     <h3>Aylara göre yazı sayısı dağılımı</h3>
     <div id="month-bar" class="container"></div>
+    <ul>
+        <li><b>Aylık ortalama yazı sayısı:</b> <script>document.write(monthAvgPostCount.toFixed(1));</script>
+        <li><b>Aylık yazı sayısı ortanca değer:</b> <script>document.write(monthMedian);</script>
+        <li><b>Aylık yazı sayısı standart sapma:</b> <script>document.write(monthStd.toFixed(1));</script>
+    </ul>
 
     <h3>Günlere göre yazı sayısı dağılımı</h3>
     <div id="day-bar" class="container"></div>
