@@ -4,22 +4,22 @@ layout: nil
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
  
- <title>Fehmi Can Sağlam.</title>
- <link href="http://fehmicansaglam.net/atom.xml" rel="self"/>
- <link href="http://fehmicansaglam.net/"/>
+ <title>Mustafa Bayer.</title>
+ <link href="http://mustafabayer.com/atom.xml" rel="self"/>
+ <link href="http://mustafabayer.com/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
- <id>http://fehmicansaglam.net/</id>
+ <id>http://mustafabayer.com/</id>
  <author>
-   <name>Fehmi Can Sağlam</name>
-   <email>fehmican.saglam@gmail.com</email>
+   <name>Mustafa Bayer</name>
+   <email>an80x86@gmail.com</email>
  </author>
 
  {% for post in site.posts limit:10 %}
  <entry>
    <title>{{ post.title | xml_escape }}</title>
-   <link href="http://fehmicansaglam.net{{ post.url }}"/>
+   <link href="http://mustafabayer.com{{ post.url }}"/>
    <updated>{{ post.date | date_to_xmlschema }}</updated>
-   <id>http://fehmicansaglam.net{{ post.id }}</id>
+   <id>http://mustafabayer.com{{ post.id }}</id>
    <content type="html">{{ post.content | xml_escape }}</content>
  </entry>
  {% endfor %}
