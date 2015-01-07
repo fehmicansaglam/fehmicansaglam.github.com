@@ -1,0 +1,164 @@
+---
+title: "Bu hafta sinemalarda: HTTP/2 hakkında her şey"
+layout: post
+description: "HTTP/2, SPDY, HTTP persistent connection, HTTP pipelining, HOL blocking"
+keywords:
+---
+
+<p>
+	Yazının başlığı her ne kadar <i>HTTP/2 hakkında her şey olsa da</i> bu yazıda günlük hayatımızın bir parçası haline gelmiş olan bu popüler protokolün yeni bir sürümüne neden ihtiyaç duyduğumuzu açıklamaya çalışacağım, HTTP/2 standardının ayrıntılarına ise çok fazla değinmeyeceğim.
+</p>
+
+<h3>HTTP/2</h3>
+
+<p>
+	HTTP/2 standardı HTTP protokolünün 1999 yılında yayınlanmış 1.1 sürümünden sonraki ilk yeni sürümü olacak. SPDY üzerine kurulu olan HTTP/2, IETF'nin httpbis çalışma grubu tarafından geliştiriliyor.
+</p>
+
+<h4>Hedefler</h4>
+
+<p>
+	<ul>
+		<li>
+			İstemci ve sunucuların HTTP 1.1, 2.0 ve hatta olası diğer protokolleri kullanmayı seçebilmelerini sağlayan bir müzakere mekanizması sunmak.
+		</li>
+		<li>
+			HTTP 1.1 ile yüksek oranda uyumlu olmak.
+		</li>
+		<li>
+			Gecikmeyi azaltarak web tarayıcılarının sayfa yükleme performansını artırmak amacıyla:
+			<ul>
+				<li>
+					HTTP başlıklarını sıkıştırma
+				</li>
+				<li>
+					Server push teknolojileri
+				</li>
+				<li>
+					HTTP 1.1 içindeki <i>HOL blocking</i> problemini çözme
+				</li>
+				<li>
+					Tek bir TCP bağlantısı üzerinden sayfa elemanlarını paralel olarak yükleme
+				</li>
+			</ul>
+		</li>
+	</ul>
+</p>
+
+<h4>Tarayıcı desteği</h4>
+
+<p>
+	<ul>
+		<li>Chrome</li>
+		<li>Firefox 34+: Şu anda yalnızca TLS üzerinden HTTP/2 gerçeklenmiş durumda.</li>
+		<li>Windows 10 Technical Preview üzerinde IE 11: Şu anda yalnızca TLS üzerinden HTTP/2 gerçeklenmiş durumda.</li>
+	</ul>
+</p>
+
+<h3>HTTP persistent connection</h3>
+
+<p>
+	Şimdi <i>HTTP/2</i>'ye giden yoldan hep beraber yürümeye çalışalım. İlk sapağımız olan <code>HTTP persistent connection</code>(kalıcı bağlantı), <code>HTTP keep-alive</code> ya da <code>HTTP connection reuse</code> olarak da isimlendirilebiliyor. Bu yöntem her bir istek/yanıt çifti için yeni bir bağlantı açmak yerine tek bir TCP bağlantısı üzerinden birden fazla HTTP istek ve yanıtını gönderip almayı sağlıyor.
+ </p>
+
+ <h4>HTTP 1.0</h4>
+
+ <p>
+ 	HTTP 1.0 sürümünde eğer istemci <code>keep-alive</code> destekliyorsa isteğe <code>Connection: Keep-Alive</code> başlığını ekler. Sunucu bir yanıt ürettiğinde o da yanıta <code>Connection: Keep-Alive</code> başlığını ekler.
+ </p>
+
+ <h4>HTTP 1.1</h4>
+
+ <p>
+ 	HTTP 1.1 sürümünde aksi belirtilmediği sürece tüm bağlantılar kalıcı kabul edilirler. Aşağıdaki şekilde kalıcı ve çoklu bağlantıların zamana göre akışını görebiliyoruz.
+ </p>
+
+ <img src="/assets/images/HTTP_persistent_connection.svg" style="display:block; margin:40px auto"/>
+
+<h4>Avantajları</h4>
+
+<p>
+	<ul>
+		<li>Daha az CPU ve bellek kullanımı (çünkü daha az bağlantı açılır)</li>
+		<li>HTTP pipelining kullanılabilmesine olanak sağlar</li>
+		<li>Ağ tıkanıklığını azaltır (daha az TCP bağlantısı)</li>
+		<li>Art arda isteklerde daha az gecikme (TCP handshaking yapılmadığı için)</li>
+	</ul>
+</p>
+
+<h3>HTTP pipelining</h3>
+
+<p>
+	İkinci sapağımız olan <code>HTTP pipelining</code> tek bir TCP bağlantısı üzerinden birden fazla HTTP isteğinin karşılık gelen yanıtları beklemeden gönderilmesi yöntemidir. Aşağıdaki şekilde HTTP pipelining yokken ve varken oluşan akışı görebiliyoruz.
+</p>
+
+<img src="/assets/images/HTTP_pipelining.svg" style="display:block; margin:40px auto"/>
+
+<p>
+	<code>HTTP pipelining</code> ile gelen hız kazancı geniş bant bağlantılarda daha az hissedilir. Bunun ana nedeni HTTP 1.1 standardına göre sunucunun yanıtları isteklerin alınma sırasına göndermek zorunda olmasıdır. Bu sebeple tüm bağlantı <code>first-in-first-out</code> olur ve <code>HOL blocking</code> oluşabilir.
+</p>
+
+<p>
+	Web tarayıcıların büyük kısmında <code>HTTP pipelining</code> varsayılan olarak devre dışıdır. Bunun nedeni olarak uygulamada karşılaşılan aşağıdaki durumları sayabiliriz:
+	<ul>
+		<li>
+			Muhafazakar sunucular: Bazı sunucular pipelining kullanılarak gönderilen istekleri yavaşlatabilir ya da istemci pipelining yapmaya çalıştığında bağlantıyı kapatabilir.
+		</li>
+		<li>
+			Şaşkın sunucular: Bazı sunucular pipelining kullanılarak gönderilen isteklere yanlış sırada yanıt verebilir. Hatta bazıları yanıtları bozabilir.
+		</li>
+		<li>
+			HOL blocking.
+		</li>
+		<li>
+			HTTP pipelining düzgün bir başarısızlık senaryosu tanımlamaz. Sunucu bağlantıyı kapattığında hangi isteklerin düzgün şekilde işlendiğini bilmenin bir yolu yoktur. Bu durum POST gibi non-idempotent istekler için pipelining kullanılmamasının en önemli nedenidir.
+		</li>
+	</ul>
+</p>
+
+<h3>HOL blocking</h3>
+
+<p>
+	Şimdiye dek önemli bir problem olarak karşımıza çıkan <code>HOL blocking</code> sorununun ne olduğuna da değinmek gerekiyor. HTTP 1.x çoklu istekleri için gönderilen yanıtlar istek sırasına göre olmalıdır. Bir HTTP istemcinin sunucuya aynı TCP bağlantısı üzerinden iki istek gönderdiğini düşünelim. İlk yanıtın içerik boyutu çok büyük iken ikinci yanıtın içerik boyutu görece küçük olsun. HTTP 1.x protokolünün doğası gereği ikinci yanıt ilk yanıtın tamamlanmasını beklemek zorundadır. Bu durumda ikinci yanıt birinci yanıt tarafından head-of-line bloklanmıştır.
+</p>
+
+<p>
+	HTTP/2 ve SPDY gibi çoklanmış protokoller ile HOL-blocking engellenebilmektedir. Çünkü bu protokoller ile yanıtlar istemciye paralel olarak gönderilebilmektedir. Böylece yukarıdaki örnekte belirtilen ikinci yanıt ilk yanıttan önce istemciye ulaşabilmektedir.
+</p>
+
+<h3>HTTP/2 protokolü</h3>
+
+<p>
+	Yazının başında da belirttiğim gibi bu yazıda HTTP/2 protokolünün ayrıntılarına çok fazla değinmeyeceğim. Yine de protokolün özelliklerinden kısaca bahsetmeye çalışayım. Daha fazla ayrıntı için <a href="http://www.ietf.org/id/draft-ietf-httpbis-http2-16.txt">HTTP/2 draft</a>'ı okuyabilirsiniz.
+</p>
+
+<p>
+	HTTP/2 tek bir bağlantı üzerinde çoklamayı sağlayabilmek için <code>stream</code> adı verilen mantıksal bağlantılar/yollar kullanır. Veri akışı <code>frame</code> adı verilen paketler aracılığıyla sağlanır. Her frame'in başlangıcında hangi stream'e ait olduğu bilgisini de taşıyan 9 bayt uzunluğunda bir başlık yer alır. Frame formatı aşağıdaki gibidir:
+</p>
+
+<p>
+	<pre>
+Length            (24 bit) : Payload boyutu (9 baytlık başlık hariç)
+Type              (8 bit)  : Frame türü
+Flags             (8 bit)  : Bayraklar
+R                 (1 bit)  : Rezerve. Değeri 0 olmalıdır.
+Stream Identifier (31 bit) : Stream tanımlayıcı. 0 değeri bağlantının tümünü ilgilendiren frame'ler için ayrılmıştır.
+Payload                    : Length ile belirtilmiş kadar bayt uzunluğundadır.
+	</pre>
+</p>
+
+<p>
+	<ul>
+		<li>
+			İstemci tarafından başlatılan stream'lerin id'leri tek, sunucu tarafından başlatılanlar çift olmalıdır.
+		</li>
+		<li>
+			Stream identifier'lar tekrar kullanılamazlar. Yeni bir stream başlatamayan istemci yeni stream için yeni bir bağlantı açabilir. Yeni bir stream başlatamayan sunucu ise <code>GOAWAY</code> frame'i göndererek istemciyi yeni stream'ler için yeni bir bağlantı açmaya zorlayabilir.
+		</li>
+	</ul>
+</p>
+
+<p>
+	Bu yazının HTTP/2 konusunda bilgi sahibi olmak adına güzel bir özet olduğunu umuyorum. Şimdiden HTTP/2 desteği veren tarayıcıları ve sunucuları takip ederek standart yayınlandığı andan itibaren performans kazancının tadını çıkarmanızı dilerim.
+</p>
+
