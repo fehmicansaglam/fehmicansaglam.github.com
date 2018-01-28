@@ -10,18 +10,6 @@
 <title>{{ page.title }}</title>
 <div id="title"><a href="/" id="home">geri</a><h1>{{ page.title  | xml_escape }}</h1></div>
 <div id="a"><h5 id="date">{{ page.date | date: "%d/%m/%Y" }}</h5><div id="share"><a href="https://twitter.com/share" class="twitter-share-button" data-via="fehmicansaglam" data-lang="tr" data-size="large">Paylaş</a></div>{{ content }}<p>Follow me on <a href="http://twitter.com/fehmicansaglam">Twitter</a></p></div>
-<div id="comments" class="section">
-  <div id="disqus_thread"></div>
-  <a href="http://disqus.com" class="dsq-brlink attribution">yorumlar <span class="logo-disqus">Disqus</span> aracılığıyla sunulmaktadır</a>
-</div>
 <script type="text/javascript">
 !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-var disqus_shortname = 'fehmicansaglam', disqus_url = 'http://fehmicansaglam.net{{ page.url }}';
-{% if page.disqus_id %}var disqus_identifier = {{ page.disqus_id }};{% else %}var disqus_identifier = '{{ page.url }}';{% endif %}
-(function() {
- var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
- dsq.src = 'http://fehmicansaglam.disqus.com/embed.js';
- (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-})();
 </script>
-<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript=fehmicansaglam">comments powered by Disqus.</a></noscript>
