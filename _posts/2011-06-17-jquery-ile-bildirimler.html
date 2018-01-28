@@ -1,5 +1,5 @@
---- 
-meta: 
+---
+meta:
   Hide OgTags: "0"
   dsq_thread_id: "339327161"
   _edit_last: "1"
@@ -8,8 +8,8 @@ type: post
 title: jQuery ile bildirimler
 status: publish
 layout: post
-published: true
-tags: 
+published: false
+tags:
 - canavARGE
 ---
 Aşağıdaki görüntüdekine benzer şekilde bildirimler oluşturmak jQuery ile oldukça kolay. Benzer işlevi sağlayan pek çok jQuery plugini olsa da kendi geliştirdiğim(bir kısmını da <a href="http://pandiyachendur.blogspot.com/2010/07/twitter-like-notification-bar-in-jquery.html">buradan</a> ödünç aldığım) aşağıdaki kodun mevcut pluginlerden daha esnek olduğunu düşünüyorum(tamamen duygusal:)).
@@ -17,7 +17,7 @@ Aşağıdaki görüntüdekine benzer şekilde bildirimler oluşturmak jQuery ile
 <img src="http://fehmicans.net/blog/wp-content/uploads/2011/06/Screen-shot-2011-06-17-at-4.06.56-PM.png" alt="" title="Screen shot 2011-06-17 at 4.06.56 PM" />
 </center>
 <!--more-->
-Plugini kullanmak için yapmanız gereken aşağıdaki kodu jquery.notification.js adıyla kaydetmek ve html sayfanıza dahil etmek. 
+Plugini kullanmak için yapmanız gereken aşağıdaki kodu jquery.notification.js adıyla kaydetmek ve html sayfanıza dahil etmek.
 
 [cc lang="javascript"]
 (function($) {
@@ -49,7 +49,7 @@ Plugini kullanmak için yapmanız gereken aşağıdaki kodu jquery.notification.
 			if (options) {
 				$.extend(true, settings, options);
 			}
-			
+
 			var $div = $('#notification');
 			if ($div.length == 0) {
 				$div = $('<div id="notification"/>');
@@ -82,10 +82,10 @@ Ekran görüntüsündeki gibi kırmızı tonlarında bir yazı rengi kullanmak i
 
 [cc lang="javascript"]
 $.notification({
-   text: 'Giriş başarısız', 
-   css: { 
-       'color': 'maroon' 
-   } 
+   text: 'Giriş başarısız',
+   css: {
+       'color': 'maroon'
+   }
 });
 [/cc]
 
@@ -94,10 +94,10 @@ Değiştirmek istediğiniz diğer stilleri css içine ekleyebilirsiniz.
 
 [cc lang="javascript"]
 $.notification({
-   text: 'Giriş başarısız', 
-   css: { 
+   text: 'Giriş başarısız',
+   css: {
        'color': 'maroon' ,
        'background-color': '#000'
-   } 
+   }
 });
 [/cc]
