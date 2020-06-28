@@ -1,0 +1,66 @@
+---
+published: true
+---
+<!DOCTYPE html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name=description content="Yazılım ve masabaşı çalışanlar için sağlıklı yaşam hakkında yazıyorum">
+<meta name="twitter:title" content="Fehmi Can Sağlam"/>
+<meta name="twitter:description" content="Yazılım ve masabaşı çalışanlar için sağlıklı yaşam hakkında yazıyorum"/>
+<meta name="twitter:card" content="summary"/>
+<meta name="twitter:site" content="@fehmicansaglam"/>
+<meta name="twitter:creator" content="@fehmicansaglam"/>
+<link href=atom.xml rel=alternate type=application/atom+xml>
+<title>Masabaşı Çalışanlar için Sağlıklı Yaşam</title>
+<style>
+body {
+	width: 920px;
+	margin: auto;
+	font-family: Tahoma, Arial, Helvetica, sans-serif;
+	background: #FEFEFE;
+}
+
+a {
+	color: #047
+}
+
+a:hover {
+	color: #c51
+}
+
+p.right {
+	float: right;
+}
+
+ul {
+	list-style: none;
+	padding: 0
+}
+
+li,
+li a {
+	padding: 15px
+}
+
+a {
+	padding: 9px
+}
+
+h3>span {
+	float: right
+}
+
+img {
+	width: 66%;
+	display: block;
+	margin: 0 auto;
+}
+</style>
+<script>var _gaq=[['_setAccount','UA-4489548-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
+</head>
+<p class="right"><a href=index.html>Ana Sayfa</a><a href=ben.html>ben</a><a href=//github.com/fehmicansaglam>github</a><a href=//twitter.com/fehmicansaglam>twitter</a><a href=stats.html>istatistik</a><a href=atom.xml>rss</a></p>
+<h1>Fehmi Can Sağlam.</h1>
+{% assign posts = site.categories.saglik | sort: 'date' %}
+{% for post in posts %}
+<h3>{{ post.title | escape}} <span>{{ post.date | date: "%d.%m.%Y" }}</span> </h3>
+{{ post.content }}
+{% endfor %}
