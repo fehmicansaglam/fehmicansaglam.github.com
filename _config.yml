@@ -1,1 +1,3 @@
-permalink: /:titlemarkdown: kramdownhighlighter: pygments
+permalink: /:title
+markdown: kramdown
+highlighter: rouge
