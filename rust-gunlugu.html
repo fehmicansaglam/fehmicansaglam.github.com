@@ -11,7 +11,7 @@ published: true
 <meta name="twitter:site" content="@fehmicansaglam"/>
 <meta name="twitter:creator" content="@fehmicansaglam"/>
 <link href=atom.xml rel=alternate type=application/atom+xml>
-<title>Masabaşı Çalışanlar için Sağlıklı Yaşam</title>
+<title>Rust günlükleri</title>
 <style>
 body {
 	max-width: 920px;
@@ -61,8 +61,8 @@ img {
 <script>var _gaq=[['_setAccount','UA-4489548-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
 </head>
 <p class="right"><a href=index.html>ana sayfa</a><a href=//github.com/fehmicansaglam>github</a><a href=//twitter.com/fehmicansaglam>twitter</a><a href=stats.html>istatistik</a><a href=atom.xml>rss</a></p>
-<h1>Sağlıklı yaşam.</h1>
-{% assign posts = site.categories.saglik | sort: 'date' %}
+<h1>Rust günlüğü.</h1>
+{% assign posts = site.categories.rust | sort: 'date' %}
 {% for post in posts %}
 <h3>{{ post.title | escape}} <span>{{ post.date | date: "%d.%m.%Y" }}</span> </h3>
 {{ post.content }}
