@@ -16,7 +16,7 @@ struct Stats {
 
 Tamsayılar içeren bir collection hakkında eleman sayısı, toplam ve ortalama gibi basit istatistikler tutan veri yapısını yukarıdaki gibi tanımladım. *#[derive(Debug)]* satırı ile compiler bizim için Debug traitini gerçekliyor ve println! ile ayrıntılı çıktı basabilmemizi sağlıyor.
 
-Şimdi de Stats tipi için FromIterator traitini implement edelim. Basitçe iteator üzerinde dolaşacağız ve istatistikleri üretip Stats içinde döneceğiz.
+Şimdi de Stats tipi için FromIterator traitini implement edelim. Basitçe iterator üzerinde dolaşacağız ve istatistikleri üretip Stats içinde döneceğiz.
 
 ```rust
 impl FromIterator<i32> for Stats {
