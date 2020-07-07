@@ -39,8 +39,8 @@ impl FromIterator<i32> for Stats {
 Artık bir tamsayı listesinden Stats nesnesine dönüşüm yapabiliriz. Aşağıdaki örnek 1 ve 4 kapalı aralığındaki sayılar için istatistik hesaplıyor.
 
 ```rust
-    let stats: Stats = (1..=4).into_iter().collect();
-    println!("{:?}", stats)
+let stats: Stats = (1..=4).into_iter().collect();
+println!("{:?}", stats)
 ```
 
 Debug traiti bizim için implement edildiğinden println! çıktısı epeyce ayrıntılı oluyor.
