@@ -5,7 +5,7 @@ category: rust
 ---
 Scala'da her şey bir expression(ifade). Bunun faydalarını gördükten sonra yalnızca statement'lar ile çalışan diller beni çok zorlamaya başladı. Örneğin Java yazarken bu durumdan oldukça rahatsızım. Expression bir değer üretir ve dönerken, statement aslında bir tür durum veya emir belirtir. Dolayısıyla statement'lar imperative dillerin, expression'lar da fonksiyonel dillerin temel bileşenleridir. Expression ve statement farkını örneklerle anlatmaya çalışayım.
 
-Rust'ta fonksiyonun veye bir bloğun son satırındaki ifade fonksiyonun dönüş değeridir. Bu nedenle return yazmanıza gerek yoktur.
+Rust'ta fonksiyonun veya bir bloğun son satırındaki ifade fonksiyonun dönüş değeridir. Bu nedenle return yazmanıza gerek yoktur.
 
 ```rust
 fn square(a: i32) -> i32 {
@@ -66,6 +66,6 @@ fn get_user_name(id: i32) -> Result<String, String> {
 }
 ```
 
-Bir dil statement'lardan oluşuyorsa o dilde mutability ve side effect'ler var demektir. Oysa biz hatasız uygulamalar yazmak için bunlardan kaçınıyoruz. Rust expressionlar ile kod yazmamıza imkan veriyor. Bu yüzden hatasız uygulamaları ifade özgürlüğümüz var. Yarın başka bir konu ile görüşmek üzere👋
+Bir dil statement'lardan oluşuyorsa o dil mutability ve side effect üzerine kurulmuş demektir. Oysa biz hatasız uygulamalar yazmak için bunlardan kaçınıyoruz. Rust, expressionlar ile kod yazmamıza imkan veriyor. Bu yüzden hatasız uygulamaları ifade özgürlüğümüz var. Yarın başka bir konu ile görüşmek üzere👋
 
 
