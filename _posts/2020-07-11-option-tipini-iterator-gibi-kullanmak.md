@@ -41,7 +41,7 @@ for v in maybe_name.iter().zip(vec.iter()) {
 // ("Fehmi Can Saglam", 0)
 ```
 
-Her ne kadar vectör içinde 4 eleman olsa da diğer iterator 1 elemanlı olduğu için zip metodu 1 elemanlı bir iterator üretti. Şimdi de *chain* metodu ile bir vektör ve bir option'ı uç uca bağlayalım.
+Her ne kadar vektör içinde 4 eleman olsa da diğer iterator 1 elemanlı olduğu için zip metodu 1 elemanlı bir iterator üretti. Şimdi de *chain* metodu ile bir vektör ve bir option'ı uç uca bağlayalım.
 
 ```rust
 let vec = vec![0, 1, 2, 3];
