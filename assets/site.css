@@ -265,6 +265,7 @@ img {
   color: var(--muted);
   font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
   font-size: 0.82rem;
+  text-align: right;
 }
 
 .mono {
