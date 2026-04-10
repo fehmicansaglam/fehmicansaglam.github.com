@@ -93,6 +93,10 @@ img {
   border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
 }
 
+.about .page-card {
+  border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
+}
+
 .site-nav {
   display: flex;
   align-items: center;
@@ -208,7 +212,6 @@ img {
 .post-list {
   list-style: none;
   margin: 1rem 0 0;
-  border-top: 1px solid var(--line);
 }
 
 .post-item {
