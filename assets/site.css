@@ -83,7 +83,7 @@ img {
 .brand-subtitle {
   color: var(--muted);
   font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
-  font-size: 0.58rem;
+  font-size: 0.75rem;
   opacity: 0.85;
   letter-spacing: 0.02em;
   line-height: 1.2;
