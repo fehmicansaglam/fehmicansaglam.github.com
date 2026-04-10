@@ -60,4 +60,3 @@ I consider myself lucky since I am doing what I really enjoy and get paid for it
 
 That said, coding is very challenging, which is both good and bad. It requires commitment, continuous learning, and hard work. I hope my experience gives you a hint and makes it easier for you to decide on your career path.
 
-If you liked this article, then you might also want to check out [how different programming languages inspired me](https://fehmicansaglam.medium.com/why-rust-excites-me-ed42b78f7bee) throughout my career.
