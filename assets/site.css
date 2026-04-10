@@ -83,7 +83,9 @@ img {
 .brand-subtitle {
   color: var(--muted);
   font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
-  font-size: 0.7rem;
+  font-size: 0.58rem;
+  opacity: 0.85;
+  letter-spacing: 0.02em;
   line-height: 1.2;
 }
 
@@ -236,6 +238,12 @@ img {
 
 .post-item:hover .post-date,
 .post-item:focus-within .post-date {
+  color: var(--red);
+}
+
+.post-link:hover ~ .post-date,
+.post-link:focus-visible ~ .post-date,
+.post-date:hover {
   color: var(--red);
 }
 
