@@ -79,7 +79,7 @@ I trained the same muscle group every day. Without rest days between workouts, m
 
 ## What about age?
 
-I was 38 at the time of the experiment. Thirty-eight is not old, but definitely not very young either.
+At the time of the experiment, I was in my late thirties, but definitely not old either.
 
 A 20-year-old might need less recovery time, so the results might differ. If you are younger, I still recommend trying this experiment yourself and comparing your data.
 
@@ -88,7 +88,3 @@ A 20-year-old might need less recovery time, so the results might differ. If you
 I am planning to run a push/pull challenge soon: 100 push-ups one day and 20 pull-ups the next day.
 
 That means 15 days of push-ups and 15 days of pull-ups in 30 days. Since each workout will train different muscle groups, I hope I will get enough recovery this time and increase max reps per set linearly.
-
----
-
-If you did a similar experiment, I would love to hear your results.
