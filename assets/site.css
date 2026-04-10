@@ -89,14 +89,6 @@ img {
   line-height: 1.2;
 }
 
-.home .page-card {
-  border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
-}
-
-.about .page-card {
-  border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
-}
-
 .site-nav {
   display: flex;
   align-items: center;
@@ -116,6 +108,7 @@ img {
 .page-card {
   background: var(--surface);
   border: 1px solid var(--line);
+  border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
   border-radius: var(--radius);
   padding: clamp(1.2rem, 2vw, 2rem);
 }
