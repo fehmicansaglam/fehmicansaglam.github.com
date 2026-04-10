@@ -9,9 +9,10 @@ I cannot say it was a conscious or well-informed decision when I first started c
 
 That said, love is not enough to pick something as a profession and build a career on top of it. There are many options to choose from on the hopefully long path of life, and I would like to tell you my story.
 
-![A long path. Karower Teiche, Berlin.](/assets/images/why-i-chose-coding-0.png)
-
-A long path. Karower Teiche, Berlin.
+<figure>
+  <img src="/assets/images/why-i-chose-coding-0.png" alt="A long path. Karower Teiche, Berlin.">
+  <figcaption>A long path. Karower Teiche, Berlin.</figcaption>
+</figure>
 
 **Disclaimer:** All the terms I mention in this article are only defined by my perception, which might (and probably will) be wrong.
 
