@@ -57,6 +57,8 @@ Ideally, the increase should be linear and I should be able to do more reps ever
 
 I love charts, and this article would be incomplete without one. The chart below shows the max number of push-ups I did in a single set from day 1 to day 30.
 
+![Max number of push-ups in a single set from day 1 to day 30](/assets/images/100-push-ups-challenge-1.png)
+
 Max number of push-ups I did in a single set from day 1 to 30.
 
 On the very first day of the experiment, I was able to do only 26 push-ups in the first set. However, there was almost linear growth during the first couple of days and I was able to do 36 push-ups on day 12, 10 more compared to day 1.
