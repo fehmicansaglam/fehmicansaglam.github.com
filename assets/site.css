@@ -89,16 +89,6 @@ img {
   line-height: 1.2;
 }
 
-.accent-dot {
-  display: inline-block;
-  width: 0.42rem;
-  height: 0.42rem;
-  margin-left: 0.35rem;
-  border-radius: 999px;
-  background: var(--red);
-  vertical-align: middle;
-}
-
 .home .page-card {
   border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
 }
