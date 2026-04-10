@@ -252,6 +252,12 @@ img {
   line-height: 1.45;
 }
 
+.archive-link {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
+}
+
 .post-item:hover .post-date,
 .post-item:focus-within .post-date {
   color: var(--red);

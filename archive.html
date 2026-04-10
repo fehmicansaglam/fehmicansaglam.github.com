@@ -6,21 +6,19 @@ published: true
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Software engineering notes by Fehmi Can Saglam.">
-  <title>Fehmi Can Saglam</title>
+  <meta name="description" content="Archive posts published before 2022.">
+  <title>Archive - Fehmi Can Saglam</title>
   <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Fehmi Can Saglam feed">
   <link rel="stylesheet" href="/assets/site.css">
 </head>
-<body class="home">
+<body>
   <header class="site-header">
     <div class="container nav-wrap">
-      <div class="brand-block">
-        <a class="brand" href="/">Fehmi Can Saglam</a>
-        <p class="brand-subtitle">I code, I run, I write.</p>
-      </div>
+      <a class="brand" href="/">Fehmi Can Saglam.</a>
       <nav class="site-nav" aria-label="Primary">
         <a href="/about.html">About</a>
         <a href="/saglikli-yasam.html">Health</a>
+        <a href="/archive.html">Archive</a>
         <a href="https://github.com/fehmicansaglam">GitHub</a>
         <a href="https://twitter.com/fehmicansaglam">X</a>
         <a href="/atom.xml">RSS</a>
@@ -30,24 +28,25 @@ published: true
 
   <main class="container page-main">
     <section class="page-card">
+      <h1 class="page-title">Archive</h1>
+      <p class="lead">Posts published before 2022 (mostly in Turkish).</p>
       <ul class="post-list">
         {% for post in site.posts %}
           {% assign post_year = post.date | date: "%Y" %}
-          {% if post_year >= "2022" %}
-          <li class="post-item">
-            <div class="post-main">
-              <a class="post-link" href="{{ post.url }}">{{ post.title | escape }}</a>
-              {% assign clean_excerpt = post.excerpt | strip_html | strip_newlines | normalize_whitespace %}
-              {% if clean_excerpt != "" %}
-                <p class="post-excerpt">{{ clean_excerpt | truncate: 130 }}</p>
-              {% endif %}
-            </div>
-            <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
-          </li>
+          {% if post_year < "2022" %}
+            <li class="post-item">
+              <div class="post-main">
+                <a class="post-link" href="{{ post.url }}">{{ post.title | escape }}</a>
+                {% assign clean_excerpt = post.excerpt | strip_html | strip_newlines | normalize_whitespace %}
+                {% if clean_excerpt != "" %}
+                  <p class="post-excerpt">{{ clean_excerpt | truncate: 130 }}</p>
+                {% endif %}
+              </div>
+              <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
+            </li>
           {% endif %}
         {% endfor %}
       </ul>
-      <p class="archive-link"><a href="/archive.html">Older posts (mostly in Turkish)</a></p>
     </section>
   </main>
 
