@@ -260,22 +260,14 @@ img {
   color: var(--red);
 }
 
-.mono {
+.post-signature {
+  margin-top: 1.6rem;
+  color: var(--muted);
   font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
+  font-size: 0.82rem;
 }
 
-.fcs-chip {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 2.2rem;
-  padding: 0.16rem 0.5rem;
-  border-radius: 999px;
-  border: 1px solid var(--line);
-  color: var(--blue);
-  background: var(--blue-soft);
-  font-size: 0.72rem;
-  letter-spacing: 0.04em;
+.mono {
   font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
 }
 
