@@ -79,9 +79,7 @@ I trained the same muscle group every day. Without rest days between workouts, m
 
 ## What about age?
 
-At the time of the experiment, I was in my late thirties, but definitely not old either.
-
-A 20-year-old might need less recovery time, so the results might differ. If you are younger, I still recommend trying this experiment yourself and comparing your data.
+At the time of the experiment, I was in my late thirties. A 20-year-old might need less recovery time, so the results might differ. If you are younger, I still recommend trying this experiment yourself and comparing your data.
 
 ## Next steps
 
