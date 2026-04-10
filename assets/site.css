@@ -74,6 +74,33 @@ img {
   text-decoration: none;
 }
 
+.brand-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.06rem;
+}
+
+.brand-subtitle {
+  color: var(--muted);
+  font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
+  font-size: 0.7rem;
+  line-height: 1.2;
+}
+
+.accent-dot {
+  display: inline-block;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin-left: 0.35rem;
+  border-radius: 999px;
+  background: var(--red);
+  vertical-align: middle;
+}
+
+.home .page-card {
+  border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
+}
+
 .site-nav {
   display: flex;
   align-items: center;
@@ -204,6 +231,12 @@ img {
   color: var(--muted);
   font-size: 0.82rem;
   font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
+  transition: color 160ms ease;
+}
+
+.post-item:hover .post-date,
+.post-item:focus-within .post-date {
+  color: var(--red);
 }
 
 .mono {

@@ -11,10 +11,13 @@ published: true
   <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Fehmi Can Saglam feed">
   <link rel="stylesheet" href="/assets/site.css">
 </head>
-<body>
+<body class="home">
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="brand" href="/">Fehmi Can Saglam.</a>
+      <div class="brand-block">
+        <a class="brand" href="/">Fehmi Can Saglam.</a>
+        <p class="brand-subtitle">I code, I write, I run.<span class="accent-dot" aria-hidden="true"></span></p>
+      </div>
       <nav class="site-nav" aria-label="Primary">
         <a href="/ben.html">About</a>
         <a href="/saglikli-yasam.html">Health</a>
@@ -27,9 +30,6 @@ published: true
 
   <main class="container page-main">
     <section class="page-card">
-      <h1 class="page-title">I code, I write, I run.</h1>
-      <p class="lead">Software engineering notes, and occasional posts on health.</p>
-
       <ul class="post-list">
         {% for post in site.posts %}
           <li class="post-item">
