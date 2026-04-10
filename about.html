@@ -3,9 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{{ page.description | default: site.description | default: 'Notes on software engineering and focused writing by Fehmi Can Saglam.' }}">
-  <title>{{ page.title | xml_escape }} - Fehmi Can Saglam</title>
-  <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Fehmi Can Saglam feed">
+  <meta name="description" content="About Fehmi Can Saglam.">
+  <title>About - Fehmi Can Saglam</title>
   <link rel="stylesheet" href="/assets/site.css">
 </head>
 <body>
@@ -14,7 +13,6 @@
       <a class="brand" href="/">Fehmi Can Saglam.</a>
       <nav class="site-nav" aria-label="Primary">
         <a href="/">Home</a>
-        <a href="/about.html">About</a>
         <a href="/saglikli-yasam.html">Health</a>
         <a href="/atom.xml">RSS</a>
       </nav>
@@ -23,15 +21,20 @@
 
   <main class="container page-main">
     <article class="page-card">
-      <h1 class="page-title">{{ page.title | xml_escape }}</h1>
-      <div class="post-content">{{ content }}</div>
+      <p class="fcs-chip">FCS</p>
+      <h1 class="page-title">About</h1>
+      <div class="post-content">
+        <p>I am Fehmi Can Saglam ("Can" is pronounced like "Jaan"). I write about software engineering, systems thinking, and occasionally focused habits for desk-based work.</p>
+        <p>I publish monthly, mostly in plain Markdown, with occasional photos when they add context.</p>
+        <p>You can find me on <a href="https://github.com/fehmicansaglam">GitHub</a>, <a href="https://twitter.com/fehmicansaglam">X</a>, and <a href="https://www.linkedin.com/in/fehmicansaglam/">LinkedIn</a>.</p>
+      </div>
     </article>
   </main>
 
   <footer class="site-footer">
     <div class="container footer-wrap">
       <span class="fcs-chip">FCS</span>
-      <p>Minimal writing on engineering and life.</p>
+      <p>Thanks for reading.</p>
     </div>
   </footer>
 </body>
