@@ -209,6 +209,11 @@ img {
   border-bottom: 1px solid var(--line);
 }
 
+.post-main {
+  min-width: 0;
+  flex: 1 1 26rem;
+}
+
 .post-link {
   color: var(--text);
   text-decoration: none;
@@ -224,6 +229,13 @@ img {
   font-size: 0.82rem;
   font-family: "IBM Plex Mono", Menlo, Monaco, monospace;
   transition: color 160ms ease;
+}
+
+.post-excerpt {
+  margin-top: 0.28rem;
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.45;
 }
 
 .post-item:hover .post-date,

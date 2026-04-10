@@ -33,7 +33,13 @@ published: true
       <ul class="post-list">
         {% for post in site.posts %}
           <li class="post-item">
-            <a class="post-link" href="{{ post.url }}">{{ post.title | escape }}</a>
+            <div class="post-main">
+              <a class="post-link" href="{{ post.url }}">{{ post.title | escape }}</a>
+              {% assign clean_excerpt = post.excerpt | strip_html | strip_newlines | normalize_whitespace %}
+              {% if clean_excerpt != "" %}
+                <p class="post-excerpt">{{ clean_excerpt | truncate: 130 }}</p>
+              {% endif %}
+            </div>
             <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
           </li>
         {% endfor %}
