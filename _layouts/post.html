@@ -1,15 +1,43 @@
-<!DOCTYPE html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="description" content="{{ page.description }}"/>
-<meta name="keywords" content="{{ page.keywords }}"/>
-<link href="/assets/site.css?v2" rel="stylesheet">
-<link href="/assets/pygments/default.css" rel="stylesheet">
-<link href="/atom.xml" rel="alternate" type="application/atom+xml">
-<script>var _gaq=[['_setAccount','UA-4489548-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="{{ page.description | default: site.description | default: 'Notes on software engineering and focused writing by Fehmi Can Saglam.' }}">
+  {% if page.keywords %}<meta name="keywords" content="{{ page.keywords }}">{% endif %}
+  <title>{{ page.title | xml_escape }} - Fehmi Can Saglam</title>
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Fehmi Can Saglam feed">
+  <link rel="stylesheet" href="/assets/site.css">
+  <link rel="stylesheet" href="/assets/pygments/default.css">
 </head>
-<title>{{ page.title }}</title>
-<div id="title"><a href="/" id="home">geri</a><h1>{{ page.title  | xml_escape }}</h1></div>
-<div id="a"><h5 id="date">{{ page.date | date: "%d/%m/%Y" }}</h5><div id="share"><a href="https://twitter.com/share" class="twitter-share-button" data-via="fehmicansaglam" data-lang="tr" data-size="large">Paylaş</a></div>{{ content }}<p>Follow me on <a href="http://twitter.com/fehmicansaglam">Twitter</a></p></div>
-<script type="text/javascript">
-!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="https://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-</script>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="/">Fehmi Can Saglam</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/ben.html">About</a>
+        <a href="/atom.xml">RSS</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page-main">
+    <article class="page-card">
+      <h1 class="page-title">{{ page.title | xml_escape }}</h1>
+      <p class="post-meta">
+        <span>{{ page.date | date: "%B %d, %Y" }}</span>
+        {% if page.category %}<span class="meta-dot">-</span><span class="mono">{{ page.category }}</span>{% endif %}
+      </p>
+      <div class="post-content">{{ content }}</div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <span class="fcs-chip">FCS</span>
+      <p>Written by Fehmi Can Saglam.</p>
+    </div>
+  </footer>
+</body>
+</html>

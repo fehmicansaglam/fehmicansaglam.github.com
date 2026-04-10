@@ -1,101 +1,42 @@
 ---
 published: true
 ---
-<!DOCTYPE html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name=description content="Yazılım ve masabaşı çalışanlar için sağlıklı yaşam hakkında yazıyorum">
-<meta name="twitter:title" content="Fehmi Can Sağlam"/>
-<meta name="twitter:description" content="Yazılım ve masabaşı çalışanlar için sağlıklı yaşam hakkında yazıyorum"/>
-<meta name="twitter:card" content="summary"/>
-<meta name="twitter:site" content="@fehmicansaglam"/>
-<meta name="twitter:creator" content="@fehmicansaglam"/>
-<link href=atom.xml rel=alternate type=application/atom+xml>
-<title>Rust günlüğü</title>
-<style>
-body {
-	max-width: 920px;
-	margin: auto;
-	font-family: Tahoma, Arial, Helvetica, sans-serif;
-	background: #FEFEFE;
-	padding: 5px;
-}
-
-a {
-	color: #047
-}
-
-a:hover {
-	color: #c51
-}
-
-p.right {
-	float: right;
-}
-
-ul {
-	list-style: none;
-	padding: 0
-}
-
-li,
-li a {
-	padding: 15px
-}
-
-a {
-	padding: 9px
-}
-
-h3>span {
-	float: right
-}
-
-img {
-	width: 66%;
-	display: block;
-	margin: 0 auto;
-	border-radius: 3px;
-}
-
-body{
-	font-family: -apple-system, 'Open Sans', 'Helvetica Neue', sans-serif;
-	font-size: 18px;
-	line-height: 1.8;
-	font-weight: normal;
-	color: #222;
-}
-
-
-h3 {
-	border-bottom: 1px solid #ededed;
-	padding-bottom: 10px;
-}
-
-h3 span{
-	color: #c0c0c0;
-	font-weight: normal;
-}
-
-.highlighter-rouge{
-	border: 1px solid #c0c0c0;
-	border-radius: 5px;
-	padding: 10px;
-	background: #fbfbfb;
-	font-size: 14px;
-}
-
-pre.highlight{
-	margin: 0;
-}
-
-</style>
-<script>var _gaq=[['_setAccount','UA-4489548-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Rust posts by Fehmi Can Saglam.">
+  <title>Rust Journal - Fehmi Can Saglam</title>
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Fehmi Can Saglam feed">
+  <link rel="stylesheet" href="/assets/site.css">
 </head>
-<p class="right"><a href=index.html>ana sayfa</a><a href=//github.com/fehmicansaglam>github</a><a href=//twitter.com/fehmicansaglam>twitter</a><a href=stats.html>istatistik</a><a href=atom.xml>rss</a></p>
-<h1>Rust günlüğü.</h1>
-{% assign posts = site.categories.rust | sort: 'date' %}
-{% for post in posts %}
-<h3>{{ post.title | escape}} <span>{{ post.date | date: "%d.%m.%Y" }}</span> </h3>
-{{ post.content }}
-{% endfor %}
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="/">Fehmi Can Saglam</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/">Home</a>
+        <a href="/ben.html">About</a>
+        <a href="/atom.xml">RSS</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page-main">
+    <article class="page-card">
+      <h1 class="page-title">Rust journal</h1>
+      <p class="lead">A focused stream of notes and examples from my Rust learning journey.</p>
+      {% assign posts = site.categories.rust | sort: 'date' | reverse %}
+      <ul class="post-list">
+        {% for post in posts %}
+          <li class="post-item">
+            <a class="post-link" href="{{ post.url }}">{{ post.title | escape }}</a>
+            <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
+          </li>
+        {% endfor %}
+      </ul>
+    </article>
+  </main>
+</body>
+</html>

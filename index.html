@@ -1,20 +1,51 @@
 ---
 published: true
 ---
-<!DOCTYPE html>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<meta name=description content="Programlama, Java, Play Framework, CoffeeScript, Git, Yazılım geliştirme, Çevik yöntemler, Ölçeklenebilir sistemler, ElasticSearch, Hazelcast ve Açık eğitim">
-<meta name=keywords content="java,scala,play framework,git,coffeescript,akka,hazelcast,elasticsearch">
-<link href=atom.xml rel=alternate type=application/atom+xml>
-<title>Fehmi Can Sağlam</title>
-<style>
-   body{width:920px;margin:auto;font-family:Tahoma,Arial,Helvetica,sans-serif;background:#FEFEFE;}a{color:#047}a:hover{color:#c51}p{float:right;}ul{list-style:none;padding:0}li,li a{padding:15px}a{padding:9px}
-</style>
-<script>var _gaq=[['_setAccount','UA-4489548-1'],['_trackPageview']];(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];g.async=g.src='//www.google-analytics.com/ga.js';s.parentNode.insertBefore(g,s)}(document,'script'))</script>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Software engineering notes by Fehmi Can Saglam.">
+  <title>Fehmi Can Saglam</title>
+  <link rel="alternate" type="application/atom+xml" href="/atom.xml" title="Fehmi Can Saglam feed">
+  <link rel="stylesheet" href="/assets/site.css">
 </head>
-<p><a href=rust-gunlugu.html>rust günlüğü</a><a href=saglikli-yasam.html>sağlıklı yaşam</a><a href=//github.com/fehmicansaglam>github</a><a href=//twitter.com/fehmicansaglam>twitter</a><a href=stats.html>istatistik</a><a href=atom.xml>rss</a></p>
-<h1>Fehmi Can Sağlam.</h1>
-<ul>
-   {% for post in site.posts %}
-   <li>{{ post.date | date: "%d/%m/%y" }}<a href={{ post.url | replace_first: '/', ''}}>{{ post.title | escape}}</a>{% endfor %}
-</ul>
+<body>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="/">Fehmi Can Saglam</a>
+      <nav class="site-nav" aria-label="Primary">
+        <a href="/ben.html">About</a>
+        <a href="https://github.com/fehmicansaglam">GitHub</a>
+        <a href="https://twitter.com/fehmicansaglam">X</a>
+        <a href="/atom.xml">RSS</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container page-main">
+    <section class="page-card">
+      <p class="fcs-chip">FCS</p>
+      <h1 class="page-title">Writing about software engineering, systems, and deliberate craft.</h1>
+      <p class="lead">I publish in English and keep posts simple, practical, and focused.</p>
+
+      <ul class="post-list">
+        {% for post in site.posts %}
+          <li class="post-item">
+            <a class="post-link" href="{{ post.url }}">{{ post.title | escape }}</a>
+            <time class="post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %d, %Y" }}</time>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-wrap">
+      <span class="fcs-chip">FCS</span>
+      <p>fehmicansaglam.net</p>
+    </div>
+  </footer>
+</body>
+</html>

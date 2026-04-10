@@ -1,3 +1,7 @@
 permalink: /:title
 markdown: kramdown
 highlighter: rouge
+title: Fehmi Can Saglam
+description: Software engineering notes and focused essays.
+url: https://fehmicansaglam.net
+lang: en
