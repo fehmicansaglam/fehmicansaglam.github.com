@@ -105,12 +105,20 @@ img {
   padding: 2.6rem 0 3.4rem;
 }
 
+.home .page-main {
+  padding-top: 1.4rem;
+}
+
 .page-card {
   background: var(--surface);
   border: 1px solid var(--line);
   border-top: 2px solid color-mix(in srgb, var(--red) 65%, var(--line));
   border-radius: var(--radius);
   padding: clamp(1.2rem, 2vw, 2rem);
+}
+
+.home .page-card {
+  padding-top: 0.9rem;
 }
 
 .page-title {
@@ -205,6 +213,10 @@ img {
 .post-list {
   list-style: none;
   margin: 1rem 0 0;
+}
+
+.home .post-list {
+  margin-top: 0;
 }
 
 .post-item {
@@ -306,6 +318,7 @@ img {
   .post-item {
     flex-direction: column;
     align-items: flex-start;
+    justify-content: flex-start;
     gap: 0.3rem;
   }
 }
