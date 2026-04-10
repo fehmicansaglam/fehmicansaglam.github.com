@@ -227,6 +227,7 @@ img {
 
 .lead {
   color: var(--muted);
+  font-size: 0.9em;
   margin-bottom: 0.7rem;
 }
 
