@@ -53,7 +53,7 @@ My hypothesis was simple: if I did 100 push-ups every day, I would increase the 
 
 Ideally, the increase should be linear and I should be able to do more reps every one or two days.
 
-## The experiment
+## Das experiment
 
 I love charts, and this article would be incomplete without one. The chart below shows the max number of push-ups I did in a single set from day 1 to day 30.
 
