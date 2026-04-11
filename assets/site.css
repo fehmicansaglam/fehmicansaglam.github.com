@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&display=swap");
 
 :root {
+  color-scheme: light;
   --bg: #f7f5f1;
   --surface: #fdfcf9;
   --text: #1e2730;
@@ -9,6 +10,7 @@
   --blue: #1f4f7f;
   --blue-soft: #dde8f2;
   --red: #7f2323;
+  --code-bg: #f4f7fb;
   --max-width: 760px;
   --radius: 10px;
 }
@@ -55,7 +57,7 @@ img {
 
 .site-header {
   border-bottom: 1px solid var(--line);
-  background: color-mix(in srgb, var(--surface) 95%, white);
+  background: var(--surface);
 }
 
 .nav-wrap {
@@ -180,7 +182,7 @@ img {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 0.9rem;
-  background: #f4f7fb;
+  background: var(--code-bg);
 }
 
 .post-content pre code {
@@ -299,6 +301,21 @@ img {
   gap: 0.7rem;
   color: var(--muted);
   font-size: 0.85rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #12161c;
+    --surface: #1a2029;
+    --text: #e6ebf2;
+    --muted: #a8b2bf;
+    --line: #2a3442;
+    --blue: #7bb7ff;
+    --blue-soft: #263344;
+    --red: #d08888;
+    --code-bg: #111721;
+  }
 }
 
 @media (max-width: 780px) {
