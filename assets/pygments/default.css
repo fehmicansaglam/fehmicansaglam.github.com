@@ -60,3 +60,84 @@
 .highlight .vg{color:#19177C}
 .highlight .vi{color:#19177C}
 .highlight .il{color:#666666}
+
+@media (prefers-color-scheme: dark) {
+  .highlight {
+    background: #111721;
+    color: #e6ebf2;
+  }
+
+  .highlight .c,
+  .highlight .cm,
+  .highlight .c1,
+  .highlight .cs {
+    color: #8fa1b5;
+    font-style: italic;
+  }
+
+  .highlight .k,
+  .highlight .kc,
+  .highlight .kd,
+  .highlight .kn,
+  .highlight .kp,
+  .highlight .kr,
+  .highlight .ow {
+    color: #8ec3ff;
+    font-weight: bold;
+  }
+
+  .highlight .s,
+  .highlight .s1,
+  .highlight .s2,
+  .highlight .sb,
+  .highlight .sc,
+  .highlight .sd,
+  .highlight .se,
+  .highlight .sh,
+  .highlight .si,
+  .highlight .sr,
+  .highlight .ss {
+    color: #f3b17b;
+  }
+
+  .highlight .m,
+  .highlight .mf,
+  .highlight .mh,
+  .highlight .mi,
+  .highlight .mo,
+  .highlight .il {
+    color: #b8cc84;
+  }
+
+  .highlight .n,
+  .highlight .na,
+  .highlight .nb,
+  .highlight .nc,
+  .highlight .no,
+  .highlight .nd,
+  .highlight .ne,
+  .highlight .nf,
+  .highlight .nl,
+  .highlight .nn,
+  .highlight .nt,
+  .highlight .nv,
+  .highlight .vc,
+  .highlight .vg,
+  .highlight .vi,
+  .highlight .bp {
+    color: #d5deea;
+  }
+
+  .highlight .o,
+  .highlight .w,
+  .highlight .go,
+  .highlight .gp,
+  .highlight .gh,
+  .highlight .gu,
+  .highlight .gt,
+  .highlight .gr,
+  .highlight .gd,
+  .highlight .gi {
+    color: #a8b2bf;
+  }
+}
