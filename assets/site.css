@@ -236,6 +236,10 @@ img {
   text-decoration: none;
 }
 
+.home .post-link {
+  font-size: 1.04em;
+}
+
 .post-link:hover,
 .post-link:focus-visible {
   color: var(--blue);
@@ -253,6 +257,10 @@ img {
   color: var(--muted);
   font-size: 0.82rem;
   line-height: 1.45;
+}
+
+.home .post-excerpt {
+  font-size: 0.86rem;
 }
 
 .archive-link {
