@@ -1,19 +1,27 @@
 ---
-title: "Healthy Desk Life: Practical Notes on Nutrition, Fat Loss, and Consistency"
+title: "Healthy Desk Life: Nutrition, Fat Loss, Consistency"
 layout: post
 description: "A practical guide on nutrition, fat loss, training, and consistency for people who work at a desk."
 category: health
+slug: healthy-desk-life-guide
+redirect_from:
+  - /healthy-desk-life-practical-notes-on-nutrition-fat-loss-and-consistency
 ---
 
 This article is a consolidated English version of my short daily health notes from 2020.
 
-I wrote those notes while living a very typical desk-worker life: long coding sessions, irregular energy, motivation swings, and the constant tension between performance at work and long-term health.
+I wrote those notes during the early months of COVID, in the middle of lockdowns, while living a very typical desk-worker life: long coding sessions, energy swings, motivation swings, and the constant tension between work performance and long-term health.
 
-The goal here is simple: practical advice you can apply without building your life around fitness.
+The goal is simple: practical advice you can actually use without turning your whole life into a fitness project.
+
+<figure>
+  <img src="/assets/images/kaliteli-beslenme-nedir-0.jpeg" alt="Simple meal plate from my original health notes">
+  <figcaption>From my original 2020 health notes: keep meals practical and repeatable.</figcaption>
+</figure>
 
 ## 1) Start with the right objective
 
-Most people fail early because the objective is vague.
+Most people fail early because the objective is too vague.
 
 "Get fit" sounds nice, but it is not operational.
 
@@ -33,7 +41,7 @@ For body weight, there is no way around energy balance:
 - if you consume less energy than you spend, you lose weight,
 - if you consume more energy than you spend, you gain weight.
 
-This is not a trendy opinion; it is the base layer.
+This is not trendy advice; it is the base layer.
 
 Everything else (meal timing, supplements, specific food protocols) sits on top of this.
 
@@ -41,7 +49,7 @@ Everything else (meal timing, supplements, specific food protocols) sits on top 
 
 Protein, carbs, and fat matter for performance, satiety, and recovery.
 
-But if your routine is unstable, macro perfection is a distraction.
+But if your routine is unstable, macro perfection is just a distraction.
 
 A practical order of priorities:
 
@@ -63,6 +71,8 @@ When trying to lose fat, protein helps with two things:
 For most desk workers who train a few times per week, a useful range is around **1.6-2.2 g protein per kg body weight**.
 
 You do not have to hit the exact number every day. A stable weekly average is enough.
+
+If calories are tight, use simple high-protein anchors in your day: eggs, yogurt, lean meat, fish, legumes, or a protein shake when needed. The point is not perfection. The point is making protein easy enough that you do not need heroic discipline every evening.
 
 ## 5) You cannot turn fat into muscle
 
@@ -88,6 +98,11 @@ It improves energy expenditure, recovery, mood, and stress management without cr
 
 If your baseline is low activity, walking is often the highest-ROI first step.
 
+<figure>
+  <img src="/assets/images/yuruyerek-kilo-verilir-mi-0.jpeg" alt="Walking outdoors in the city">
+  <figcaption>Walking is still one of the most sustainable tools for desk workers.</figcaption>
+</figure>
+
 ## 7) Cardio is useful, but not mandatory for fat loss
 
 You can lose fat without cardio if nutrition is aligned.
@@ -103,6 +118,8 @@ If you include cardio, choose formats you can repeat consistently:
 
 Consistency beats intensity spikes.
 
+Also, remember this: you cannot choose where fat comes off first. There is no reliable "targeted fat loss" for a specific body part. Usually the stubborn areas improve later in the process. This is frustrating, but normal.
+
 ## 8) Strength training should progress over time
 
 A useful training anchor is progressive overload:
@@ -112,7 +129,7 @@ A useful training anchor is progressive overload:
 - better technique at same load,
 - more total quality volume over time.
 
-You do not need dramatic jumps. Small progression compounds.
+You do not need dramatic jumps. Small progress compounds.
 
 ## 9) Recovery is not optional
 
@@ -129,9 +146,11 @@ At minimum:
 
 If recovery is poor, even a great plan underperforms.
 
+For desk workers specifically, two underrated recovery tools are posture breaks and short mobility work. A few minutes of stretching for hips, chest, shoulders, and hamstrings can reduce stiffness and make training feel much better over time.
+
 ## 10) Motivation is unreliable; systems are not
 
-Motivation comes and goes.
+Motivation comes and goes. That is normal.
 
 If your plan depends on feeling inspired every day, it will eventually fail.
 
@@ -156,11 +175,18 @@ Helpful levers:
 - manage sleep and stress,
 - avoid making every meal ultra-palatable.
 
-You do not need to suffer constantly to make progress.
+You do not need to suffer all the time to make progress.
+
+One practical note from my own logs: not every scale increase is fat gain. Sometimes it is water retention, salt, stress, poor sleep, or digestion. That is why weekly averages and waist measurements matter more than one noisy morning weigh-in.
 
 ## 12) Supplements: useful in context, not magic
 
-Supplements are often oversold. Most are optional.
+Supplements are usually oversold. Most are optional.
+
+<figure>
+  <img src="/assets/images/bol-protein-kaynaklari-0.jpeg" alt="High-protein meal example">
+  <figcaption>Start with whole foods and protein-rich meals before thinking about supplements.</figcaption>
+</figure>
 
 ### Vitamins
 
@@ -182,6 +208,8 @@ One of the more evidence-backed supplements for training performance. Not essent
 
 Most products marketed as fat burners are overpriced noise. Build fundamentals first.
 
+If your basics are weak, supplements will not save the plan. If your basics are strong, supplements are optional extras.
+
 ## 13) Alcohol and progress
 
 Alcohol can interfere with appetite control, sleep quality, and recovery.
@@ -196,6 +224,8 @@ A moderate, steady rate is usually better for real life.
 
 Think in months, not days.
 
+A useful practical range for many people is roughly 0.25-0.75% of body weight per week, depending on your starting point and training status. Slow progress feels boring, but it is usually the progress that lasts.
+
 ## 15) Build a plan for busy professionals
 
 A practical weekly template can look like this:
@@ -206,6 +236,13 @@ A practical weekly template can look like this:
 - one fallback meal strategy for overloaded days.
 
 This is enough for meaningful progress if repeated consistently.
+
+If you think "I do not have time to cook," use a two-level strategy:
+
+- default meals you can prepare quickly,
+- emergency meals that are still decent when your day collapses.
+
+Having a fallback is what keeps one bad day from becoming a bad week.
 
 ## 16) What to track
 
@@ -226,8 +263,6 @@ You are not trying to win one week.
 
 You are building a body and routine that supports your work and life for years.
 
-For desk workers, health is not separate from professional output. Better sleep, lower pain, better energy, and better focus are all performance multipliers.
+For desk workers, health is not separate from professional output. Better sleep, less pain, better energy, and better focus are all performance multipliers.
 
 If you keep your plan practical and repeatable, results follow.
-
-FCS
