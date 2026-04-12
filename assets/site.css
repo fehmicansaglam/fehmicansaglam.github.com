@@ -201,6 +201,18 @@ img {
   margin: 1.1rem 0 1.2rem;
 }
 
+.post-content figure.crop-compact {
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.post-content figure.crop-compact img {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  object-position: center;
+}
+
 .post-content figcaption {
   margin-top: 0.45rem;
   color: var(--muted);
@@ -346,5 +358,9 @@ img {
   .post-main {
     flex: 1 1 auto;
     width: 100%;
+  }
+
+  .post-content figure.crop-compact img {
+    height: 220px;
   }
 }
