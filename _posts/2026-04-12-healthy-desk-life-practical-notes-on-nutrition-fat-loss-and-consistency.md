@@ -1,14 +1,12 @@
 ---
-title: "Healthy Desk Life: Nutrition, Fat Loss, Consistency"
+title: "Healthy Desk Life: Nutrition, Exercise, Consistency"
 layout: post
 description: "A full English translation of my 2020 daily health notes for desk workers."
 category: health
 slug: healthy-desk-life-guide
-redirect_from:
-  - /healthy-desk-life-practical-notes-on-nutrition-fat-loss-and-consistency
 ---
 
-This is a single English article built from my 25 short Turkish notes from June 2020.
+This is a single article built from my 25 short Turkish notes from June 2020.
 
 I wrote those notes in Berlin during the early COVID months and lockdown period. Every morning, I made coffee, sat on the balcony, and wrote one practical note about fat loss, training, and desk-worker health.
 
@@ -75,11 +73,6 @@ The practical rule I used: avoid aggressive deficits, and aim for a sustainable 
 ## Preventing Muscle Loss While Losing Weight
 
 Weight loss is not always fat loss. You can lose water and muscle too.
-
-<figure>
-  <img src="/assets/images/kilo-verirken-kas-kaybini-engellemek-0.jpeg" alt="Old transformation photo">
-  <figcaption>Keeping muscle is as important as lowering body weight.</figcaption>
-</figure>
 
 The practical framework:
 
@@ -342,11 +335,6 @@ I covered practical options: eggs, chicken breast, legumes (lentils, chickpeas, 
 I had previously generalized too hard and then corrected it.
 
 Early in a cut, especially with high starting body fat, fast drops can come from water loss. Do not panic-adjust too early. Give your trend time to stabilize, then tune calories carefully.
-
-<figure class="crop-compact">
-  <img src="/assets/images/ideal-kilo-verme-hizi-0.jpeg" alt="Weight trend with rapid initial drop">
-  <figcaption>Early fast loss is often not pure fat loss.</figcaption>
-</figure>
 
 ## Should We Take Supplements?
 
