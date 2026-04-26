@@ -40,8 +40,11 @@ published: true
           <li class="post-item">
             <div class="post-main">
               <a class="post-link" href="{{ post.url }}">{{ post.title | escape }}</a>
+              {% assign custom_subtitle = post.subtitle | strip %}
               {% assign clean_excerpt = post.excerpt | strip_html | strip_newlines | normalize_whitespace %}
-              {% if clean_excerpt != "" %}
+              {% if custom_subtitle != "" %}
+                <p class="post-excerpt">{{ custom_subtitle }}</p>
+              {% elsif clean_excerpt != "" %}
                 <p class="post-excerpt">{{ clean_excerpt | truncate: 130 }}</p>
               {% endif %}
             </div>

@@ -2,6 +2,7 @@
 title: "My Ideal Team Playbook"
 layout: post
 description: "A practical playbook for how I want product teams to work: ownership, transparency, context, and simplicity."
+subtitle: "After more than 25 years of coding and 20+ years in product teams, I have come up with the following cultural values."
 category: software-engineering
 ---
 
