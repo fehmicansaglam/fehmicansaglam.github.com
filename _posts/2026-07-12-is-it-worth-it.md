@@ -18,4 +18,6 @@ In order to produce great products, you first need to build great teams. The fou
 
 Recently, Mark Zuckerberg complained that Meta’s AI efforts weren’t progressing at the pace he expected. That comes as no surprise. You no longer have great teams because they no longer trust you. And they don’t trust you because you lied to them. 
 
-I admire how clearly the young Steve Jobs articulated his thoughts. I keep going back to his early interviews on YouTube. One of the most important things he realized early on was that, once you’ve built great teams, all they need is a vision. The rest is history. Steve also emphasized that A-players want to work with other A-players. Humans are not fungible because each of us is unique. When you lose a great engineer, you don’t just lose a role. You lose a unique human being, someone you can never truly replace.
+I admire how clearly the young Steve Jobs articulated his thoughts. I keep going back to his early interviews on YouTube. One of the most important things he realized early on was that, once you’ve built great teams, all they need is a vision. The rest is history. 
+
+Steve also emphasized that A-players want to work with other A-players. Humans are not fungible because each of us is unique. When you lose a great engineer, you don’t just lose a role. You lose a unique human being, someone you can never truly replace.
