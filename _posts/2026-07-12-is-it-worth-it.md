@@ -2,7 +2,7 @@
 title: "Is It Worth It?"
 layout: post
 description: "A personal reflection on layoffs, leadership, and trust."
-subtitle: "The cost of treating people as fungible isn’t losing employees. It’s losing trust."
+subtitle: "The true cost of treating people as fungible isn’t losing employees. It’s losing trust."
 category: software-engineering
 ---
 
