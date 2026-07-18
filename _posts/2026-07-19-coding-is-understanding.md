@@ -24,4 +24,4 @@ Then I deliberately stopped using LLMs and migrated to Neovim, which has excelle
 
 Of course, my previous experience with other programming languages shortened the time it took to become proficient in a new one. But no matter what, we need productive struggle to learn, and we need some kind of friction to get there.
 
-I understand why many people see coding as friction. However, I now see coding as a useful form of friction that builds a deeper understanding of the problem domain through productive struggle. Sometimes, the friction isn’t the obstacle. It’s your elementary school teacher.
+I understand why many people see coding as friction. However, I now see coding as a useful form of friction that builds a deeper understanding of the problem domain through productive struggle. Sometimes, the friction isn’t the obstacle. It’s your elementary school teacher...
