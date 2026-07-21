@@ -26,5 +26,5 @@ Of course, my previous experience with other programming languages shortened the
 
 I understand why many people see coding as friction. However, I now see coding as a useful form of friction that builds a deeper understanding of the problem domain through productive struggle. Sometimes, the friction isn’t the obstacle. It’s your elementary school teacher.
 
-[^1]: The Pragmatic Engineer, *How Kent Beck shapes the software engineering industry*, https://youtu.be/ddHQQtjIOpw
+[^1]: The Pragmatic Engineer, [How Kent Beck shapes the software engineering industry](https://youtu.be/ddHQQtjIOpw)
  
