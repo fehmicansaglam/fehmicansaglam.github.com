@@ -8,7 +8,7 @@ category: software-engineering
 
 I have a personal connection to coding since it has been both my craft and my hobby for decades. I occasionally suspect that I might have a bias and overestimate its value. This started a long time ago, but it has definitely accelerated in the age of LLMs. As a result, I have been reading, listening to, and watching what true experts have to say about coding. I stumbled upon a few thought-provoking comments that turned my intuition into a more concrete understanding. I’ll try to present a quick summary of that as I am too impatient to write long in-depth articles like those experts. 
 
-To me, coding is a medium for conveying intent deterministically. Kent Beck recently described coding, more or less, as a tool for deeply understanding the problem domain. His explanation was in a broader software engineering context but I still find it quite relevant. For us builders, that idea is easy to grasp and agree with. However, expressing intent through natural language is inherently ambiguous and doesn’t require the same depth of understanding. As Dijkstra argued decades ago, natural language is “hopelessly inadequate” when we need to reason unambiguously about complex systems. 
+To me, coding is a medium for conveying intent deterministically. Kent Beck recently described coding, more or less, as a tool for deeply understanding the problem domain.[^1] His explanation was in a broader software engineering context but I still find it quite relevant. For us builders, that idea is easy to grasp and agree with. However, expressing intent through natural language is inherently ambiguous and doesn’t require the same depth of understanding. As Dijkstra argued decades ago, natural language is “hopelessly inadequate” when we need to reason unambiguously about complex systems. 
 
 My mother was my elementary school teacher as well for five years. She was really good at math and respected among her peers. From early on, when I was around six or seven years old, she kept telling me to draw a diagram to better understand the problem at hand. Back then, I didn’t really understand that this was actually about modeling a problem, much like in coding, where you need to build a mental model of the program.
 
@@ -25,3 +25,6 @@ Then I deliberately stopped using LLMs and migrated to Neovim, which has excelle
 Of course, my previous experience with other programming languages shortened the time it took to become proficient in a new one. But no matter what, we need productive struggle to learn, and we need some kind of friction to get there.
 
 I understand why many people see coding as friction. However, I now see coding as a useful form of friction that builds a deeper understanding of the problem domain through productive struggle. Sometimes, the friction isn’t the obstacle. It’s your elementary school teacher.
+
+[^1]: The Pragmatic Engineer, *How Kent Beck shapes the software engineering industry*, https://youtu.be/ddHQQtjIOpw
+ 
