@@ -4,13 +4,13 @@ layout:
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
- <title>Fehmi Can Saglam.</title>
+ <title>Fehmi Can Sağlam.</title>
  <link href="{{ site.url }}/atom.xml" rel="self"/>
  <link href="{{ site.url }}/"/>
  <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>{{ site.url }}/</id>
  <author>
-   <name>Fehmi Can Saglam</name>
+   <name>Fehmi Can Sağlam</name>
    <email>fehmican.saglam@gmail.com</email>
  </author>
 
