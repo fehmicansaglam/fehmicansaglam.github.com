@@ -10,3 +10,4 @@ I was influenced by early Macintosh interface design, Susan Kare's work, and Don
 - Mostly monochrome; color should not carry meaning.
 - Links are signified by underlines at rest and a subtle marker effect during interaction.
 - Secondary navigation belongs in the footer.
+- The site should encourage intentional visits, not subscription or push-consumption patterns.
