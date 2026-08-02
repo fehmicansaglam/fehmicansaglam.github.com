@@ -26,7 +26,6 @@ published: true
   <main class="container page-main">
     <section class="page-card">
       <h1 class="page-title">Archive</h1>
-      <p class="lead">Posts published before 2022 (mostly in Turkish).</p>
       <ul class="post-list">
         {% for post in site.posts %}
           {% assign post_year = post.date | date: "%Y" %}
