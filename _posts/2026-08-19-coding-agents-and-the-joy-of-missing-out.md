@@ -4,10 +4,10 @@ layout: post
 description: "Tribal knowledge, specifications, coding agents, and the joy of missing out."
 subtitle: "What if coding was never the problem in the first place?"
 category: software-engineering
-published: false
+published: true
 ---
 
-Not long ago, Fatih Arslan published a blog post[^1]⁠ announcing that he will be joining Cursor soon. That came partially as a surprise, since I almost envied his achievements at PlanetScale. But I was also aware of his recent comments on Cursor. Anyway, as an avid follower of his blog, which I strongly recommend, I obviously read the post ASAP.
+Not long ago, Fatih Arslan published a blog post[^1] announcing that he will be joining Cursor soon. That came partially as a surprise, since I almost envied his achievements at PlanetScale. But I was also aware of his recent comments on Cursor. Anyway, as an avid follower of his blog, which I strongly recommend, I obviously read the post ASAP.
 
 In his detailed blog post, Fatih wrote the following about coding agents:
 
@@ -18,11 +18,13 @@ When I first read this, I immediately felt a strong sense of FOMO and asked myse
 Marc Brooker is an engineer at AWS and works on agentic AI. He also happens to have a very nice blog and has several blog posts on the topic. I find the one titled *Agentic Software Development Hypothesis*[^2] very relatable. (I also find the post quite funny. Anyone?)
 
 > *Weak form*: Any coding task for which a complete specification is available will become trivial.
+>
 > *First objection*: Few meaningful tasks have a complete specification.
 
-More often than not, I find myself creating specifications from code. In other words, the code is often the only source of truth. Sometimes I'm so perplexed by what I see in the code that, after staring at the screen for a few minutes, I go and find a person with at least five years of tenure to understand what the fuck they were thinking a billion years ago. This is tribal knowledge and is not documented except obscurely in the code.
+More often than not, I find myself creating specifications from code. In other words, the code is often the only source of truth. Sometimes I'm so perplexed by what I see in the code that, after staring at the screen for a few minutes, I go and find a person with at least five years of tenure to understand what the fuck they were thinking a billion years ago. This is tribal knowledge and is not documented except implicitly in the code.
 
-Then I thought about what Colin Breck wrote about writing things down.[^3]
+That reminds me what Colin Breck wrote about writing things down.[^3]
+
 I agree with almost 100% of what he wrote:
 
 > I believe organizations that have a culture of writing—real writing about ideas, from primary sources—will outperform those that do not.
@@ -39,7 +41,7 @@ Fatih wrote about his time at a startup called Koding:
 
 If you can be early, then there is no technical blocker. It has always been like this. It has always been about execution. If it were not, then all engineers would have been rich and FIREd already.
 
-Could we be looking at coding agents from a narrow, purely technical perspective? Perhaps relying on tribal knowledge is simply the way some companies operate. Perhaps we are underestimating the importance of actual execution and valuing code more than it deserves. Just as coding wasn't the problem at Koding (pun intended), maybe we will never be able to eliminate writing code as Fatih mentioned, and that may not be a problem at all. Because coding might not have been the problem in the first place.
+Could we be looking at coding agents from a narrow, purely technical perspective? Perhaps relying on tribal knowledge is simply the way some companies operate. Perhaps we are underestimating the importance of actual execution and valuing code more than it deserves. Just as coding wasn't the problem at Koding (pun intended), maybe we will never be able to eliminate writing code entirely, despite what Fatih observed, and that may not be a problem at all. Because coding might not have been the problem in the first place.
 
 Could this be the reason why we don't yet see AI's contribution to aggregate productivity numbers, as Chicago Fed President Austan Goolsbee explained?[^4]
 
