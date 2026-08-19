@@ -15,7 +15,7 @@ In his detailed blog post, Fatih wrote the following about coding agents:
 
 When I first read this, I immediately felt a strong sense of FOMO and asked myself: why haven’t I seen this put into practice as completely as Fatih has? What am I missing? There have been a few times when I had huge success pair programming with a coding agent. I accomplished at least a week’s worth of work, perhaps in a day or two. But in my experience, that’s ridiculously rare, because I rarely know exactly what I need and what I will implement.
 
-Marc Brooker is an engineer at AWS and works on agentic AI. He also happens to have a very nice blog and has several blog posts on the topic. I find the one titled *Agentic Software Development Hypothesis*[^2] very relatable. (I also find the post quite funny. Anyone?)
+Marc Brooker is an engineer at AWS and works on agentic AI. He also happens to have a very nice blog and has several blog posts on the topic. I find the one titled *Agentic software development hypothesis*[^2] very relatable. (I also find the post quite funny. Anyone?)
 
 > *Weak form*: Any coding task for which a complete specification is available will become trivial.
 >
