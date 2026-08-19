@@ -53,10 +53,10 @@ And last but not least, I remember Hashimoto's legendary tweet,[^6] which I gues
 
 Nonetheless, Fatih is rarely wrong, whereas I am almost never right. Is he wrong now? Maybe. Or maybe we're both right this time.
 
-[^1]: https://arslan.io/2026/08/10/joining-cursor/
-[^2]: https://brooker.co.za/blog/2026/05/20/hypothesis.html
-[^3]: https://blog.colinbreck.com/adapting-to-ai-write-things-down/
-[^4]: https://finance.yahoo.com/economy/policy/articles/fed-goolsbee-wants-see-more-163249754.html
-[^5]: https://en.wikipedia.org/wiki/Bullshit_Jobs
-[^6]: https://x.com/mitchellh/status/2072738025344565262
+[^1]: [Fatih Arslan, *Joining Cursor*](https://arslan.io/2026/08/10/joining-cursor/)
+[^2]: [Marc Brooker, *Agentic software development hypothesis*](https://brooker.co.za/blog/2026/05/20/hypothesis.html)
+[^3]: [Colin Breck, *Adapting to AI: Write Things Down*](https://blog.colinbreck.com/adapting-to-ai-write-things-down/)
+[^4]: [Yahoo Finance, *Fed's Goolsbee wants to see more data before deciding on September rate cut*](https://finance.yahoo.com/economy/policy/articles/fed-goolsbee-wants-see-more-163249754.html)
+[^5]: [Wikipedia, *Bullshit Jobs*](https://en.wikipedia.org/wiki/Bullshit_Jobs)
+[^6]: [Mitchell Hashimoto on X](https://x.com/mitchellh/status/2072738025344565262)
 
