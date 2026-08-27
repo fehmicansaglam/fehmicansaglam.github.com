@@ -218,6 +218,17 @@ img {
   line-height: 1.35;
 }
 
+.post-content .image-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin: 1.1rem 0 1.2rem;
+}
+
+.post-content .image-row img {
+  width: 100%;
+}
+
 .post-list {
   list-style: none;
   margin: 1rem 0 0;
@@ -360,5 +371,9 @@ img {
 
   .post-content figure.crop-compact img {
     height: 220px;
+  }
+
+  .post-content .image-row {
+    grid-template-columns: 1fr;
   }
 }
