@@ -43,7 +43,7 @@ In a remote team, most communication happens in writing. But words without conte
 - Every feature, every interaction, and even every line of code should be approached with the customer in mind.
 - Whether it's a new feature, a piece of code, or a customer-facing interface, we review each other's work critically to ensure it meets our standards of taste.
 
-> Note: When I originally wrote the next three sections, I had not yet read John Ousterhout's *A Philosophy of Software Design*.[^1] After reading it recently, I realized that I was describing something very close to his idea of strategic programming: choosing simplicity, clarity, and long-term design quality over quick tactical fixes. I highly recommend the book.
+> Note: When I originally wrote the next three sections, I had not yet read John Ousterhout's *A Philosophy of Software Design*.[^1] After reading it recently, I realized that I was describing something very close to his idea of strategic programming: pursuing simplicity, obviousness, and continuous design improvement instead of quick tactical fixes.
 
 ## Strive for Elegance
 
@@ -69,8 +69,8 @@ Here, we raise the bar every day. Every line of code, every document, and all ar
 - Whether it's a small bug fix or a major feature development, we welcome improvements that push us to be better than we were the day before.
 - Every pull request is more than a merge. It's a learning opportunity. We review not just for errors but for improvements, always asking, "Is this better than what we had yesterday?"
 
-## Final Note
+## What Matters Most
 
-This playbook is not static. As I learn, I'll refine it. But the goal stays simple. In order to build better products, we need to improve our people, values, communication, and expectation management.
+This playbook is not static. As I learn, I'll refine it. But the goal stays simple. We want to build better products that solve real customer problems. Process, code quality, tools, and even AI are only useful if they help the team get there. In the end, it comes down to the team, the culture we build, the standards we hold, and how we show up for each other.
 
 [^1]: [*A Philosophy of Software Design* by John Ousterhout](https://web.stanford.edu/~ouster/cgi-bin/book.php)
