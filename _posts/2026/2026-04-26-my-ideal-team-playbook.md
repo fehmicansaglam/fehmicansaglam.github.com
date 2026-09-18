@@ -43,6 +43,8 @@ In a remote team, most communication happens in writing. But words without conte
 - Every feature, every interaction, and even every line of code should be approached with the customer in mind.
 - Whether it's a new feature, a piece of code, or a customer-facing interface, we review each other's work critically to ensure it meets our standards of taste.
 
+> Note: When I originally wrote the next three sections, I had not yet read John Ousterhout's *A Philosophy of Software Design*.[^1] After reading it recently, I realized that I was describing something very close to his idea of strategic programming: choosing simplicity, clarity, and long-term design quality over quick tactical fixes. I highly recommend the book.
+
 ## Strive for Elegance
 
 In our world, simple doesn't mean easy. It means clear, intuitive, efficient, and manageable. Every line of code, every architecture choice, and every feature should be as simple as it can be.
@@ -70,3 +72,5 @@ Here, we raise the bar every day. Every line of code, every document, and all ar
 ## Final Note
 
 This playbook is not static. As I learn, I'll refine it. But the goal stays simple. In order to build better products, we need to improve our people, values, communication, and expectation management.
+
+[^1]: [*A Philosophy of Software Design* by John Ousterhout](https://web.stanford.edu/~ouster/cgi-bin/book.php)
